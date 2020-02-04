@@ -20,10 +20,6 @@ use App\Models\UserProfile;
 use App\Models\Role;
 use App\Models\RoleUser;
 use App\Models\OrganizationParameter;
-use App\Models\Modules;
-use App\Models\ClassificationMaterial;
-use App\Models\ClassificationType;
-use App\Models\ClassificationParameter;
 
 use App\Helpers\HashId;
 
@@ -318,11 +314,8 @@ class UserController extends Controller
                 'username'      => 'required|string|max:191',
                 'email'         => 'required|string|email|max:191',
                 'mobile'        => 'required|min:8|max:15',
-                'password'      => 'nullable|min:'.appsetting('PASS_LENGTH_MIN').'|regex:'.appsetting('PASS_REGEX'),
+                'password'      => 'nullable|min:8',
                 // 'status'        => 'required'
-            ],
-            [
-                'regex'     => 'The :attribute must have :\n'.appsetting('PASS_REGEX_DESCRIPTION'),
             ]
         );
 
@@ -348,7 +341,7 @@ class UserController extends Controller
                         'username'          => $request->username,
                         'email'             => $request->email,
                         'mobile'            => $request->mobile,
-                        'api_token'         => Str::random(100),
+                        'api_token'         => str_random(100),
                         'status'            => 0, //pending email
                         'confirmation_code' => $code,
                         'deleted'           => 0,
