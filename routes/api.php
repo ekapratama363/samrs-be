@@ -18,3 +18,7 @@ Route::group(['prefix' => 'user', 'namespace' => 'Api'], function () {
     Route::post('/confirm-email/{id}', 'AuthController@confirmEmail');
     Route::post('/forgot-password', 'AuthController@forgotPassword');
 });
+
+Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'namespace' => 'Api'], function () {
+    Route::post('/user', 'Master\UserController@store');
+});
