@@ -3,12 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-<<<<<<< HEAD
-
-class Setting extends Model
-{
-    //
-=======
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Setting extends Model
@@ -52,5 +46,4 @@ class Setting extends Model
     {
         return $this->hasOne('App\Models\User', 'id', 'updated_by');
     }
->>>>>>> ruben_dev
 }

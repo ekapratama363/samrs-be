@@ -2,10 +2,6 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\Role;
-<<<<<<< HEAD
-
-=======
->>>>>>> ruben_dev
 class RoleTableSeeder extends Seeder
 {
     /**
@@ -20,11 +16,11 @@ class RoleTableSeeder extends Seeder
         );
 
         Role::firstOrCreate(
-<<<<<<< HEAD
             ['name' => 'member']
-=======
+        );
+
+        Role::firstOrCreate(
             ['name' => 'technician']
->>>>>>> ruben_dev
         );
     }
 }

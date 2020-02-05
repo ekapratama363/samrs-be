@@ -20,8 +20,8 @@ class CreateUserDetailsTable extends Migration
             $table->integer('status')->nullable()->default(1);
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('user_group_id')->references('id')->on('user_groups')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('user_group_id')->references('id')->on('user_groups')->onDelete('set null');
 
         });
     }

@@ -21,8 +21,8 @@ class CreateUserGroupsTable extends Migration
             $table->bigInteger('updated_by')->unsigned()->nullable();
             $table->boolean('deleted')->default(false);
             $table->timestamps();
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
 
         });
     }

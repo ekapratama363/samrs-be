@@ -20,6 +20,7 @@ use App\Models\UserProfile;
 use App\Models\Role;
 use App\Models\RoleUser;
 use App\Models\OrganizationParameter;
+use App\Models\Modules;
 
 use App\Helpers\HashId;
 
@@ -315,7 +316,6 @@ class UserController extends Controller
                 'email'         => 'required|string|email|max:191',
                 'mobile'        => 'required|min:8|max:15',
                 'password'      => 'nullable|min:8',
-                // 'status'        => 'required'
             ]
         );
 

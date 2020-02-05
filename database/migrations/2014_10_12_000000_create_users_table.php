@@ -14,37 +14,21 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-<<<<<<< HEAD
-            $table->increments('id');
-            $table->string('firstname');
-            $table->string('lastname')->nullable();
-            $table->string('username')->nullable();
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('mobile')->nullable();
-            $table->string('api_token', 100)->unique();
-            $table->boolean('deleted')->default(0);
-            $table->integer('worng_pass')->nullable();
-            $table->integer('status')->nullable();
-            $table->string('confirmation_code', 50)->nullable();
-            $table->string('last_request_time')->nullable();
-=======
             $table->bigIncrements('id');
             $table->string('firstname');
-            $table->string('lastname');
-            $table->string('username')->unique();
+            $table->string('lastname')->nullable();
+            $table->string('username')->unique()->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->string('wrong_pass')->nullable();
-            $table->integer('status')->default(0);
-            $table->string('api_token', 100)->unique();
+            $table->integer('status')->default(0)->nullable();
+            $table->string('api_token', 100)->unique()->nullable();
             $table->string('mobile')->nullable();
             $table->string('confirmation_code', 50)->nullable();
-            $table->bigInteger('created_by');
-            $table->bigInteger('updated_by');
+            $table->bigInteger('created_by')->nullable();
+            $table->bigInteger('updated_by')->nullable();
             $table->string('last_request_time')->nullable();
             $table->boolean('deleted')->default(false);
->>>>>>> ruben_dev
             $table->rememberToken();
             $table->timestamps();
         });
