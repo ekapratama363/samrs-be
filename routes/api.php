@@ -26,6 +26,10 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
     Route::get('/user', 'Master\UserController@index');
     Route::get('/user-list', 'Master\UserController@list');
     Route::post('/user', 'Master\UserController@store');
+<<<<<<< HEAD
+});
+
+=======
     Route::get('/user/{id}', 'Master\UserController@show');
     Route::get('/user-log/{id}', 'Master\UserController@log');
     Route::put('/user/{id}', 'Master\UserController@update');
@@ -50,4 +54,5 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'user', 'nam
     Route::get('/module-object-list', 'ProfileController@moduleList');
 });
 
+>>>>>>> master
 

@@ -4,7 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
+<<<<<<< HEAD
     "content-hash": "b3c431bfd6034a2b31f8641d9c57523d",
+=======
+    "content-hash": "969de23b018bd255a4b9a90616dd0256",
+>>>>>>> ruben_dev
+=======
+    "content-hash": "b3c431bfd6034a2b31f8641d9c57523d",
+>>>>>>> master
     "packages": [
         {
             "name": "anahkiasen/underscore-php",
@@ -57,6 +65,10 @@
             "time": "2015-05-16T19:24:58+00:00"
         },
         {
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> master
             "name": "barryvdh/laravel-dompdf",
             "version": "v0.8.5",
             "source": {
@@ -113,6 +125,11 @@
             "time": "2019-08-23T14:30:33+00:00"
         },
         {
+<<<<<<< HEAD
+=======
+>>>>>>> ruben_dev
+=======
+>>>>>>> master
             "name": "dnoegel/php-xdg-base-dir",
             "version": "v0.1.1",
             "source": {
@@ -2500,6 +2517,10 @@
             "time": "2019-12-17T08:18:51+00:00"
         },
         {
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> master
             "name": "sabberworm/php-css-parser",
             "version": "8.3.0",
             "source": {
@@ -2545,6 +2566,11 @@
             "time": "2019-02-22T07:42:52+00:00"
         },
         {
+<<<<<<< HEAD
+=======
+>>>>>>> ruben_dev
+=======
+>>>>>>> master
             "name": "spatie/laravel-activitylog",
             "version": "3.9.1",
             "source": {

@@ -110,7 +110,11 @@ class SettingsTableSeeder extends Seeder
         );
         Setting::firstOrCreate(
             ['key' => 'WEB_URL'],
+<<<<<<< HEAD
+            ['key' => 'WEB_URL', 'value' => 'http://localhost:8000/#', 'sort' => 22]
+=======
             ['key' => 'WEB_URL', 'value' => 'https://izora.mindaperdana.com/#', 'sort' => 22]
+>>>>>>> master
         );
         Setting::firstOrCreate(
             ['key' => 'VENDOR_INVOICE_DIFF'],

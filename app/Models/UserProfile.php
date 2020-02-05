@@ -24,7 +24,18 @@ class UserProfile extends Model
     }
 
     protected $fillable = [
+<<<<<<< HEAD
+        'user_id', 'address', 'phone_number', 'photo'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
+=======
         'user_id', 'address', 'phone', 'photo', 'value'
     ];
 
+>>>>>>> master
 }

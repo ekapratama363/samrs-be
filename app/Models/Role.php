@@ -17,7 +17,11 @@ class Role extends Model
     protected static $logFillable = true;
     protected static $logName = 'ROLE';
     protected static $logOnlyDirty = false;
+<<<<<<< HEAD
+    
+=======
 
+>>>>>>> master
     public function getDescriptionForEvent(string $eventName): string {
         return "Table \"{$this->table}\" is {$eventName}";
     }
