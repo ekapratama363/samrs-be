@@ -22,12 +22,7 @@ class CreateUserProfilesTable extends Migration
             $table->string('value')->nullable();
             $table->timestamps();
 
-<<<<<<< HEAD:database/migrations/2020_02_04_144757_create_user_profiles_table.php
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-
-=======
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
->>>>>>> master:database/migrations/2020_02_05_061526_create_user_profiles_table.php
         });
     }
 
