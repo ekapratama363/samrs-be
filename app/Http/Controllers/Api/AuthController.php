@@ -237,11 +237,7 @@ class AuthController extends Controller
 
         $this->validate(request(),
             [
-<<<<<<< HEAD
-                'password' => 'required|min:'.appsetting('PASS_LENGTH_MIN').'|regex:'.appsetting('PASS_REGEX'),
-=======
                 'password'      => 'required|confirmed|min:'.appsetting('PASS_LENGTH_MIN').'|regex:'.appsetting('PASS_REGEX'),
->>>>>>> master
             ],
             [
                 'regex' => 'The :attribute must have :\n'.appsetting('PASS_REGEX_DESCRIPTION'),
