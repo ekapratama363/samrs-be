@@ -14,7 +14,7 @@ class CreatePasswordHistoriesTable extends Migration
     public function up()
     {
         Schema::create('password_histories', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->integer('user_id');
             $table->string('password');
             $table->timestamps();

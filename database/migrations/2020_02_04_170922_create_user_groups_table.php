@@ -14,11 +14,11 @@ class CreateUserGroupsTable extends Migration
     public function up()
     {
         Schema::create('user_groups', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->string('code');
             $table->string('description');
-            $table->bigInteger('created_by')->unsigned()->nullable();
-            $table->bigInteger('updated_by')->unsigned()->nullable();
+            $table->integer('created_by')->unsigned()->nullable();
+            $table->integer('updated_by')->unsigned()->nullable();
             $table->boolean('deleted')->default(false);
             $table->timestamps();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');

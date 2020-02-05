@@ -14,7 +14,7 @@ class UserLoginHistories extends Migration
     public function up()
     {
         Schema::create('user_login_histories', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable();
             $table->string('ip_address')->nullable();
             $table->string('device')->nullable();

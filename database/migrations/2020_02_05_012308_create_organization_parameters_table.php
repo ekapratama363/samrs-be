@@ -14,12 +14,12 @@ class CreateOrganizationParametersTable extends Migration
     public function up()
     {
         Schema::create('organization_parameters', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->string('key');//plant, storage, movement-type, procurement-group, valuation-group
             $table->json('value')->nullable();
-            $table->bigInteger('role_id')->unsigned();
-            $table->bigInteger('created_by')->unsigned()->nullable();
-            $table->bigInteger('updated_by')->unsigned()->nullable();
+            $table->integer('role_id')->unsigned();
+            $table->integer('created_by')->unsigned()->nullable();
+            $table->integer('updated_by')->unsigned()->nullable();
             $table->timestamps();
 
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
