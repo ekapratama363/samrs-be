@@ -22,3 +22,10 @@ Route::group(['prefix' => 'user', 'namespace' => 'Api'], function () {
 Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'namespace' => 'Api'], function () {
     Route::post('/user', 'Master\UserController@store');
 });
+
+// Guest User API
+Route::post('/login', 'Api\Auth\AuthController@login');
+Route::post('/confirm-email/{id}', 'Api\Auth\AuthController@confirmEmail');
+Route::post('/forgot-password', 'Api\Auth\AuthController@forgotPassword');
+
+
