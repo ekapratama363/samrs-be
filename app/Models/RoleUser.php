@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+<<<<<<< HEAD
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class RoleUser extends Model
@@ -27,4 +28,10 @@ class RoleUser extends Model
     public function getDescriptionForEvent(string $eventName): string {
         return "Table \"{$this->table}\" is {$eventName}";
     }
+=======
+
+class RoleUser extends Model
+{
+    //
+>>>>>>> ruben_dev
 }

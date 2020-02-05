@@ -7,7 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class OrganizationParameter extends Model
 {
     protected $fillable = [
+<<<<<<< HEAD
 		'key', 'value', 'role_id', 'created_by', 'updated_by'
+=======
+        'key',
+        'value',
+        'role_id',
+        'created_by',
+        'updated_by'
+>>>>>>> ruben_dev
 	];
 
     public function role()

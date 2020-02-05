@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Modules extends Model
 {
+<<<<<<< HEAD
     protected $fillable = [
 		'object', 'description', 'created_by', 'updated_by'
 	];
@@ -24,4 +25,7 @@ class Modules extends Model
     {
         return $this->hasOne('App\Models\User', 'id', 'updated_by');
     }
+=======
+    //
+>>>>>>> ruben_dev
 }

@@ -3,45 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-<<<<<<< HEAD
-
-class Setting extends Model
-{
-    //
-=======
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Setting extends Model
+class UserGroup extends Model
 {
     use LogsActivity;
 
-    /**
-     * Enable logging all changes in this model
-     *
-     * @var boolean
-     */
     protected static $logFillable = true;
-
-    // Fields that needs to be recorded
-    protected static $logAttributes = ['value', 'updated_by'];
-
-    // Logging name
-    protected static $logName = 'GLOBAL_SETTING';
-
-    // Logging for edited field only
+    protected static $logName = 'UserGroup';
     protected static $logOnlyDirty = false;
-
-    protected $primaryKey = 'key';
-    public $timestamps  = true ;
-    public $incrementing = false;
-
-    protected $fillable = [
-        'value', 'created_by', 'updated_by'
-    ];
 
     public function getDescriptionForEvent(string $eventName): string {
         return "Table \"{$this->table}\" is {$eventName}";
     }
+
+    protected $fillable = [
+        'code', 'description', 'created_by', 'updated_by', 'deleted'
+    ];
 
     public function createdBy()
     {
@@ -52,5 +30,4 @@ class Setting extends Model
     {
         return $this->hasOne('App\Models\User', 'id', 'updated_by');
     }
->>>>>>> ruben_dev
 }

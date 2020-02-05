@@ -12,6 +12,10 @@ class RoleComposite extends Model
 
 	public function child_role()
     {
+<<<<<<< HEAD
         return $this->belongsTo('App\Models\role', 'child_id');
+=======
+        return $this->belongsTo('App\Models\Role', 'child_id');
+>>>>>>> ruben_dev
     }
 }
