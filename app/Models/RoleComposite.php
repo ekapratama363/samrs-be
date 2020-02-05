@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class RoleComposite extends Model
 {
-
     protected $fillable = [
 		'parent_id', 'child_id'
 	];

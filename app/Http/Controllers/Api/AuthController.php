@@ -237,7 +237,7 @@ class AuthController extends Controller
 
         $this->validate(request(),
             [
-                'password' => 'required|confirmed|min:'.appsetting('PASS_LENGTH_MIN').'|regex:'.appsetting('PASS_REGEX'),
+                'password'      => 'required|confirmed|min:'.appsetting('PASS_LENGTH_MIN').'|regex:'.appsetting('PASS_REGEX'),
             ],
             [
                 'regex' => 'The :attribute must have :\n'.appsetting('PASS_REGEX_DESCRIPTION'),
@@ -256,7 +256,8 @@ class AuthController extends Controller
             ], 422);
         }
 
-        // send mail succes confirm email if account is new
+
+        // // send mail succes confirm email if account is new
         if ($user->status == 0) {
             \Mail::send(new \App\Mail\SuccessCreateAccount($user));
         } else if ($user->status == 3) {
@@ -269,7 +270,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password, ['rounds' => 10])
         ]);
 
-        // record to password history table
+        // // record to password history table
         \App\Models\PasswordHistory::create(['user_id' => $user->id, 'password' => $user->password]);
 
         return response()->json([

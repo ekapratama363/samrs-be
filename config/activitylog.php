@@ -43,4 +43,3 @@ return [
      */
     'table_name' => 'activity_logs',
 ];
-

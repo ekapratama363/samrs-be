@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Master;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Auth;
 use Storage;
@@ -27,8 +26,12 @@ use App\Models\ClassificationParameter;
 
 use App\Helpers\HashId;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\UsersMatrixExport;
+
 class UserController extends Controller
 {
+
     public function index()
     {
         Auth::user()->cekRoleModules(['user-view']);
@@ -113,7 +116,7 @@ class UserController extends Controller
             $user->whereHas('roles', function ($q) use ($role) {
                 for ($i=0; $i<count(request()->input('roles')); $i++) {
                     if ($i==0) {
-                        $q->where('roles.id', $role[$i]);                            
+                        $q->where('roles.id', $role[$i]);
                     } else {
                         $q->orWhere('roles.id', $role[$i]);
                     }
@@ -230,7 +233,7 @@ class UserController extends Controller
             $user->whereHas('roles', function ($q) use ($role) {
                 for ($i=0; $i<count(request()->input('roles')); $i++) {
                     if ($i==0) {
-                        $q->where('roles.id', $role[$i]);                            
+                        $q->where('roles.id', $role[$i]);
                     } else {
                         $q->orWhere('roles.id', $role[$i]);
                     }
@@ -262,14 +265,14 @@ class UserController extends Controller
                     $user->select('users.*', 'departments.code');
                     $user->orderBy('departments.id',$sort_order);
                 break;
-                
+
                 case 'last_login_date':
                     $user->join('user_login_histories','user_login_histories.user_id','=','users.id');
                     $user->select('users.*');
                     $user->orderBy('user_login_histories.created_at',$sort_order);
                 break;
 
-                case 'last_ip_address': 
+                case 'last_ip_address':
                     $user->join('user_login_histories','user_login_histories.user_id','=','users.id');
                     $user->select('users.*');
                     $user->orderBy('user_login_histories.ip_address',$sort_order);
@@ -348,7 +351,7 @@ class UserController extends Controller
                         'username'          => $request->username,
                         'email'             => $request->email,
                         'mobile'            => $request->mobile,
-                        'api_token'         => Str::random(100),
+                        'api_token'         => str_random(100),
                         'status'            => 0, //pending email
                         'confirmation_code' => $code,
                         'deleted'           => 0,
@@ -420,7 +423,7 @@ class UserController extends Controller
             \Mail::send(new \App\Mail\RegisterMail($save, $code));
 
             \DB::commit();
-            
+
             $save->id_hash = HashId::encode($save->id);
 
             return $save;
@@ -522,7 +525,7 @@ class UserController extends Controller
 
         $user = User::findOrFail($id);
 
-        $this->validate(request(), 
+        $this->validate(request(),
             [
                 'firstname'     => 'required|string|max:191',
                 'lastname'      => 'nullable|string|max:191',
@@ -805,7 +808,7 @@ class UserController extends Controller
 
         // Store User Profile Params
         $parameter = $request->input('parameter');
-        
+
         if (is_array($parameter) || is_object($parameter))
         {
             foreach($parameter as $key => $value)
@@ -911,7 +914,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $parameter = $request->input('parameter');
-        
+
         if (is_array($parameter) || is_object($parameter))
         {
             foreach($parameter as $key => $value)
