@@ -7,22 +7,22 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class RegisterMail extends Mailable implements ShouldQueue
+class SubmitReservation extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     public $user;
-    public $code;
+    public $reservation;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user, $code)
+    public function __construct($user, $reservation)
     {
         $this->user = $user;
-        $this->code = $code;
+        $this->reservation = $reservation;
     }
 
     /**
@@ -32,13 +32,12 @@ class RegisterMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('email.register')
-        // ->text('mails.user_register_plain')
+        return $this->view('email.reservation.submit')
         ->with([
             'user' => $this->user,
-            'code' => $this->code
+            'reservation' => $this->reservation
         ])->to(
             $this->user->email
-        )->subject('Account Confirmation');
+        )->subject('Reservation '.$this->reservation->reservation_code.' submited');
     }
 }

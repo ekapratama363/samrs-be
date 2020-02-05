@@ -7,22 +7,22 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class RegisterMail extends Mailable implements ShouldQueue
+class ApprovalPONotification extends Mailable  implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $user;
-    public $code;
+    public $vendor;
+    public $po;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user, $code)
+    public function __construct($vendor, $po)
     {
-        $this->user = $user;
-        $this->code = $code;
+        $this->vendor = $vendor;
+        $this->po = $po;
     }
 
     /**
@@ -32,13 +32,12 @@ class RegisterMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('email.register')
-        // ->text('mails.user_register_plain')
+        return $this->view('email.po.approval_notif')
         ->with([
-            'user' => $this->user,
-            'code' => $this->code
+            'vendor' => $this->vendor,
+            'po' => $this->po
         ])->to(
-            $this->user->email
-        )->subject('Account Confirmation');
+            $this->vendor->email
+        )->subject('Purchase Order '.$this->po->po_doc_no.' already approved');
     }
 }

@@ -14,14 +14,13 @@ class CreateRoleCompositesTable extends Migration
     public function up()
     {
         Schema::create('role_composites', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('parent_id')->unsigned()->nullable();
-            $table->bigInteger('child_id')->unsigned()->nullable();
+            $table->increments('id');
+            $table->integer('parent_id')->unsigned()->nullable();
+            $table->integer('child_id')->unsigned()->nullable();
             $table->timestamps();
 
             $table->foreign('parent_id')->references('id')->on('roles')->onDelete('set null');
             $table->foreign('child_id')->references('id')->on('roles')->onDelete('set null');
-
         });
     }
 

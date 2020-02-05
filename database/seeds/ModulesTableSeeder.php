@@ -1,7 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
+<<<<<<< HEAD
+=======
 use Illuminate\Database\Seeder;
+>>>>>>> master
+use Illuminate\Support\Facades\DB;
 use App\Models\Modules;
 use App\Models\Role;
 
@@ -77,6 +80,7 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Role - Edit']
         );
 
+<<<<<<< HEAD
 
 
         // Location Type
@@ -1228,6 +1232,8 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Accounting Procedure - Create']
         );
 
+=======
+>>>>>>> master
         //Assign All Module To Admin Role
         $role_admin = Role::where(DB::raw("LOWER(name)"), 'admin')->first();
         $modules    = Modules::all()->pluck('id');

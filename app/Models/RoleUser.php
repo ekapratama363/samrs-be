@@ -23,7 +23,7 @@ class RoleUser extends Model
     protected static $logFillable = true;
     protected static $logName = 'USER_ROLE';
     protected static $logOnlyDirty = false;
-    
+
     public function getDescriptionForEvent(string $eventName): string {
         return "Table \"{$this->table}\" is {$eventName}";
     }

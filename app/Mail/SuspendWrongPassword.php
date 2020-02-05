@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class RegisterMail extends Mailable implements ShouldQueue
+class SuspendWrongPassword extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -32,13 +32,12 @@ class RegisterMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('email.register')
-        // ->text('mails.user_register_plain')
+        return $this->view('email.suspend_info')
         ->with([
             'user' => $this->user,
             'code' => $this->code
         ])->to(
             $this->user->email
-        )->subject('Account Confirmation');
+        )->subject('Your Izora account has been temporarily suspended');
     }
 }

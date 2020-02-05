@@ -17,7 +17,11 @@ class Role extends Model
     protected static $logFillable = true;
     protected static $logName = 'ROLE';
     protected static $logOnlyDirty = false;
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> master
     public function getDescriptionForEvent(string $eventName): string {
         return "Table \"{$this->table}\" is {$eventName}";
     }
@@ -33,10 +37,11 @@ class Role extends Model
 				->withTimestamps();
 	}
 
-	public function modules()
+    public function modules()
 	{
 		return $this->belongsToMany('App\Models\Modules', 'modules_roles', 'role_id', 'modules_id');
 	}
+
 
 	public function organization_parameter()
     {

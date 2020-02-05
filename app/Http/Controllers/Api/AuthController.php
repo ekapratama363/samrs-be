@@ -56,7 +56,7 @@ class AuthController extends Controller
                         'status'    => LOGIN_FAILED_INACTIVE
                     ]
                 );
-                
+
                 if ($user->status === 0) {
                     return response()->json([
                         'message' => 'This Account is pending email, Please Check your email for instruction'
@@ -83,7 +83,7 @@ class AuthController extends Controller
 
             if ($authenticated) {
                 $user = Auth::user();
-                
+
                 $user->timestamps = false;
                 $user->last_request_time = time();
                 $user->api_token = str_random(100);
@@ -181,7 +181,7 @@ class AuthController extends Controller
                     'email' => $user->email,
                     'password' => request()->password
                 ]);
-                
+
                 $user->timestamps = false;
                 $user->last_request_time = time();
                 $user->api_token = str_random(100);
@@ -237,7 +237,11 @@ class AuthController extends Controller
 
         $this->validate(request(),
             [
+<<<<<<< HEAD
                 'password' => 'required|min:'.appsetting('PASS_LENGTH_MIN').'|regex:'.appsetting('PASS_REGEX'),
+=======
+                'password'      => 'required|confirmed|min:'.appsetting('PASS_LENGTH_MIN').'|regex:'.appsetting('PASS_REGEX'),
+>>>>>>> master
             ],
             [
                 'regex' => 'The :attribute must have :\n'.appsetting('PASS_REGEX_DESCRIPTION'),
@@ -255,7 +259,8 @@ class AuthController extends Controller
             ], 422);
         }
 
-        // send mail succes confirm email if account is new
+
+        // // send mail succes confirm email if account is new
         if ($user->status == 0) {
             \Mail::send(new \App\Mail\SuccessCreateAccount($user));
         } else if ($user->status == 3) {
@@ -268,7 +273,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password, ['rounds' => 10])
         ]);
 
-        // record to password history table
+        // // record to password history table
         \App\Models\PasswordHistory::create(['user_id' => $user->id, 'password' => $user->password]);
 
         return response()->json([
@@ -366,4 +371,6 @@ class AuthController extends Controller
 
         return $is_login_all_failed && $login_log->count()==$failed_limit;
     }
+
+
 }

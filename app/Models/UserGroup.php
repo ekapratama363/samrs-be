@@ -9,6 +9,11 @@ class UserGroup extends Model
 {
     use LogsActivity;
 
+    /**
+     * Enable logging all changes in this model
+     *
+     * @var boolean
+     */
     protected static $logFillable = true;
     protected static $logName = 'UserGroup';
     protected static $logOnlyDirty = false;

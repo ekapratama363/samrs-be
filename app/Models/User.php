@@ -92,6 +92,29 @@ class User extends Authenticatable implements JWTSubject
                 ->withTimestamps();
     }
 
+<<<<<<< HEAD
+=======
+    public function authorizeRoles($roles)
+    {
+        if (is_array($roles))
+        {
+            return $this->hasAnyRole($roles) ||
+                abort(401, 'This action is unauthorized.');
+        }
+        return $this->hasRole($roles) ||
+            abort(401, 'This action is unauthorized.');
+    }
+
+    public function authorizeMenu($roles)
+    {
+        if (is_array($roles))
+        {
+            return $this->hasAnyRole($roles);
+        }
+        return $this->hasRole($roles);
+    }
+
+>>>>>>> master
     public function hasAnyRole($roles)
     {
         return null !== $this->roles()->whereIn('name', $roles)->first();
@@ -102,6 +125,7 @@ class User extends Authenticatable implements JWTSubject
         return null !== $this->roles()->where('name', $role)->first();
     }
 
+<<<<<<< HEAD
     public function authorizeRoles($roles)
     {
         if (is_array($roles))
@@ -118,11 +142,31 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasRole($roles);
     }
 
+=======
+    public function detail()
+    {
+        return $this->hasOne('App\Models\UserDetail', 'user_id');
+    }
+
+    public function profile()
+    {
+        return $this->hasMany('App\Models\UserProfile', 'user_id');
+    }
+
+    public function login_history()
+    {
+        return $this->hasMany('App\Models\UserLoginHistory', 'user_id');
+    }
+>>>>>>> master
 
     public function cekRoleModules($object)
     {
         $role_id = RoleUser::where('user_id', $this->id)->pluck('role_id');
 
+<<<<<<< HEAD
+=======
+        // extract all role include composite role
+>>>>>>> master
         $all_role = [];
         foreach($role_id as $role) {
             $role_data = Role::find($role);
@@ -141,15 +185,26 @@ class User extends Authenticatable implements JWTSubject
         }
 
         $modules_id = ModulesRole::whereIn('role_id', $all_role)->pluck('modules_id');
+<<<<<<< HEAD
         $modules = Modules::whereIn('id', $modules_id)->where('object', $object)->first();
         $object_name = Modules::where('object', $object)->first();
         return $modules || abort(403, $object_name->description);
+=======
+
+        $modules = Modules::whereIn('id', $modules_id)->where('object', $object)->first();
+
+        $object_name = Modules::where('object', $object)->first();
+
+        return $modules ||
+            abort(403, $object_name->description);
+>>>>>>> master
     }
 
     public function roleOrgParam($key)
     {
         $role_id = RoleUser::where('user_id', $this->id)->pluck('role_id');
 
+<<<<<<< HEAD
         $all_role = [];
         foreach($role_id as $role)
         {
@@ -168,6 +223,22 @@ class User extends Authenticatable implements JWTSubject
             }
             else
             {
+=======
+        // extract all role include composite role
+        $all_role = [];
+        foreach($role_id as $role) {
+            $role_data = Role::find($role);
+
+            if ($role_data->composite) {
+                $child_id = RoleComposite::where('parent_id', $role)->pluck('child_id');
+
+                if (count($child_id) > 0) {
+                    foreach ($child_id as $child) {
+                        $all_role[] = $child;
+                    }
+                }
+            } else {
+>>>>>>> master
                 $all_role[] = $role;
             }
         }
@@ -175,6 +246,7 @@ class User extends Authenticatable implements JWTSubject
         $org_param = OrganizationParameter::whereIn('role_id', $all_role)->where('key', $key)->pluck('value');
 
         if (count($org_param) > 0) {
+<<<<<<< HEAD
             if (in_array("[null]", json_decode($org_param)))
             {
                 $data = [];
@@ -183,17 +255,29 @@ class User extends Authenticatable implements JWTSubject
                 $param = [];
                 foreach ($org_param as $data)
                 {
+=======
+            if (in_array("[null]", json_decode($org_param))) {
+                $data = [];
+            } else {
+                $param = [];
+                foreach ($org_param as $data) {
+>>>>>>> master
                     $param[] = array_map('intval', json_decode($data));
                 }
                 $data = call_user_func_array("array_merge", $param);
             }
+<<<<<<< HEAD
         }
         else {
+=======
+        } else {
+>>>>>>> master
             $data = [];
         }
 
         return $data;
     }
+<<<<<<< HEAD
 
     public function detail()
     {
@@ -210,4 +294,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany('App\Models\UserLoginHistory', 'user_id');
     }
 
+=======
+>>>>>>> master
 }

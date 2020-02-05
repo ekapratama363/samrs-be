@@ -8,6 +8,7 @@ class OrganizationParameter extends Model
 {
     protected $fillable = [
 <<<<<<< HEAD
+<<<<<<< HEAD
 		'key', 'value', 'role_id', 'created_by', 'updated_by'
 =======
         'key',
@@ -16,6 +17,9 @@ class OrganizationParameter extends Model
         'created_by',
         'updated_by'
 >>>>>>> ruben_dev
+=======
+		'key', 'value', 'role_id', 'created_by', 'updated_by'
+>>>>>>> master
 	];
 
     public function role()
