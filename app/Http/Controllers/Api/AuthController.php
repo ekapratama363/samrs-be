@@ -56,7 +56,7 @@ class AuthController extends Controller
                         'status'    => LOGIN_FAILED_INACTIVE
                     ]
                 );
-                
+
                 if ($user->status === 0) {
                     return response()->json([
                         'message' => 'This Account is pending email, Please Check your email for instruction'
@@ -83,7 +83,7 @@ class AuthController extends Controller
 
             if ($authenticated) {
                 $user = Auth::user();
-                
+
                 $user->timestamps = false;
                 $user->last_request_time = time();
                 $user->api_token = str_random(100);
@@ -181,7 +181,7 @@ class AuthController extends Controller
                     'email' => $user->email,
                     'password' => request()->password
                 ]);
-                
+
                 $user->timestamps = false;
                 $user->last_request_time = time();
                 $user->api_token = str_random(100);
@@ -367,4 +367,6 @@ class AuthController extends Controller
 
         return $is_login_all_failed && $login_log->count()==$failed_limit;
     }
+
+
 }

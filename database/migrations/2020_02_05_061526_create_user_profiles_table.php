@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UserLoginHistories extends Migration
+class CreateUserProfilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class UserLoginHistories extends Migration
      */
     public function up()
     {
-        Schema::create('user_login_histories', function (Blueprint $table) {
+        Schema::create('user_profiles', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable();
-            $table->string('ip_address')->nullable();
-            $table->string('device')->nullable();
-            $table->string('os')->nullable();
-            $table->string('imei')->nullable();
-            $table->string('imsi')->nullable();
+            $table->longText('address')->nullable();
+            $table->string('phone')->nullable();
+            $table->longText('photo')->nullable();
+            $table->string('value')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -34,6 +33,6 @@ class UserLoginHistories extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_login_histories');
+        Schema::dropIfExists('user_profiles');
     }
 }

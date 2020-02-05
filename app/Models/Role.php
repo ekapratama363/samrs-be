@@ -28,9 +28,10 @@ class Role extends Model
     }
 
     public function modules()
-    {
-        return $this->belongsToMany('Aapp\Models\Modules','modules_rules', 'role_id', 'module_id');
-    }
+	{
+		return $this->belongsToMany('App\Models\Modules', 'modules_roles', 'role_id', 'modules_id');
+	}
+
 
     public function organization_parameter()
     {

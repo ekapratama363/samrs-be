@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class UserProfile extends Model
+class RoleUser extends Model
 {
     use LogsActivity;
+
+    protected $table = 'role_users';
+
+    protected $fillable = [
+        'role_id', 'user_id', 'created_by', 'updated_by'
+    ];
 
     /**
      * Enable logging all changes in this model
@@ -16,15 +21,10 @@ class UserProfile extends Model
      * @var boolean
      */
     protected static $logFillable = true;
-    protected static $logName = 'UserProfile';
+    protected static $logName = 'USER_ROLE';
     protected static $logOnlyDirty = false;
 
     public function getDescriptionForEvent(string $eventName): string {
         return "Table \"{$this->table}\" is {$eventName}";
     }
-
-    protected $fillable = [
-        'user_id', 'address', 'phone', 'photo', 'value'
-    ];
-
 }

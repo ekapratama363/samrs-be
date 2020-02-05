@@ -4,12 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Storage;
 
 class UserDetail extends Model
 {
     use LogsActivity;
 
+    /**
+     * Enable logging all changes in this model
+     *
+     * @var boolean
+     */
     protected static $logFillable = true;
     protected static $logName = 'UserDetail';
     protected static $logOnlyDirty = false;
@@ -29,11 +33,31 @@ class UserDetail extends Model
 
     public function getPhotoUrlFullAttribute()
     {
-        if($this->photo && Storage::disk('public')->exists($this->photo)){
-            return Storage::disk('public')->url($this->photo);
-        }else {
+        if ($this->photo && \Storage::disk('public')->exists($this->photo)) {
+            return \Storage::disk('public')->url($this->photo);
+        } else {
             return null;
         }
+    }
+
+    public function location()
+    {
+        return $this->belongsTo('App\Models\Location', 'location_id');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo('App\Models\Company', 'company_id');
+    }
+
+    public function department()
+    {
+        return $this->belongsTo('App\Models\Department', 'department_id');
+    }
+
+    public function cost_center()
+    {
+        return $this->belongsTo('App\Models\CostCenter', 'cost_center_id');
     }
 
     public function user()
@@ -51,3 +75,4 @@ class UserDetail extends Model
         return $this->belongsTo('App\Models\User', 'supervisor');
     }
 }
+
