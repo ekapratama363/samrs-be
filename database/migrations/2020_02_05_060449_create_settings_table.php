@@ -16,11 +16,13 @@ class CreateSettingsTable extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->string('key');
             $table->text('value');
-            $table->integer('updated_by')->unsigned()->nullable();
-            $table->timestamps();
-
             $table->primary('key');
-            $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
+            $table->integer('sort')->nullable();
+            $table->bigInteger('updated_by')->unsigned()->nullable();
+            $table->bigInteger('created_by')->unsigned()->nullable();            
+            $table->timestamps();
+            
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
         });
     }

@@ -14,12 +14,12 @@ class CreateUserDetailsTable extends Migration
     public function up()
     {
         Schema::create('user_details', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->unsigned()->nullable();
-            $table->integer('user_group_id')->unsigned()->nullable();
-            // $table->integer('location_id')->unsigned()->nullable();
-            // $table->integer('company_id')->unsigned()->nullable();
-            // $table->integer('supervisor')->unsigned()->nullable();
+            $table->bigIncrements('id');
+            $table->bigInteger('user_id')->unsigned()->nullable();
+            $table->bigInteger('user_group_id')->unsigned()->nullable();
+            // $table->bigInteger('location_id')->unsigned()->nullable();
+            // $table->bigInteger('company_id')->unsigned()->nullable();
+            // $table->bigInteger('supervisor')->unsigned()->nullable();
             $table->integer('cost_center')->unsigned()->nullable();
             $table->string('photo')->nullable();
             $table->string('departement')->nullable();

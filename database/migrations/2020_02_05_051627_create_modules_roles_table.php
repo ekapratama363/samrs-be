@@ -14,9 +14,9 @@ class CreateModulesRolesTable extends Migration
     public function up()
     {
         Schema::create('modules_roles', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('role_id')->unsigned();
-            $table->integer('modules_id')->unsigned();
+            $table->bigIncrements('id');
+            $table->bigInteger('role_id')->unsigned();
+            $table->bigInteger('modules_id')->unsigned();
 
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->foreign('modules_id')->references('id')->on('modules')->onDelete('cascade');
