@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Plant extends Model
+class ReleaseObject extends Model
 {
     use LogsActivity;
 
@@ -15,7 +16,7 @@ class Plant extends Model
      * @var boolean
      */
     protected static $logFillable = true;
-    protected static $logName = 'Plant';
+    protected static $logName = 'ReleaseObject';
     protected static $logOnlyDirty = false;
 
     public function getDescriptionForEvent(string $eventName): string {
@@ -27,22 +28,15 @@ class Plant extends Model
         'description',
         'created_by',
         'updated_by',
-        'deleted',
-        'location_id',
-        'company_id'
+        'deleted'
 	];
 
-    public function location()
+	public function classification()
     {
-        return $this->belongsTo('App\Models\Location', 'location_id');
+        return $this->belongsTo('App\Models\ClassificationMaterial', 'classification_id');
     }
 
-    public function company()
-    {
-        return $this->belongsTo('App\Models\Company', 'company_id');
-    }
-
-	public function createdBy()
+    public function createdBy()
     {
         return $this->hasOne('App\Models\User', 'id', 'created_by');
     }

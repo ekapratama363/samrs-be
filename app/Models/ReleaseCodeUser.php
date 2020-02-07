@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Plant extends Model
+class ReleaseCodeUser extends Model
 {
     use LogsActivity;
 
@@ -15,7 +15,7 @@ class Plant extends Model
      * @var boolean
      */
     protected static $logFillable = true;
-    protected static $logName = 'Plant';
+    protected static $logName = 'ReleaseCodeUser';
     protected static $logOnlyDirty = false;
 
     public function getDescriptionForEvent(string $eventName): string {
@@ -23,26 +23,31 @@ class Plant extends Model
     }
 
     protected $fillable = [
-        'code',
-        'description',
+        'release_code_id',
+        'release_code_desc',
+        'release_group_id',
+        'user_id',
         'created_by',
         'updated_by',
-        'deleted',
-        'location_id',
-        'company_id'
+        'deleted'
 	];
 
-    public function location()
+	public function release_code()
     {
-        return $this->belongsTo('App\Models\Location', 'location_id');
+        return $this->belongsTo('App\Models\ReleaseCode', 'release_code_id');
     }
 
-    public function company()
+    public function release_group()
     {
-        return $this->belongsTo('App\Models\Company', 'company_id');
+        return $this->belongsTo('App\Models\ReleaseGroup', 'release_group_id');
     }
 
-	public function createdBy()
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
+    public function createdBy()
     {
         return $this->hasOne('App\Models\User', 'id', 'created_by');
     }

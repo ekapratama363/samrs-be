@@ -25,13 +25,15 @@ class ProfileController extends Controller
 {
     public function profile()
     {
-        $profile = Auth::user();
-
         return User::with(['detail', 'profile', 'roles'])
             ->with([
-                'detail.location', 'detail.company', 'detail.user_group', 'detail.supervisor', 'detail.department', 'detail.cost_center'
-            ])
-            ->find($profile->id);
+                'detail.location',
+                'detail.company',
+                'detail.user_group',
+                'detail.supervisor',
+                'detail.department',
+                'detail.cost_center'
+            ])->find(Auth::user()->id);
     }
 
     public function moduleList()
