@@ -149,13 +149,17 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
     Route::post('/release-strategy/{id}/add-release-code', 'Master\ReleaseStrategy\ReleaseStrategyController@addCode');
     Route::post('/release-strategy/{id}/delete-release-code', 'Master\ReleaseStrategy\ReleaseStrategyController@deleteCode');
 
-    // release strategy classification
+    /** Release Strategy Classification */
     Route::post('/release-strategy/{id}/classification', 'Master\ReleaseStrategy\ReleaseStrategyController@storeClassification');
 
-    // release status
+    /** Release Strategy Status */
     Route::get('/release-strategy/{id}/status', 'Master\ReleaseStrategy\ReleaseStrategyController@status');
     Route::post('/release-strategy/{id}/status', 'Master\ReleaseStrategy\ReleaseStrategyController@updateStatus');
 
+    /** Setting */
+    Route::get('/setting', 'Master\SettingController@index');
+    Route::get('/setting/{key}', 'Master\SettingController@show');
+    Route::post('/setting/{key}', 'Master\SettingController@update');
 
 });
 
