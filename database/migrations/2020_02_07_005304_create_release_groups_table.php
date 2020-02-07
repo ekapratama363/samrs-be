@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStorageConditionsTable extends Migration
+class CreateReleaseGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,19 @@ class CreateStorageConditionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('storage_conditions', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('code')->unique();
+        Schema::create('release_groups', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('code');
+            $table->string('object');
             $table->string('description');
-            $table->integer('created_by')->unsigned()->nullable();
-            $table->integer('updated_by')->unsigned()->nullable();
+            $table->bigInteger('classification_id')->unsigned()->nullable();
+            $table->boolean('active')->default(1);
+            $table->bigInteger('created_by')->unsigned()->nullable();
+            $table->bigInteger('updated_by')->unsigned()->nullable();
             $table->boolean('deleted')->default(0);
             $table->timestamps();
 
+            $table->foreign('classification_id')->references('id')->on('classification_materials')->onDelete('set null');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
         });
@@ -34,6 +38,6 @@ class CreateStorageConditionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('storage_conditions');
+        Schema::dropIfExists('release_groups');
     }
 }

@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class OrganizationParameter extends Model
 {
     protected $fillable = [
-		'key', 'value', 'role_id', 'created_by', 'updated_by'
+        'key',
+        'value',
+        'role_id',
+        'created_by',
+        'updated_by'
 	];
 
     public function role()
