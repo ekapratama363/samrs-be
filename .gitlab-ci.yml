@@ -7,7 +7,7 @@ devsrv:
   script:
     - cd /var/www/html/minda-backend-template/
     - git pull origin master
-    - composer install --no-dev
+    - composer install --ignore-platform-reqs
     - php artisan migrate --force
     - php artisan db:seed --class=ModulesTableSeeder --force
     - php artisan db:seed --class=ClassificationTypeTableSeeder --force
