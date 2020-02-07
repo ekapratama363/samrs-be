@@ -1,0 +1,15 @@
+stages:
+  - staging
+  - production
+
+devsrv:
+  stage: staging
+  script:
+    - cd /var/www/html/minda-backend-template/
+    - git pull origin master
+    - composer install --no-dev
+    - php artisan migrate --force
+    - php artisan db:seed --class=ModulesTableSeeder --force
+    - php artisan db:seed --class=ClassificationTypeTableSeeder --force
+  only:
+    - master
