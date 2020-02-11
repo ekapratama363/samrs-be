@@ -30,11 +30,7 @@ class SettingsTableSeeder extends Seeder
             ],
             ['key' => 'COMPANY_PHONE', 'value' => '', 'sort' => 3],
             ['key' => 'COMPANY_FAX', 'value' => '', 'sort' => 4],
-            [
-                'key' => 'THEME',
-                'value' => '',
-                'sort' => 5
-            ],
+            ['key' => 'THEME', 'value' => '{"name": "Cold Sapphire", "primary_color": "#0073dd", "secondary_color": "#1890ff"}', 'sort' => 5],
             ['key' => 'PASS_LENGTH_MIN', 'value' => '', 'sort' => 6],
             ['key' => 'HISTORY_PASS_KEEP', 'value' => '', 'sort' => 7],
             ['key' => 'PASS_CYCLE_LIMIT', 'value' => '', 'sort' => 8],
