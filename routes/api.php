@@ -94,7 +94,11 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
     Route::delete('/classification-type/{id}', 'Master\ClassificationTypeController@delete');
     Route::post('/multiple-delete-classification-type', 'Master\ClassificationTypeController@multipleDelete');
 
-
+     // Settings
+     Route::get('/setting', 'Master\SettingController@index');
+     Route::get('/setting/{key}', 'Master\SettingController@show');
+     Route::post('/setting/{key}', 'Master\SettingController@update');
+     
     /** MASTER - RELEASE STRATEGY */
     //Release Object
     Route::get('/release-object', 'Master\ReleaseStrategy\ReleaseObjectController@index');
