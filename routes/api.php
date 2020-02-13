@@ -98,7 +98,7 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
      Route::get('/setting', 'Master\SettingController@index');
      Route::get('/setting/{key}', 'Master\SettingController@show');
      Route::post('/setting/{key}', 'Master\SettingController@update');
-     
+
     /** MASTER - RELEASE STRATEGY */
     //Release Object
     Route::get('/release-object', 'Master\ReleaseStrategy\ReleaseObjectController@index');
@@ -153,13 +153,53 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
     Route::post('/release-strategy/{id}/add-release-code', 'Master\ReleaseStrategy\ReleaseStrategyController@addCode');
     Route::post('/release-strategy/{id}/delete-release-code', 'Master\ReleaseStrategy\ReleaseStrategyController@deleteCode');
 
-    // release strategy classification
+    /** Release Strategy Classification */
     Route::post('/release-strategy/{id}/classification', 'Master\ReleaseStrategy\ReleaseStrategyController@storeClassification');
 
-    // release status
+    /** Release Strategy Status */
     Route::get('/release-strategy/{id}/status', 'Master\ReleaseStrategy\ReleaseStrategyController@status');
     Route::post('/release-strategy/{id}/status', 'Master\ReleaseStrategy\ReleaseStrategyController@updateStatus');
 
+    /** Setting */
+    Route::get('/setting', 'Master\SettingController@index');
+    Route::get('/setting/{key}', 'Master\SettingController@show');
+    Route::post('/setting/{key}', 'Master\SettingController@update');
+
+
+    /** Location Type */
+    Route::get('/location-type', 'Master\LocationTypeController@index');
+    Route::get('/location-type-list', 'Master\LocationTypeController@list');
+    Route::post('/location-type', 'Master\LocationTypeController@store');
+    Route::get('/location-type/{id}', 'Master\LocationTypeController@show');
+    Route::get('/location-type-log/{id}', 'Master\LocationTypeController@log');
+    Route::post('/update-location-type/{id}', 'Master\LocationTypeController@update');
+    Route::delete('/location-type/{id}', 'Master\LocationTypeController@delete');
+    Route::post('/multiple-delete-location-type', 'Master\LocationTypeController@multipleDelete');
+
+    /** Plant */
+    Route::get('/plant', 'Master\PlantController@index');
+    Route::get('/plant-list', 'Master\PlantController@list');
+    Route::post('/plant', 'Master\PlantController@store');
+    Route::get('/plant/{id}', 'Master\PlantController@show');
+    Route::get('/plant-log/{id}', 'Master\PlantController@log');
+    Route::put('/plant/{id}', 'Master\PlantController@update');
+    Route::delete('/plant/{id}', 'Master\PlantController@delete');
+    Route::post('/multiple-delete-plant', 'Master\PlantController@multipleDelete');
+
+    /** Location */
+    Route::get('/company-list-by-type/{id}', 'Master\LocationController@getCompanyByType');
+    Route::get('/location', 'Master\LocationController@index');
+    Route::get('/location-list-hash', 'Master\LocationController@list');
+    Route::post('/location', 'Master\LocationController@store');
+    Route::get('/location/{id}', 'Master\LocationController@show');
+    Route::get('/location-log/{id}', 'Master\LocationController@log');
+    Route::put('/location/{id}', 'Master\LocationController@update');
+    Route::delete('/location/{id}', 'Master\LocationController@delete');
+    Route::post('/multiple-delete-location', 'Master\LocationController@multipleDelete');
+
+    Route::get('/location-list-by-plant/{id}', 'Master\LocationController@getLocationByPlant');
+    Route::get('/user-list-by-location/{id}', 'Master\LocationController@getUserByLocation');
+    Route::get('/location-list', 'Master\LocationController@getLocationList');
 
 });
 
