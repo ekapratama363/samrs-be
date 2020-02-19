@@ -18,8 +18,6 @@ Route::group(['prefix' => 'user', 'namespace' => 'Api'], function () {
     Route::post('/confirm-email/{id}', 'AuthController@confirmEmail');
     Route::post('/forgot-password', 'AuthController@forgotPassword');
 });
-//http://devsrv.mindaperdana.com/minda-backend-template/public/api//create-password/r27N6JEt67pYhJMW5iXeV0XlFa0V6Q
-// Authenticated User API (Master)
 Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'namespace' => 'Api'], function () {
     /* User Group */
     Route::get('/user-group', 'Master\UserGroupController@index');
