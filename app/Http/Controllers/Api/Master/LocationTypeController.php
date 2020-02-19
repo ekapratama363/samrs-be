@@ -90,7 +90,7 @@ class LocationTypeController extends Controller
     {
         Auth::user()->cekRoleModules(['location-type-create']);
 
-        $this->validate(request(),
+        $this->validate(request(), 
             [
                 // 'code' => 'required|unique:location_types,code',
                 // 'icon' => 'required',
@@ -236,7 +236,7 @@ class LocationTypeController extends Controller
 
         $locationType = LocationType::findOrFail($id);
 
-        $this->validate(request(),
+        $this->validate(request(), 
             [
                 'code' => 'required|max:4|regex:/^\S*$/|unique:location_types,code,'. $id .'',
                 'description' => 'required|max:30',
@@ -381,4 +381,3 @@ class LocationTypeController extends Controller
         }
     }
 }
-
