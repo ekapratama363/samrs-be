@@ -111,6 +111,13 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
     Route::delete('/classification-material/{id}', 'Master\ClassificationController@delete');
     Route::post('/multiple-delete-classification-mat', 'Master\ClassificationController@multipleDelete');
 
+    /* Classification Parameter */
+    Route::post('/classification-material/{id}/addparam', 'Master\ClassificationController@clasificationStoreParam');
+    Route::get('/classification-parameter/{id}', 'Master\ClassificationController@showClassificationParameter');
+    Route::put('/classification-parameter/{id}', 'Master\ClassificationController@updateClassificationParameter');
+    Route::delete('/classification-parameter/{id}', 'Master\ClassificationController@deleteClassificationParameter');
+    Route::post('/multiple-delete-classification-param', 'Master\ClassificationController@multipleDeleteClassificationParam');
+
     /* Location Type */
     Route::get('/location-type', 'Master\LocationTypeController@index');
     Route::get('/location-type-list', 'Master\LocationTypeController@list');
