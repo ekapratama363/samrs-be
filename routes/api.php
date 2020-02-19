@@ -18,9 +18,18 @@ Route::group(['prefix' => 'user', 'namespace' => 'Api'], function () {
     Route::post('/confirm-email/{id}', 'AuthController@confirmEmail');
     Route::post('/forgot-password', 'AuthController@forgotPassword');
 });
-
+//http://devsrv.mindaperdana.com/minda-backend-template/public/api//create-password/r27N6JEt67pYhJMW5iXeV0XlFa0V6Q
 // Authenticated User API (Master)
 Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'namespace' => 'Api'], function () {
+    /* User Group */
+    Route::get('/user-group', 'Master\UserGroupController@index');
+    Route::get('/user-group-list', 'Master\UserGroupController@list');
+    Route::post('/user-group', 'Master\UserGroupController@store');
+    Route::get('/user-group/{id}', 'Master\UserGroupController@show');
+    Route::get('/user-group-log/{id}', 'Master\UserGroupController@log');
+    Route::put('/user-group/{id}', 'Master\UserGroupController@update');
+    Route::delete('/user-group/{id}', 'Master\UserGroupController@delete');
+    Route::post('/multiple-delete-user-group', 'Master\UserGroupController@multipleDelete');
 
     /** Master User */
     Route::get('/user', 'Master\UserController@index');
@@ -93,6 +102,26 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
     Route::put('/classification-type/{id}', 'Master\ClassificationTypeController@update');
     Route::delete('/classification-type/{id}', 'Master\ClassificationTypeController@delete');
     Route::post('/multiple-delete-classification-type', 'Master\ClassificationTypeController@multipleDelete');
+
+    /* Classification Material */
+    Route::get('/classification-material', 'Master\ClassificationController@index');
+    Route::get('/classification-material-list', 'Master\ClassificationController@list');
+    Route::post('/classification-material', 'Master\ClassificationController@store');
+    Route::get('/classification-material/{id}', 'Master\ClassificationController@show');
+    Route::get('/classification-material-log/{id}', 'Master\ClassificationController@log');
+    Route::put('/classification-material/{id}', 'Master\ClassificationController@update');
+    Route::delete('/classification-material/{id}', 'Master\ClassificationController@delete');
+    Route::post('/multiple-delete-classification-mat', 'Master\ClassificationController@multipleDelete');
+
+    /* Location Type */
+    Route::get('/location-type', 'Master\LocationTypeController@index');
+    Route::get('/location-type-list', 'Master\LocationTypeController@list');
+    Route::post('/location-type', 'Master\LocationTypeController@store');
+    Route::get('/location-type/{id}', 'Master\LocationTypeController@show');
+    Route::get('/location-type-log/{id}', 'Master\LocationTypeController@log');
+    Route::post('/update-location-type/{id}', 'Master\LocationTypeController@update');
+    Route::delete('/location-type/{id}', 'Master\LocationTypeController@delete');
+    Route::post('/multiple-delete-location-type', 'Master\LocationTypeController@multipleDelete');
 
      // Settings
      Route::get('/setting', 'Master\SettingController@index');
