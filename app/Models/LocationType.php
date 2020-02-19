@@ -17,21 +17,13 @@ class LocationType extends Model
     protected static $logFillable = true;
     protected static $logName = 'LocationType';
     protected static $logOnlyDirty = false;
-
+    
     public function getDescriptionForEvent(string $eventName): string {
         return "Table \"{$this->table}\" is {$eventName}";
     }
 
     protected $fillable = [
-        'name',
-        'icon',
-        'zoom_level',
-        'zoom_level_end',
-        'created_by',
-        'updated_by',
-        'deleted',
-        'code',
-        'description'
+		'name', 'icon', 'zoom_level', 'zoom_level_end', 'created_by', 'updated_by', 'deleted', 'code', 'description'
 	];
 
     protected $appends = [
