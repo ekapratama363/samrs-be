@@ -17,8 +17,8 @@ class AlterLocationRemovePlant extends Migration
             $table->dropForeign(['plant_id']);
             $table->dropColumn('plant_id');
 
-            $table->dropForeign(['company_id']);
-            $table->dropColumn('company_id');
+            // $table->dropForeign(['company_id']);
+            // $table->dropColumn('company_id');
         });
     }
 
@@ -33,8 +33,8 @@ class AlterLocationRemovePlant extends Migration
             $table->bigInteger('plant_id')->unsigned()->nullable();
             $table->foreign('plant_id')->references('id')->on('plants')->onDelete('set null');
 
-            $table->bigInteger('company_id')->unsigned()->nullable();
-            $table->foreign('company_id')->references('id')->on('suppliers')->onDelete('set null');
+            //$table->bigInteger('company_id')->unsigned()->nullable();
+            //$table->foreign('company_id')->references('id')->on('suppliers')->onDelete('set null');
         });
     }
 }
