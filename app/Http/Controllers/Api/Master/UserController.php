@@ -20,6 +20,9 @@ use App\Models\Role;
 use App\Models\RoleUser;
 use App\Models\OrganizationParameter;
 use App\Models\Modules;
+use App\Models\ClassificationMaterial;
+use App\Models\ClassificationType;
+use App\Models\ClassificationParameter;
 
 use App\Helpers\HashId;
 
@@ -28,7 +31,6 @@ use App\Exports\UsersMatrixExport;
 
 class UserController extends Controller
 {
-
     public function index()
     {
         Auth::user()->cekRoleModules(['user-view']);
