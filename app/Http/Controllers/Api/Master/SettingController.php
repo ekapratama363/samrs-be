@@ -17,7 +17,7 @@ class SettingController extends Controller
 {
     public function index()
     {
-        // Auth::user()->cekRoleModules(['setting-view']);
+        Auth::user()->cekRoleModules(['setting-view']);
 
         $settings = (new Setting)->newQuery();
 
@@ -71,8 +71,8 @@ class SettingController extends Controller
 
     public function show($key)
     {
-        // Auth::user()->cekRoleModules(['setting-view']);
-        
+        Auth::user()->cekRoleModules(['setting-view']);
+
         $setting = Setting::with(['createdBy', 'updatedBy'])->find($key);
 
         if (!$setting) {
@@ -336,7 +336,7 @@ class SettingController extends Controller
                 ]);
                 // 0 = not tax
                 // 1 = include tax
-                
+
                 $setting->update([
                     'value' => $request->value,
                     'updated_by' => Auth::user()->id
