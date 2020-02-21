@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterLocationTypeColumn extends Migration
+class AlterColumnOnLocationType extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class AlterLocationTypeColumn extends Migration
     public function up()
     {
         Schema::table('location_types', function (Blueprint $table) {
-            $table->string('code')->unique()->nullable()->change();
-            $table->string('description')->nullable();
+            $table->string('icon')->nullable()->default(null)->change();
         });
     }
 
@@ -27,7 +26,7 @@ class AlterLocationTypeColumn extends Migration
     public function down()
     {
         Schema::table('location_types', function (Blueprint $table) {
-            $$table->string('code')->unique()->nullable()->change();
+            $table->string('icon')->nullable()->default(null)->change();
         });
     }
 }
