@@ -83,6 +83,18 @@ class ModulesTableSeeder extends Seeder
         );
 
 
+        /** =========== SETTING ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'setting-view'],
+            ['description' => 'Global Setting - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'setting-update'],
+            ['description' => 'Global Setting - Update']
+        );
+
+
 
 
         /** =========== RELEASE GROUP ====================== */
