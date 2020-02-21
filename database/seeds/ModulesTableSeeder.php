@@ -14,7 +14,7 @@ class ModulesTableSeeder extends Seeder
      */
     public function run()
     {
-        // User
+        /** =========== USER ====================== */
         Modules::updateOrCreate(
             ['object' => 'user-view'],
             ['description' => 'User List - Display']
@@ -45,7 +45,10 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'User Login History - View']
         );
 
-        // User group
+
+
+
+        /** =========== USER GROUP ====================== */
         Modules::updateOrCreate(
             ['object' => 'user-group-view'],
             ['description' => 'User group List - Display']
@@ -61,7 +64,9 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'User group Login Detail - Edit']
         );
 
-        // Role
+
+
+        /** =========== ROLE ====================== */
         Modules::updateOrCreate(
             ['object' => 'role-view'],
             ['description' => 'Role - Display']
@@ -77,7 +82,64 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Role - Edit']
         );
 
-        // Classification Type
+
+
+
+        /** =========== RELEASE GROUP ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'release-group-view'],
+            ['description' => 'Release Group - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'release-group-create'],
+            ['description' => 'Release Group - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'release-group-update'],
+            ['description' => 'Release Group - Edit']
+        );
+
+
+
+        /** =========== RELEASE CODE ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'release-code-view'],
+            ['description' => 'Release Code - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'release-code-create'],
+            ['description' => 'Release Code - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'release-code-update'],
+            ['description' => 'Release Code - Edit']
+        );
+
+
+
+        /** =========== RELEASE OBJECT ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'release-object-view'],
+            ['description' => 'Release object - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'release-object-create'],
+            ['description' => 'Release object - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'release-object-update'],
+            ['description' => 'Release object - Edit']
+        );
+
+
+
+        /** =========== CLASSIFICATION TYPE ====================== */
         Modules::updateOrCreate(
             ['object' => 'classification-type-view'],
             ['description' => 'Classification Type - Display']
@@ -94,81 +156,75 @@ class ModulesTableSeeder extends Seeder
         );
 
 
-        // Setting
+
+        /** =========== LOCATION TYPE ====================== */
         Modules::updateOrCreate(
-            ['object' => 'setting-view'],
-            ['description' => 'Global Setting - Display']
+            ['object' => 'location-type-view'],
+            ['description' => 'Location Type - Display']
         );
 
         Modules::updateOrCreate(
-            ['object' => 'setting-update'],
-            ['description' => 'Global Setting - Update']
-        );
-
-
-        // Release Group
-        Modules::updateOrCreate(
-            ['object' => 'release-group-view'],
-            ['description' => 'Release Group - Display']
+            ['object' => 'location-type-create'],
+            ['description' => 'Location Type - Create']
         );
 
         Modules::updateOrCreate(
-            ['object' => 'release-group-create'],
-            ['description' => 'Release Group - Create']
+            ['object' => 'location-type-update'],
+            ['description' => 'Location Type - Edit']
+        );
+
+
+        /** =========== PLANT ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'plant-view'],
+            ['description' => 'Plant - Display']
         );
 
         Modules::updateOrCreate(
-            ['object' => 'release-group-update'],
-            ['description' => 'Release Group - Edit']
-        );
-
-        // Release Code
-        Modules::updateOrCreate(
-            ['object' => 'release-code-view'],
-            ['description' => 'Release Code - Display']
+            ['object' => 'plant-create'],
+            ['description' => 'Plant - Create']
         );
 
         Modules::updateOrCreate(
-            ['object' => 'release-code-create'],
-            ['description' => 'Release Code - Create']
+            ['object' => 'plant-update'],
+            ['description' => 'Plant - Edit']
+        );
+
+
+        /** =========== LOCATION ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'location-view'],
+            ['description' => 'Location - Display']
         );
 
         Modules::updateOrCreate(
-            ['object' => 'release-code-update'],
-            ['description' => 'Release Code - Edit']
-        );
-
-        // Release object
-        Modules::updateOrCreate(
-            ['object' => 'release-object-view'],
-            ['description' => 'Release object - Display']
+            ['object' => 'location-create'],
+            ['description' => 'Location - Create']
         );
 
         Modules::updateOrCreate(
-            ['object' => 'release-object-create'],
-            ['description' => 'Release object - Create']
+            ['object' => 'location-update'],
+            ['description' => 'Location - Edit']
+        );
+
+
+        /** =========== STORAGE ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'storage-view'],
+            ['description' => 'Storage - Display']
         );
 
         Modules::updateOrCreate(
-            ['object' => 'release-object-update'],
-            ['description' => 'Release object - Edit']
-        );
-
-        // Release strategy
-        Modules::updateOrCreate(
-            ['object' => 'release-strategy-view'],
-            ['description' => 'Release strategy - Display']
+            ['object' => 'storage-create'],
+            ['description' => 'Storage - Create']
         );
 
         Modules::updateOrCreate(
-            ['object' => 'release-strategy-create'],
-            ['description' => 'Release strategy - Create']
+            ['object' => 'storage-update'],
+            ['description' => 'Storage - Edit']
         );
 
-        Modules::updateOrCreate(
-            ['object' => 'release-strategy-update'],
-            ['description' => 'Release strategy - Edit']
-        );
+
 
         //Assign All Module To Admin Role
         $role_admin = Role::where(DB::raw("LOWER(name)"), 'admin')->first();
