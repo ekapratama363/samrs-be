@@ -14,8 +14,9 @@ class AlterLocationTypeColumn extends Migration
     public function up()
     {
         Schema::table('location_types', function (Blueprint $table) {
-            $table->string('code')->unique()->nullable()->change();
+            $table->string('code')->unique()->nullable();
             $table->string('description')->nullable();
+            $table->string('name')->nullable()->change();
         });
     }
 
@@ -27,7 +28,7 @@ class AlterLocationTypeColumn extends Migration
     public function down()
     {
         Schema::table('location_types', function (Blueprint $table) {
-            $$table->string('code')->unique()->nullable()->change();
+            $table->string('name')->nullable()->change();
         });
     }
 }

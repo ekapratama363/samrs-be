@@ -15,7 +15,7 @@ class CreateLocationTypesTable extends Migration
     {
         Schema::create('location_types', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('code');
+            $table->string('name');
             $table->string('icon');
             $table->integer('zoom_level');
             $table->integer('zoom_level_end');
