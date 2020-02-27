@@ -168,6 +168,23 @@ class ModulesTableSeeder extends Seeder
         );
 
 
+        /** =========== CLASSIFICATION MATERIAL ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'classification-material-view'],
+            ['description' => 'Classification Master - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'classification-material-create'],
+            ['description' => 'Classification Master - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'classification-material-update'],
+            ['description' => 'Classification Master - Edit']
+        );
+
+
 
         /** =========== LOCATION TYPE ====================== */
         Modules::updateOrCreate(
