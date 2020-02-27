@@ -254,6 +254,39 @@ class ModulesTableSeeder extends Seeder
         );
 
 
+        /** =========== GROUP MATERIAL ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'group-material-view'],
+            ['description' => 'Group Material - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'group-material-create'],
+            ['description' => 'Group Material - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'group-material-update'],
+            ['description' => 'Group Material - Edit']
+        );
+
+
+        /** =========== MATERIAL ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'material-view'],
+            ['description' => 'Material - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'material-create'],
+            ['description' => 'Material - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'material-update'],
+            ['description' => 'Material - Edit']
+        );
+
 
         //Assign All Module To Admin Role
         $role_admin = Role::where(DB::raw("LOWER(name)"), 'admin')->first();
