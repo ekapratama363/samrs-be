@@ -16,7 +16,7 @@ class CreateOrganizationParametersTable extends Migration
         Schema::create('organization_parameters', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('key');//plant, storage, movement-type, procurement-group, valuation-group
-            $table->json('value')->nullable();
+            $table->string('value')->nullable();
             $table->bigInteger('role_id')->unsigned();
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->bigInteger('updated_by')->unsigned()->nullable();
