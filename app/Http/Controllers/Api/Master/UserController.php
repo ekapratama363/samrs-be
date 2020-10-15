@@ -131,7 +131,7 @@ class UserController extends Controller
         }
 
         $user = $user->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         $user->transform(function($data){
             $login = UserLoginHistory::where('user_id', $data->id)
@@ -286,7 +286,7 @@ class UserController extends Controller
         }
 
         $user = $user->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'))
+            ->appends(request()->except('page'))
             ->toArray();
 
         foreach($user['data'] as $k => $v) {
@@ -499,7 +499,7 @@ class UserController extends Controller
         }
 
         $log = $log->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         $log->transform(function ($data) {
             $data->properties = json_decode($data->properties);
@@ -1023,9 +1023,9 @@ class UserController extends Controller
         }
 
         if (request()->has('per_page')) {
-            return $user->paginate(request()->input('per_page'))->appends(Input::except('page'));
+            return $user->paginate(request()->input('per_page'))->appends(request()->except('page'));
         } else {
-            return $user->paginate(20)->appends(Input::except('page'));
+            return $user->paginate(20)->appends(request()->except('page'));
         }
     }
 
@@ -1066,7 +1066,7 @@ class UserController extends Controller
         }
 
         $role = $role->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         $role->transform(function($data) use ($id){
             $role_user = RoleUser::where('role_id', $data->id)

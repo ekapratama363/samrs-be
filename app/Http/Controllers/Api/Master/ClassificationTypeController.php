@@ -42,9 +42,9 @@ class ClassificationTypeController extends Controller
         }
 
         if (request()->has('per_page')) {
-            return $classificationType->paginate(request()->input('per_page'))->appends(Input::except('page'));
+            return $classificationType->paginate(request()->input('per_page'))->appends(request()->except('page'));
         } else {
-            return $classificationType->paginate(appsetting('PAGINATION_DEFAULT'))->appends(Input::except('page'));
+            return $classificationType->paginate(appsetting('PAGINATION_DEFAULT'))->appends(request()->except('page'));
         }
     }
 

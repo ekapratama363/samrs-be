@@ -62,7 +62,7 @@ class ReleaseCodeUserController extends Controller
         }
 
         $release = $release->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         return $release;
     }
@@ -105,7 +105,7 @@ class ReleaseCodeUserController extends Controller
         }
 
         $release = $release->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'))
+            ->appends(request()->except('page'))
             ->toArray();
 
         foreach($release['data'] as $k => $v) {

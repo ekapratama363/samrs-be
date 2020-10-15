@@ -61,7 +61,7 @@ class RoleController extends Controller
         }
 
         $role = $role->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         $role->transform(function($data){
             // total auth object assigned to role
@@ -124,7 +124,7 @@ class RoleController extends Controller
         }
 
         $role = $role->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'))
+            ->appends(request()->except('page'))
             ->toArray();
 
         foreach($role['data'] as $k => $v) {
@@ -257,7 +257,7 @@ class RoleController extends Controller
         }
 
         $log = $log->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         $log->transform(function ($data) {
             $data->properties = json_decode($data->properties);
@@ -708,7 +708,7 @@ class RoleController extends Controller
         }
 
         $user = $user->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         $user->transform(function($data) use ($id){
             $role_user = RoleUser::where('user_id', $data->id)
@@ -846,7 +846,7 @@ class RoleController extends Controller
         }
 
         $role = $role->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         return $role;
     }

@@ -40,7 +40,7 @@ class StorageConditionController extends Controller
         }
 
         $storage = $storage->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         return $storage;
     }
@@ -69,7 +69,7 @@ class StorageConditionController extends Controller
         }
 
         $storage = $storage->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'))
+            ->appends(request()->except('page'))
             ->toArray();
 
         foreach($storage['data'] as $k => $v) {

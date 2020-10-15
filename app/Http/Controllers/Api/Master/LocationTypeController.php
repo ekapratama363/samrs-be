@@ -40,7 +40,7 @@ class LocationTypeController extends Controller
         }
 
         $locType = $locType->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         return $locType;
     }
@@ -69,7 +69,7 @@ class LocationTypeController extends Controller
         }
 
         $locType = $locType->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'))
+            ->appends(request()->except('page'))
             ->toArray();
 
         foreach($locType['data'] as $k => $v) {
@@ -211,7 +211,7 @@ class LocationTypeController extends Controller
         }
 
         $log = $log->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         $log->transform(function ($data) {
             $data->properties = json_decode($data->properties);

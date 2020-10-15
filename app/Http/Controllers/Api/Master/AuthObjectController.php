@@ -56,9 +56,9 @@ class AuthObjectController extends Controller
         }
 
         if (request()->has('per_page')) {
-            return $modules->paginate(request()->input('per_page'))->appends(Input::except('page'));
+            return $modules->paginate(request()->input('per_page'))->appends(request()->except('page'));
         } else {
-            return $modules->paginate(appsetting('PAGINATION_DEFAULT'))->appends(Input::except('page'));
+            return $modules->paginate(appsetting('PAGINATION_DEFAULT'))->appends(request()->except('page'));
         }
     }
 

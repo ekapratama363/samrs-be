@@ -39,7 +39,7 @@ class SettingController extends Controller
         }
 
         if (request()->has('per_page')) {
-            $settings = $settings->paginate(request()->input('per_page'))->appends(Input::except('page'));
+            $settings = $settings->paginate(request()->input('per_page'))->appends(request()->except('page'));
             $settings->transform(function($data){
                 if ($data->key == 'COMPANY_LOGO') {
                     if ($data->value && Storage::disk('public')->exists($data->value)) {
@@ -53,7 +53,7 @@ class SettingController extends Controller
 
             return $settings;
         } else {
-            $settings = $settings->paginate(appsetting('PAGINATION_DEFAULT'))->appends(Input::except('page'));
+            $settings = $settings->paginate(appsetting('PAGINATION_DEFAULT'))->appends(request()->except('page'));
             $settings->transform(function($data){
                 if ($data->key == 'COMPANY_LOGO') {
                     if ($data->value && Storage::disk('public')->exists($data->value)) {

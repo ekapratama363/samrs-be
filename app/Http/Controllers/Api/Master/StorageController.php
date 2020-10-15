@@ -68,7 +68,7 @@ class StorageController extends Controller
         }
 
         $storage = $storage->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         return $storage;
     }
@@ -172,7 +172,7 @@ class StorageController extends Controller
         }
 
         $storage = $storage->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'))
+            ->appends(request()->except('page'))
             ->toArray();
 
         foreach($storage['data'] as $k => $v) {
@@ -298,7 +298,7 @@ class StorageController extends Controller
         }
 
         $log = $log->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         $log->transform(function ($data) {
             $data->properties = json_decode($data->properties);
@@ -458,7 +458,7 @@ class StorageController extends Controller
         }
 
         $storage = $storage->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         return $storage;
     }
@@ -511,7 +511,7 @@ class StorageController extends Controller
         $data = StorageFailedUpload::where('uploaded_by', Auth::user()->id)
             ->orderBy('created_at', 'asc')
             ->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         return response()->json([
             'message' => 'invalid data',

@@ -51,7 +51,7 @@ class PlantController extends Controller
         }
 
         $plant = $plant->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         return $plant;
     }
@@ -126,7 +126,7 @@ class PlantController extends Controller
         }
 
         $plant = $plant->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'))
+            ->appends(request()->except('page'))
             ->toArray();
 
         foreach($plant['data'] as $k => $v) {
@@ -250,7 +250,7 @@ class PlantController extends Controller
         }
 
         $log = $log->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         $log->transform(function ($data) {
             $data->properties = json_decode($data->properties);

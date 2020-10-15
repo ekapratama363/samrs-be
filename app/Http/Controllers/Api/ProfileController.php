@@ -98,9 +98,9 @@ class ProfileController extends Controller
         }
 
         if (request()->has('per_page')) {
-            return $user->paginate(request()->input('per_page'))->appends(Input::except('page'));
+            return $user->paginate(request()->input('per_page'))->appends(request()->except('page'));
         } else {
-            return $user->paginate(20)->appends(Input::except('page'));
+            return $user->paginate(20)->appends(request()->except('page'));
         }
     }
 

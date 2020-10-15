@@ -41,7 +41,7 @@ class UserGroupController extends Controller
         }
 
         $userGroup = $userGroup->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         return $userGroup;
     }
@@ -70,7 +70,7 @@ class UserGroupController extends Controller
         }
 
         $userGroup = $userGroup->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'))
+            ->appends(request()->except('page'))
             ->toArray();
 
         foreach($userGroup['data'] as $k => $v) {
@@ -178,7 +178,7 @@ class UserGroupController extends Controller
         }
 
         $log = $log->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(Input::except('page'));
+            ->appends(request()->except('page'));
 
         $log->transform(function ($data) {
             $data->properties = json_decode($data->properties);
