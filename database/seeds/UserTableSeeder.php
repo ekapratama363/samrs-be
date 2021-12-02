@@ -15,26 +15,33 @@ class UserTableSeeder extends Seeder
         $role_admin = Role::where('name', 'admin')->first();
 	    $role_anggota  = Role::where('name', 'member')->first();
 
-	    $admin = new User();
-	    $admin->firstname = 'Admin';
-	    $admin->lastname = 'Admin';
-	    $admin->username = 'Admin';
-	    $admin->status = 1;
-	    $admin->email = 'admin@localhost.com';
-	    $admin->password = bcrypt('admin');
-	    $admin->api_token = str_random(100);
-	    $admin->save();
-	    $admin->roles()->attach($role_admin);
+	    $admin  = User::where('email', 'admin@localhost.com')->first();
 
-	    $anggota = new User();
-	    $anggota->firstname = 'Member';
-	    $anggota->lastname = 'Member';
-	    $anggota->username = 'Member';
-	    $anggota->status = 1;
-	    $anggota->email = 'member@localhost.com';
-	    $anggota->password = bcrypt('member');
-	    $anggota->api_token = str_random(100);
-	    $anggota->save();
-		$anggota->roles()->attach($role_anggota);
+		if(!$admin) {
+			$admin = new User();
+			$admin->firstname = 'Admin';
+			$admin->lastname = 'Admin';
+			$admin->username = 'Admin';
+			$admin->status = 1;
+			$admin->email = 'admin@localhost.com';
+			$admin->password = bcrypt('admin');
+			$admin->api_token = str_random(100);
+			$admin->save();
+			$admin->roles()->attach($role_admin);		
+		}
+
+	    $member  = User::where('email', 'member@localhost.com')->first();
+		if(!$member) {
+			$anggota = new User();
+			$anggota->firstname = 'Member';
+			$anggota->lastname = 'Member';
+			$anggota->username = 'Member';
+			$anggota->status = 1;
+			$anggota->email = 'member@localhost.com';
+			$anggota->password = bcrypt('member');
+			$anggota->api_token = str_random(100);
+			$anggota->save();
+			$anggota->roles()->attach($role_anggota);
+		}
     }
 }

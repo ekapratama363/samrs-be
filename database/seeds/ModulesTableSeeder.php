@@ -45,7 +45,10 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'User Login History - View']
         );
 
-
+        Modules::updateOrCreate(
+            ['object' => 'user-delete'],
+            ['description' => 'User - Delete']
+        );
 
 
         /** =========== USER GROUP ====================== */
@@ -286,6 +289,97 @@ class ModulesTableSeeder extends Seeder
             ['object' => 'material-update'],
             ['description' => 'Material - Edit']
         );
+
+        Modules::updateOrCreate(
+            ['object' => 'material-delete'],
+            ['description' => 'Material - Delete']
+        );
+
+        /** =========== UNIT ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'unit-view'],
+            ['description' => 'Unit - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'unit-create'],
+            ['description' => 'Unit - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'unit-update'],
+            ['description' => 'Unit - Edit']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'unit-delete'],
+            ['description' => 'Unit - Delete']
+        );
+
+        /** =========== OWNERSHIP ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'ownership-view'],
+            ['description' => 'Ownership - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'ownership-create'],
+            ['description' => 'Ownership - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'ownership-update'],
+            ['description' => 'Ownership - Edit']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'ownership-delete'],
+            ['description' => 'Ownership - Delete']
+        );
+
+        /** =========== FUND ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'fund-view'],
+            ['description' => 'Fund - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'fund-create'],
+            ['description' => 'Fund - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'fund-update'],
+            ['description' => 'Fund - Edit']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'fund-delete'],
+            ['description' => 'Fund - Delete']
+        );
+
+
+        /** =========== ASSET CATEGORY ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'asset-category-view'],
+            ['description' => 'Asset Category - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'asset-category-create'],
+            ['description' => 'Asset Category - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'asset-category-update'],
+            ['description' => 'Asset Category - Edit']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'asset-category-delete'],
+            ['description' => 'Asset Category - Delete']
+        );
+
 
 
         //Assign All Module To Admin Role

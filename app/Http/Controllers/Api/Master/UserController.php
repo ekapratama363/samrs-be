@@ -216,6 +216,16 @@ class UserController extends Controller
             $user->where(DB::raw("LOWER(users.lastname)"), 'LIKE', "%".strtolower(request()->input('lastname'))."%");
         }
 
+        // filter username
+        if (request()->has('username')) {
+            $user->where(DB::raw("LOWER(users.username)"), 'LIKE', "%".strtolower(request()->input('username'))."%");
+        }
+
+        // filter email
+        if (request()->has('email')) {
+            $user->where(DB::raw("LOWER(users.email)"), 'LIKE', "%".strtolower(request()->input('email'))."%");
+        }
+
         // filter status
         if (request()->has('status')) {
             $user->whereIn('users.status', request()->input('status'));

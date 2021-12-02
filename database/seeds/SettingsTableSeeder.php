@@ -14,7 +14,16 @@ class SettingsTableSeeder extends Seeder
     {
         $data = $this->defaultSetting();
         foreach ($data as $key => $value) {
-            Setting::firstOrCreate($value);
+            Setting::updateOrCreate(
+                [
+                    'key' => $value['key']
+                ],
+                [
+                    'value' => $value['value'],
+                    'sort' => $value['sort'],
+                    
+                ]
+            );
         }
     }
 
@@ -46,7 +55,7 @@ class SettingsTableSeeder extends Seeder
             ],
             ['key' => 'LOGIN_FAILED_LIMIT', 'value' => '5', 'sort' => 11],
             ['key' => 'LAST_ACTIVITY', 'value' => '30', 'sort' => 12],
-            ['key' => 'PAGINATION_DEFAULT', 'value' => '25', 'sort' => 13],
+            ['key' => 'PAGINATION_DEFAULT', 'value' => '20', 'sort' => 13],
             //['key' => 'EXPIRY_BATCH', 'value' => '1', 'sort' => 14],
             //['key' => 'SORT_BATCH', 'value' => '0', 'sort' => 15],
             //['key' => 'PROPOSE_DELIV_DATE', 'value' => '', 'sort' => 16],
