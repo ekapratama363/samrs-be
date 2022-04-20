@@ -28,9 +28,9 @@ class CreateUsersTable extends Migration
             $table->bigInteger('created_by')->nullable();
             $table->bigInteger('updated_by')->nullable();
             $table->string('last_request_time')->nullable();
-            $table->boolean('deleted')->default(false);
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

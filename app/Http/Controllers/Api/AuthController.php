@@ -44,7 +44,7 @@ class AuthController extends Controller
                 );
                 return response()->json([
                     'message' => 'Email / Password doesn\'t match our record'
-                ], 401);
+                ], 400);
             }
 
             if($user->status != 1) {
@@ -60,19 +60,19 @@ class AuthController extends Controller
                 if ($user->status === 0) {
                     return response()->json([
                         'message' => 'This Account is pending email, Please Check your email for instruction'
-                    ], 401);
+                    ], 400);
                 } elseif ($user->status === 3) {
                     return response()->json([
                         'message' => 'This Account is suspend, Please contact your Administrator for instruction'
-                    ], 401);
+                    ], 400);
                 } elseif ($user->status === 4) {
                     return response()->json([
                         'message' => 'This Account is blocked by administrator, Please contact your Administrator for instruction'
-                    ], 401);
+                    ], 400);
                 } else {
                     return response()->json([
                         'message' => 'This Account is not active'
-                    ], 401);
+                    ], 400);
                 }
             }
 
@@ -129,7 +129,7 @@ class AuthController extends Controller
 
                 return response()->json([
                     'message' => 'Email / Password doesn\'t match our record'
-                ], 401);
+                ], 400);
             }
         } else {//login using username
             $user = User::whereRaw('LOWER(username) = ?', strtolower(request()->email))->first();
@@ -144,7 +144,7 @@ class AuthController extends Controller
                 );
                 return response()->json([
                     'message' => 'Username / Password doesn\'t match our record'
-                ], 401);
+                ], 400);
             }
 
             if($user->status != 1) {
@@ -160,19 +160,19 @@ class AuthController extends Controller
                 if ($user->status === 0) {
                     return response()->json([
                         'message' => 'This Account is pending email, Please Check your email for instruction'
-                    ], 401);
+                    ], 400);
                 } elseif ($user->status === 3) {
                     return response()->json([
                         'message' => 'This Account is suspend, Please contact your Administrator for instruction'
-                    ], 401);
+                    ], 400);
                 } elseif ($user->status === 4) {
                     return response()->json([
                         'message' => 'This Account is blocked by administrator, Please contact your Administrator for instruction'
-                    ], 401);
+                    ], 400);
                 } else {
                     return response()->json([
                         'message' => 'This Account is not active'
-                    ], 401);
+                    ], 400);
                 }
             }
 
@@ -226,7 +226,7 @@ class AuthController extends Controller
 
                 return response()->json([
                     'message' => 'Username / Password doesn\'t match our record'
-                ], 401);
+                ], 400);
             }
         }
     }

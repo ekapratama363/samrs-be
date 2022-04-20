@@ -16,23 +16,13 @@ class CreateUserDetailsTable extends Migration
         Schema::create('user_details', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->unsigned()->nullable();
-            $table->bigInteger('user_group_id')->unsigned()->nullable();
-            // $table->bigInteger('location_id')->unsigned()->nullable();
-            // $table->bigInteger('company_id')->unsigned()->nullable();
-            // $table->bigInteger('supervisor')->unsigned()->nullable();
-            $table->integer('cost_center')->unsigned()->nullable();
+            $table->string('nik')->nullable();
             $table->string('photo')->nullable();
-            $table->string('departement')->nullable();
+            $table->string('position')->nullable();
             $table->integer('status')->nullable();
-            $table->dateTime('join_date');
-            $table->dateTime('retired_date')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('user_group_id')->references('id')->on('user_groups')->onDelete('cascade');
-            // $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
-            // $table->foreign('company_id')->references('id')->on('suppliers')->onDelete('cascade');
-            // $table->foreign('supervisor')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

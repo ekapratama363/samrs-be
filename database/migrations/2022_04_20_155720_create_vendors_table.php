@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateReleaseCodesTable extends Migration
+class CreateVendorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,19 @@ class CreateReleaseCodesTable extends Migration
      */
     public function up()
     {
-        Schema::create('release_codes', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('vendors', function (Blueprint $table) {
+            $table->id();
             $table->string('code');
-            $table->string('description');
-            $table->bigInteger('release_group_id')->unsigned()->nullable();
+            $table->string('name');
+            $table->string('contact');
+            $table->string('email');
+            $table->string('website')->nullable();
+            $table->text('address');
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->bigInteger('updated_by')->unsigned()->nullable();
-            $table->boolean('deleted')->default(0);
             $table->timestamps();
+            $table->softDeletes();
 
-            $table->foreign('release_group_id')->references('id')->on('release_groups')->onDelete('set null');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
         });
@@ -36,6 +38,6 @@ class CreateReleaseCodesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('release_codes');
+        Schema::dropIfExists('vendors');
     }
 }

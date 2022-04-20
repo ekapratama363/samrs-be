@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateReleaseGroupsTable extends Migration
+class CreateRoomsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,18 @@ class CreateReleaseGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('release_groups', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('rooms', function (Blueprint $table) {
+            $table->id();
             $table->string('code');
-            $table->string('object');
+            $table->string('name');
             $table->string('description');
-            $table->bigInteger('classification_id')->unsigned()->nullable();
-            $table->boolean('active')->default(1);
+            $table->bigInteger('plant_id')->unsigned()->nullable();
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->bigInteger('updated_by')->unsigned()->nullable();
-            $table->boolean('deleted')->default(0);
             $table->timestamps();
+            $table->softDeletes();
 
-            $table->foreign('classification_id')->references('id')->on('classification_materials')->onDelete('set null');
+            $table->foreign('plant_id')->references('id')->on('plants')->onDelete('set null');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
         });
@@ -38,6 +37,6 @@ class CreateReleaseGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('release_groups');
+        Schema::dropIfExists('rooms');
     }
 }

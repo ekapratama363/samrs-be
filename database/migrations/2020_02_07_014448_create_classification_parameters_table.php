@@ -28,7 +28,7 @@ class CreateClassificationParametersTable extends Migration
             $table->boolean('deleted')->default(0);
             $table->timestamps();
 
-            $table->foreign('classification_id')->references('id')->on('classification_materials')->onDelete('set null');
+            $table->foreign('classification_id')->references('id')->on('classifications')->onDelete('set null');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
 

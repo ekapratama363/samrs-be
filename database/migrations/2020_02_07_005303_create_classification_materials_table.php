@@ -13,16 +13,14 @@ class CreateClassificationMaterialsTable extends Migration
      */
     public function up()
     {
-        Schema::create('classification_materials', function (Blueprint $table) {
+        Schema::create('classifications', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('classification_type_id')->unsigned();
             $table->string('name');
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->bigInteger('updated_by')->unsigned()->nullable();
-            $table->boolean('deleted')->default(0);
             $table->timestamps();
+            $table->softDeletes();
 
-            $table->foreign('classification_type_id')->references('id')->on('classification_types')->onDelete('cascade');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
         });
@@ -35,6 +33,6 @@ class CreateClassificationMaterialsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('classification_materials');
+        Schema::dropIfExists('classifications');
     }
 }
