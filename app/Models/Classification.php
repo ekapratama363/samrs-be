@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class ReleaseObject extends Model
+class Classification extends Model
 {
     use LogsActivity;
 
@@ -16,7 +15,7 @@ class ReleaseObject extends Model
      * @var boolean
      */
     protected static $logFillable = true;
-    protected static $logName = 'ReleaseObject';
+    protected static $logName = 'Classification';
     protected static $logOnlyDirty = false;
 
     public function getDescriptionForEvent(string $eventName): string {
@@ -24,19 +23,17 @@ class ReleaseObject extends Model
     }
 
     protected $fillable = [
-        'code',
-        'description',
+        'name',
         'created_by',
         'updated_by',
-        'deleted'
 	];
-
-	public function classification()
+    
+    public function parameters()
     {
-        return $this->belongsTo('App\Models\ClassificationMaterial', 'classification_id');
+        return $this->hasMany('App\Models\ClassificationParameter', 'classification_id');
     }
 
-    public function createdBy()
+	public function createdBy()
     {
         return $this->hasOne('App\Models\User', 'id', 'created_by');
     }

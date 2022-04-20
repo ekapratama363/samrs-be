@@ -22,11 +22,7 @@ class PlantController extends Controller
 
         $plant = (new Plant)->newQuery();
 
-        $plant->where('deleted', false)->with(['location', 'createdBy', 'updatedBy']);
-
-        $plant->with('location.location_type');
-
-        $plant->with('company');
+        $plant->with(['createdBy', 'updatedBy']);
 
         if (request()->has('q')) {
             $q = strtolower(request()->input('q'));
@@ -62,9 +58,7 @@ class PlantController extends Controller
 
         $plant = (new Plant)->newQuery();
 
-        $plant->where('plants.deleted', false)->with(['location', 'createdBy', 'updatedBy']);
-        $plant->with('location.location_type');
-        $plant->with('company');
+        $plant->with(['createdBy', 'updatedBy']);
 
         if (request()->has('q') && request()->input('q') != '') {
             $q = strtolower(request()->input('q'));
@@ -72,48 +66,11 @@ class PlantController extends Controller
                 $query->where(DB::raw("LOWER(code)"), 'LIKE', "%".$q."%");
                 $query->orWhere(DB::raw("LOWER(description)"), 'LIKE', "%".$q."%");
             });
-
-            // search location
-            $plant->where('deleted', false)->orWhereHas('location', function ($query) use ($q) {
-                $query->where(DB::raw("LOWER(name)"), 'LIKE', "%".$q."%");
-                $query->orWhere(DB::raw("LOWER(address)"), 'LIKE', "%".$q."%");
-            })
-            ->with(['location' => function ($query) use ($q) {
-                $query->where(DB::raw("LOWER(name)"), 'LIKE', "%".$q."%");
-                $query->orWhere(DB::raw("LOWER(address)"), 'LIKE', "%".$q."%");
-            }]);
-
-            // search company
-            $plant->where('deleted', false)->orWhereHas('company', function ($query) use ($q) {
-                $query->where(DB::raw("LOWER(code)"), 'LIKE', "%".$q."%");
-                $query->orWhere(DB::raw("LOWER(description)"), 'LIKE', "%".$q."%");
-            })
-            ->with(['company' => function ($query) use ($q) {
-                $query->where(DB::raw("LOWER(code)"), 'LIKE', "%".$q."%");
-                $query->orWhere(DB::raw("LOWER(description)"), 'LIKE', "%".$q."%");
-            }]);
         }
-
 
         if (request()->has('sort_field')) {
             $sort_order = request()->input('sort_order') == 'asc' ? 'asc' : 'desc';
-            $sort_field = request()->input('sort_field');
-            switch ($sort_field) {
-                case 'location':
-                    $plant->join('locations', 'locations.id', '=', 'plants.location_id');
-                    $plant->select('plants.code as code', 'plants.*');
-                    $plant->orderBy('locations.name', $sort_order);
-                break;
-
-                case 'company':
-                    $plant->leftJoin('companies', 'companies.id', '=', 'plants.company_id');
-                    $plant->select('plants.code as code', 'plants.*');
-                    $plant->orderBy('companies.code', $sort_order);
-                break;
-
-                default:
-                    $plant->orderBy($sort_field, $sort_order);
-            }
+            $plant->orderBy(request()->input('sort_field'), $sort_order);
         } else {
             $plant->orderBy('code', 'asc');
         }
@@ -149,26 +106,19 @@ class PlantController extends Controller
 
         $this->validate(request(), [
             'code' => 'required|max:4',
-            'description' => 'required|max:30',
-            'location_id' => 'nullable|exists:locations,id',
-            'company_id' => 'nullable|exists:companies,id',
-            // 'latitude' => 'required',
-            // 'longitude' => 'required'
+            'name' => 'required|max:30',
+            'description' => 'required|max:200',
         ]);
 
-        $plant = Plant::whereRaw('LOWER(code) = ?', strtolower($request->code))->first();
+        $plant = Plant::withTrashed()->whereRaw('LOWER(code) = ?', strtolower($request->code))->first();
 
         if ($plant) {
-
-            if($plant->deleted){
+            if($plant->deleted_at){
+                $plant->restore();
                 $save = $plant->update([
                     'code' => $request->code,
+                    'name' => $request->name,
                     'description' => $request->description,
-                    'location_id' => $request->location_id,
-                    'company_id' => $request->company_id,
-                    // 'latitude' => $request->latitude,
-                    // 'longitude' => $request->longitude,
-                    'deleted'       => 0,
                     'updated_by'    => Auth::user()->id
                 ]);
 
@@ -184,11 +134,8 @@ class PlantController extends Controller
         } else {
             $save = Plant::create([
                 'code' => $request->code,
+                'name' => $request->name,
                 'description' => $request->description,
-                'location_id' => $request->location_id,
-                'company_id' => $request->company_id,
-                // 'latitude' => $request->latitude,
-                // 'longitude' => $request->longitude,
                 'created_by' => Auth::user()->id,
                 'updated_by' => Auth::user()->id
             ]);
@@ -209,56 +156,7 @@ class PlantController extends Controller
             ], 400);
         }
 
-        return Plant::with(['location', 'createdBy', 'updatedBy'])
-        	->with('location.location_type')
-            ->with('company')
-        	->find($id);
-    }
-
-    public function log($id)
-    {
-        Auth::user()->cekRoleModules(['plant-view']);
-
-        try {
-            $id = HashId::decode($id);
-        } catch(\Exception $ex) {
-            return response()->json([
-                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
-            ], 400);
-        }
-
-        
-        $log = (new \App\Models\ActivityLog)->newQuery();
-
-        $log->with('user')
-            ->where('log_name', 'Plant')
-            ->whereNotNull('causer_id')
-            ->where('subject_id', $id);
-
-        if (request()->has('q')) {
-            $q = strtolower(request()->input('q'));
-            $log->where(function($query) use ($q) {
-                $query->orWhere(DB::raw("LOWER(properties)"), 'LIKE', "%".$q."%");
-            });
-        }
-
-        if (request()->has('sort_field')) {
-            $sort_order = request()->input('sort_order') == 'asc' ? 'asc' : 'desc';
-            $log->orderBy(request()->input('sort_field'), $sort_order);
-        } else {
-            $log->orderBy('id', 'desc');
-        }
-
-        $log = $log->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(request()->except('page'));
-
-        $log->transform(function ($data) {
-            $data->properties = json_decode($data->properties);
-
-            return $data;
-        });
-
-        return $log;
+        return Plant::with(['createdBy', 'updatedBy'])->find($id);
     }
 
     public function update($id, Request $request)
@@ -277,18 +175,16 @@ class PlantController extends Controller
 
         $this->validate(request(), [
             'code' => 'required|max:4|unique:plants,code,'. $id .'',
-            'description' => 'required|max:30',
-            'location_id' => 'nullable|exists:locations,id',
-            'company_id' => 'nullable|exists:companies,id',
+            'name' => 'required|max:30',
+            'description' => 'required|max:200',
             // 'latitude' => 'required',
             // 'longitude' => 'required'
         ]);
 
         $save = $plant->update([
             'code' => $request->code,
+            'name' => $request->name,
             'description' => $request->description,
-            'location_id' => $request->location_id,
-            'company_id' => $request->company_id,
             // 'latitude' => $request->latitude,
             // 'longitude' => $request->longitude,
             'updated_by' => Auth::user()->id
@@ -315,9 +211,9 @@ class PlantController extends Controller
             ], 400);
         }
 
-        $delete = Plant::findOrFail($id)->update([
-            'deleted' => true, 'updated_by' => Auth::user()->id
-        ]);
+        $plant = Plant::findOrFail($id);
+
+        $delete = $plant->delete();
 
         if ($delete) {
             return response()->json($delete);
@@ -359,9 +255,7 @@ class PlantController extends Controller
             DB::beginTransaction();
 
             foreach (request()->id as $ids) {
-                $delete = Plant::findOrFail($ids)->update([
-                    'deleted' => true, 'updated_by' => Auth::user()->id
-                ]);
+                $delete = Plant::findOrFail($ids)->delete();
             }
 
             DB::commit();
