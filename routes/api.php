@@ -138,6 +138,16 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
     Route::put('/vendor/{id}', 'Master\VendorController@update');
     Route::delete('/vendor/{id}', 'Master\VendorController@delete');
     Route::post('/multiple-delete-vendor', 'Master\VendorController@multipleDelete');
+
+    /** Plant */
+    Route::get('/room', 'Master\RoomController@index');
+    Route::get('/room-list', 'Master\RoomController@list');
+    Route::post('/room', 'Master\RoomController@store');
+    Route::get('/room/{id}', 'Master\RoomController@show');
+    Route::get('/room-log/{id}', 'Master\RoomController@log');
+    Route::put('/room/{id}', 'Master\RoomController@update');
+    Route::delete('/room/{id}', 'Master\RoomController@delete');
+    Route::post('/multiple-delete-room', 'Master\RoomController@multipleDelete');
 });
 
 

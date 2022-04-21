@@ -45,11 +45,6 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'User Login History - View']
         );
 
-        Modules::updateOrCreate(
-            ['object' => 'user-delete'],
-            ['description' => 'User - Delete']
-        );
-
         /** =========== ROLE ====================== */
         Modules::updateOrCreate(
             ['object' => 'role-view'],
@@ -126,11 +121,6 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Material - Edit']
         );
 
-        Modules::updateOrCreate(
-            ['object' => 'material-delete'],
-            ['description' => 'Material - Delete']
-        );
-
         /** =========== UNIT ====================== */
         Modules::updateOrCreate(
             ['object' => 'unit-view'],
@@ -145,11 +135,6 @@ class ModulesTableSeeder extends Seeder
         Modules::updateOrCreate(
             ['object' => 'unit-update'],
             ['description' => 'Unit - Edit']
-        );
-
-        Modules::updateOrCreate(
-            ['object' => 'unit-delete'],
-            ['description' => 'Unit - Delete']
         );
 
         /** =========== VENDOR ====================== */
@@ -168,9 +153,20 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Vendor - Edit']
         );
 
+        /** =========== ROOM ====================== */
         Modules::updateOrCreate(
-            ['object' => 'vendor-delete'],
-            ['description' => 'Vendor - Delete']
+            ['object' => 'room-view'],
+            ['description' => 'Room - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'room-create'],
+            ['description' => 'Room - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'room-update'],
+            ['description' => 'Room - Edit']
         );
         
         //Assign All Module To Admin Role
