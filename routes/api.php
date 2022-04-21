@@ -128,6 +128,16 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
     Route::put('/plant/{id}', 'Master\PlantController@update');
     Route::delete('/plant/{id}', 'Master\PlantController@delete');
     Route::post('/multiple-delete-plant', 'Master\PlantController@multipleDelete');
+
+    /** Vendor */
+    Route::get('/vendor', 'Master\VendorController@index');
+    Route::get('/vendor-list', 'Master\VendorController@list');
+    Route::post('/vendor', 'Master\VendorController@store');
+    Route::get('/vendor/{id}', 'Master\VendorController@show');
+    Route::get('/vendor-log/{id}', 'Master\VendorController@log');
+    Route::put('/vendor/{id}', 'Master\VendorController@update');
+    Route::delete('/vendor/{id}', 'Master\VendorController@delete');
+    Route::post('/multiple-delete-vendor', 'Master\VendorController@multipleDelete');
 });
 
 

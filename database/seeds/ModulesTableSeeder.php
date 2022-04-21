@@ -151,6 +151,27 @@ class ModulesTableSeeder extends Seeder
             ['object' => 'unit-delete'],
             ['description' => 'Unit - Delete']
         );
+
+        /** =========== VENDOR ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'vendor-view'],
+            ['description' => 'Vendor - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'vendor-create'],
+            ['description' => 'Vendor - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'vendor-update'],
+            ['description' => 'Vendor - Edit']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'vendor-delete'],
+            ['description' => 'Vendor - Delete']
+        );
         
         //Assign All Module To Admin Role
         $role_admin = Role::where(DB::raw("LOWER(name)"), 'admin')->first();

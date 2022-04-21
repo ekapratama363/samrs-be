@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Plant extends Model
 {
+    use SoftDeletes;
     use LogsActivity;
 
     /**
@@ -24,23 +26,11 @@ class Plant extends Model
 
     protected $fillable = [
         'code',
+        'name',
         'description',
         'created_by',
         'updated_by',
-        'deleted',
-        'location_id',
-        'company_id'
 	];
-
-    public function location()
-    {
-        return $this->belongsTo('App\Models\Location', 'location_id');
-    }
-
-    public function company()
-    {
-        return $this->belongsTo('App\Models\Company', 'company_id');
-    }
 
 	public function createdBy()
     {
