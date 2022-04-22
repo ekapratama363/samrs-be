@@ -37,8 +37,6 @@ class UserController extends Controller
 
         $user = (new User)->newQuery();
 
-        $user->where('deleted', false);
-
         $user->with(['detail', 'profile', 'roles']);
 
         $user->with([
@@ -153,8 +151,6 @@ class UserController extends Controller
         Auth::user()->cekRoleModules(['user-view']);
 
         $user = (new User)->newQuery();
-
-        $user->where('users.deleted', false);
 
         $user->with(['detail', 'profile', 'roles']);
 

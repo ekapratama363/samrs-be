@@ -43,12 +43,7 @@ class Role extends Model
     {
         return $this->hasMany('App\Models\OrganizationParameter', 'role_id');
     }
-
-    public function childs()
-    {
-        return $this->hasMany('App\Models\RoleComposite', 'parent_id');
-    }
-
+    
     public function createdBy()
     {
         return $this->hasOne('App\Models\User', 'id', 'created_by');

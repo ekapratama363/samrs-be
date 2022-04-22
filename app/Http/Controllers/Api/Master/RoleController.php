@@ -16,7 +16,6 @@ use App\Models\UserLoginHistory;
 use App\Models\UserDetail;
 use App\Models\UserProfile;
 use App\Models\Role;
-use App\Models\RoleComposite;
 use App\Models\RoleUser;
 use App\Models\OrganizationParameter;
 use App\Models\Modules;
@@ -189,10 +188,7 @@ class RoleController extends Controller
             ], 400);
         }
 
-        $role = Role::with(['modules', 'organization_parameter', 'users', 'createdBy', 'updatedBy'])
-            ->with('childs')
-            ->with('childs.child_role')
-            ->findOrFail($id);
+        $role = Role::with(['modules', 'organization_parameter', 'users', 'createdBy', 'updatedBy'])->findOrFail($id);
 
         // total auth object assigned to this role
         $role->total_auth_object = $role->modules->count();
@@ -202,20 +198,12 @@ class RoleController extends Controller
         // Organization Parameter
         $orgparam = OrganizationParameter::where('role_id', $id)->get();
 
-        $plant   = $orgparam->where('key', 'plant')->first();
-        $storage = $orgparam->where('key', 'storage')->first();
-        $movement_type = $orgparam->where('key', 'movement_type')->first();
-        $cost_center = $orgparam->where('key', 'cost_center')->first();
-        $valuation_group = $orgparam->where('key', 'valuation_group')->first();
-        $procurement_group = $orgparam->where('key', 'procurement_group')->first();
+        $plant = $orgparam->where('key', 'plant')->first();
+        $room  = $orgparam->where('key', 'room')->first();
 
         $datamap = [
             'plant' => $plant ? array_map('intval', json_decode($plant->value)) : null,
-            'storage' => $storage ? array_map('intval', json_decode($storage->value)) : null,
-            'movement_type' => $movement_type ? array_map('intval', json_decode($movement_type->value)) : null,
-            'cost_center' => $cost_center ? array_map('intval', json_decode($cost_center->value)) : null,
-            'valuation_group' => $valuation_group ? array_map('intval', json_decode($valuation_group->value)) : null,
-            'procurement_group' => $procurement_group ? array_map('intval', json_decode($procurement_group->value)) : null,
+            'room' => $room ? array_map('intval', json_decode($room->value)) : null,
         ];
 
         $role->organization_parameter_value = $datamap;
