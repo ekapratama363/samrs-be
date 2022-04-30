@@ -6,12 +6,13 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable, LogsActivity;
+    use Notifiable, LogsActivity, SoftDeletes;
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -62,7 +63,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'firstname', 'lastname', 'username', 'email', 'password', 'api_token', 'mobile', 'wrong_pass', 'status', 'confirmation_code',
-        'last_request_time', 'deleted'
+        'last_request_time'
     ];
 
     /**

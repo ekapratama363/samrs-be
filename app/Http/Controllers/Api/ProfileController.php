@@ -21,6 +21,8 @@ use App\Models\Modules;
 use App\Models\UserProfile;
 use App\Models\UserDetail;
 
+use App\Helpers\HashId;
+
 class ProfileController extends Controller
 {
     public function profile()
@@ -196,8 +198,40 @@ class ProfileController extends Controller
         return User::with(['detail', 'profile'])->find($user->id);
     }
 
+    public function deletePhotoProfile($id, Request $request)
+    {
+        Auth::user()->cekRoleModules(['user-update-profile']);
+
+        try {
+            $id = HashId::decode($id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $user = UserDetail::where('user_id', $id)->first();
+
+        if (Storage::disk('public')->exists($user->photo)) {
+            Storage::disk('public')->delete($user->photo);
+        }
+
+        $user->photo = '';
+        $user->save();
+
+        if ($user) {
+            return $user;
+        } else {
+            return response()->json([
+                'message' => 'Unable to upload profile Image'
+            ], 422);
+        }
+    }
+
     public function changePhotoProfile(Request $request)
     {
+        Auth::user()->cekRoleModules(['user-update-profile']);
+
         if (!Auth::user()->detail) {
             $this->validate($request, [
                 'image' => 'required|image'
@@ -213,9 +247,8 @@ class ProfileController extends Controller
                 $uploaded = Storage::disk('public')->putFileAs($image_path, $image_data, $image_name);
 
                 $save = UserDetail::create([
-                    'user_id'       => Auth::user()->id,
-                    'join_date'     => Auth::user()->created_at,
-                    'photo'         => $uploaded,
+                    'user_id' => Auth::user()->id,
+                    'photo'   => $uploaded,
                 ]);
 
                 if ($uploaded) {

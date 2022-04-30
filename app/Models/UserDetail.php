@@ -24,16 +24,10 @@ class UserDetail extends Model
 
     protected $fillable = [
         'user_id',
-        'user_group_id',
-        'location_id',
-        'company_id',
-        'cost_center_id',
-        'supervisor',
+        'nik',
         'photo',
-        'department_id',
-        'status',
-        'join_date',
-        'retired_date'
+        'position',
+        'address',
     ];
 
     protected $appends = [

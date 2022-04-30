@@ -37,12 +37,7 @@ class UserController extends Controller
 
         $user = (new User)->newQuery();
 
-        $user->with(['detail', 'profile', 'roles']);
-
-        $user->with([
-            'detail.location', 'detail.company', 'detail.user_group',
-            'detail.supervisor', 'detail.department', 'detail.cost_center'
-        ]);
+        $user->with(['detail', 'roles']);
 
         if (request()->has('q')) {
             $q = strtolower(request()->input('q'));
@@ -52,38 +47,6 @@ class UserController extends Controller
                 $query->orWhere(DB::raw("LOWER(lastname)"), 'LIKE', "%".$q."%");
                 $query->orWhere(DB::raw("LOWER(email)"), 'LIKE', "%".$q."%");
                 $query->orWhere(DB::raw("LOWER(mobile)"), 'LIKE', "%".$q."%");
-            });
-        }
-
-        // filter location
-        if (request()->has('location')) {
-            $location = request()->input('location');
-            $user->whereHas('detail', function ($q) use ($location){
-                $q->whereIn('user_details.location_id', $location);
-            });
-        }
-
-        // filter company
-        if (request()->has('company')) {
-            $company = request()->input('company');
-            $user->whereHas('detail', function ($q) use ($company){
-                $q->whereIn('user_details.company_id', $company);
-            });
-        }
-
-        // filter department
-        if (request()->has('department')) {
-            $department = request()->input('department');
-            $user->whereHas('detail', function ($q) use ($department){
-                $q->whereIn('user_details.department_id', $department);
-            });
-        }
-
-        // filter user group
-        if (request()->has('user_group')) {
-            $user_group = request()->input('user_group');
-            $user->whereHas('detail', function ($q) use ($user_group){
-                $q->whereIn('user_details.user_group_id', $user_group);
             });
         }
 
@@ -152,12 +115,7 @@ class UserController extends Controller
 
         $user = (new User)->newQuery();
 
-        $user->with(['detail', 'profile', 'roles']);
-
-        $user->with([
-            'detail.location', 'detail.company', 'detail.user_group',
-            'detail.supervisor', 'detail.department', 'detail.cost_center'
-        ]);
+        $user->with(['detail', 'roles']);
 
         if (request()->has('q')) {
             $q = strtolower(request()->input('q'));
@@ -167,38 +125,6 @@ class UserController extends Controller
                 $query->orWhere(DB::raw("LOWER(lastname)"), 'LIKE', "%".$q."%");
                 $query->orWhere(DB::raw("LOWER(email)"), 'LIKE', "%".$q."%");
                 $query->orWhere(DB::raw("LOWER(mobile)"), 'LIKE', "%".$q."%");
-            });
-        }
-
-        // filter location
-        if (request()->has('location')) {
-            $location = request()->input('location');
-            $user->whereHas('detail', function ($q) use ($location){
-                $q->whereIn('user_details.location_id', $location);
-            });
-        }
-
-        // filter company
-        if (request()->has('company')) {
-            $company = request()->input('company');
-            $user->whereHas('detail', function ($q) use ($company){
-                $q->whereIn('user_details.company_id', $company);
-            });
-        }
-
-        // filter department
-        if (request()->has('department')) {
-            $department = request()->input('department');
-            $user->whereHas('detail', function ($q) use ($department){
-                $q->whereIn('user_details.department_id', $department);
-            });
-        }
-
-        // filter user group
-        if (request()->has('user_group')) {
-            $user_group = request()->input('user_group');
-            $user->whereHas('detail', function ($q) use ($user_group){
-                $q->whereIn('user_details.user_group_id', $user_group);
             });
         }
 
@@ -250,27 +176,6 @@ class UserController extends Controller
             $sort_order = request()->input('sort_order') == 'asc' ? 'asc' : 'desc';
             $sort_field = request()->input('sort_field');
             switch ($sort_field) {
-                case 'user_group':
-                    $user->leftJoin('user_details','user_details.user_id','=','users.id');
-                    $user->leftJoin('user_groups','user_groups.id','=','user_details.user_group_id');
-                    $user->select('users.*');
-                    $user->orderBy('user_groups.code',$sort_order);
-                break;
-
-                case 'company':
-                    $user->leftJoin('user_details','user_details.user_id','=','users.id');
-                    $user->leftJoin('companies','companies.id','=','user_details.company_id');
-                    $user->select('users.*','companies.code');
-                    $user->orderBy('companies.id',$sort_order);
-                break;
-
-                case 'department':
-                    $user->leftJoin('user_details', 'user_details.user_id','=','users.id');
-                    $user->leftJoin('departments','departments.id','=','user_details.department_id');
-                    $user->select('users.*', 'departments.code');
-                    $user->orderBy('departments.id',$sort_order);
-                break;
-
                 case 'last_login_date':
                     $user->join('user_login_histories','user_login_histories.user_id','=','users.id');
                     $user->select('users.*');
@@ -326,6 +231,10 @@ class UserController extends Controller
                 'username'      => 'required|string|max:191',
                 'email'         => 'required|string|email|max:191',
                 'mobile'        => 'required|min:8|max:15',
+                'nik'           => 'nullable|string|max:50',
+                'position'      => 'required|string|max:50',
+                'address'       => 'required|string',
+                'role_id'       => 'required|exists:roles,id',
                 'password'      => 'nullable|min:'.appsetting('PASS_LENGTH_MIN').'|regex:'.appsetting('PASS_REGEX'),
                 // 'status'        => 'required'
             ],
@@ -335,10 +244,10 @@ class UserController extends Controller
         );
 
         // cek email exist in db
-        $existMail = User::whereRaw('LOWER(email) = ?', strtolower($request->email))->first();
+        $existMail = User::withTrashed()->whereRaw('LOWER(email) = ?', strtolower($request->email))->first();
 
         // cek username exist in db
-        $existUsername = User::whereRaw('LOWER(username) = ?', strtolower($request->username))->first();
+        $existUsername = User::withTrashed()->whereRaw('LOWER(username) = ?', strtolower($request->username))->first();
 
         // generate random code for confirmation
         $code = str_random(30);
@@ -349,7 +258,8 @@ class UserController extends Controller
             // if email exist
             if ($existMail) {
                 // if email exist but deleted, remove deleted
-                if($existMail->deleted){
+                if($existMail->deleted_at){
+                    $existMail->restore();
                     $existMail->update([
                         'firstname'         => $request->firstname,
                         'lastname'          => $request->lastname,
@@ -359,7 +269,6 @@ class UserController extends Controller
                         'api_token'         => str_random(100),
                         'status'            => 0, //pending email
                         'confirmation_code' => $code,
-                        'deleted'           => 0,
                     ]);
 
                     $save = $existMail;
@@ -374,7 +283,8 @@ class UserController extends Controller
                 }
             } else if ($existUsername) {// if username exist
                 // if username exist but deleted, remove deleted
-                if($existUsername->deleted){
+                if($existUsername->deleted_at){
+                    $existUsername->restore();
                     $existUsername->update([
                         'firstname'         => $request->firstname,
                         'lastname'          => $request->lastname,
@@ -384,7 +294,6 @@ class UserController extends Controller
                         'api_token'         => str_random(100),
                         'status'            => 0, //pending email
                         'confirmation_code' => $code,
-                        'deleted'           => 0,
                     ]);
 
                     $save = $existUsername;
@@ -425,7 +334,34 @@ class UserController extends Controller
                 \App\Models\PasswordHistory::create(['user_id'=>$save->id, 'password'=>$save->password]);
             }
 
-            \Mail::send(new \App\Mail\RegisterMail($save, $code));
+            UserDetail::updateOrCreate(
+                [
+                    'user_id' => $save->id
+                ],
+                [
+                    'nik'      => $request->nik,
+                    // 'photo'    => $request->photo,
+                    'position' => $request->position,
+                    'address'  => $request->address,
+                ]
+            );
+
+            if (count($request->role_id) > 0) {
+                foreach ($request->role_id as $key => $value) {
+                    RoleUser::updateOrCreate(
+                        [
+                            'user_id' => $save->id,
+                            'role_id' => $value
+                        ],
+                        [
+                            'created_by' => Auth::user()->id,
+                            'updated_by' => Auth::user()->id,
+                        ]
+                    );
+                }
+            }
+
+            // \Mail::send(new \App\Mail\RegisterMail($save, $code));
 
             \DB::commit();
 
@@ -436,7 +372,7 @@ class UserController extends Controller
         catch(\Exception $e) {
             \DB::rollBack();
             return response()->json([
-                'message'       => 'Failed Insert data. '.$e->getMessage(),
+                'message'       => $e->getMessage(),
                 'stacktrace'    => strtolower(env('APP_DEBUG'))==='true'?$e->getTrace():''
             ], 400);
         }
@@ -454,12 +390,16 @@ class UserController extends Controller
             ], 400);
         }
 
-        $user = User::with(['detail', 'profile', 'roles'])
-        ->with([
-            'detail.location', 'detail.company', 'detail.user_group',
-            'detail.supervisor', 'detail.department', 'detail.cost_center'
-        ])
-        ->find($id);
+        $user = User::with(['detail', 'roles'])->find($id);
+
+        if (count($user->roles) > 0) {
+            $roles = [];
+            foreach($user->roles as $role) {
+                $roles[] = $role->id;
+            }
+
+            $user->roles_id = $roles;
+        }
 
         $login = UserLoginHistory::where('user_id', $id)
                 ->orderBy('updated_at', 'desc')->first();
@@ -538,7 +478,12 @@ class UserController extends Controller
                 'email'         => 'required|string|email|max:191|unique:users,email,'. $id .'',
                 'mobile'        => 'required|min:8|max:15',
                 // 'password'      => 'required|min:6|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).+$/',
-                'status'        => 'required'
+                // 'status'        => 'required',
+                'nik'           => 'nullable|string|max:50',
+                'position'      => 'required|string|max:50',
+                'address'       => 'required|string',
+                'photo'         => 'nullable|string',
+                'role_id'       => 'required|exists:roles,id',
             ],
             [
                 // 'regex'     => 'The :attribute must have lowercase letter, uppercase letter, a number .',
@@ -581,18 +526,46 @@ class UserController extends Controller
                 'username'          => $request->username,
                 'email'             => $request->email,
                 'mobile'            => $request->mobile,
-                'status'            => $request->status,
+                // 'status'            => $request->status,
             ]);
 
-            // send email if edit user but status user not active
-            if ($user->status != 1) {
-                $code = str_random(30);
-                $user->update([
-                    'api_token'         => str_random(100),
-                    'confirmation_code' => $code
-                ]);
+            // // send email if edit user but status user not active
+            // if ($user->status != 1) {
+            //     $code = str_random(30);
+            //     $user->update([
+            //         'api_token'         => str_random(100),
+            //         'confirmation_code' => $code
+            //     ]);
 
-                \Mail::send(new \App\Mail\RegisterMail($user, $code));
+            //     \Mail::send(new \App\Mail\RegisterMail($user, $code));
+            // }
+
+            UserDetail::updateOrCreate(
+                [
+                    'user_id' => $user->id
+                ],
+                [
+                    'nik'      => $request->nik,
+                    'position' => $request->position,
+                    'address'  => $request->address,
+                ]
+            );
+
+            if (count($request->role_id) > 0) {
+                RoleUser::where('user_id', $user->id)
+                    ->whereNotIn('role_id', $request->role_id)->delete();
+
+                foreach ($request->role_id as $key => $value) {
+                    RoleUser::updateOrCreate(
+                        [
+                            'user_id' => $user->id,
+                            'role_id' => $value
+                        ],
+                        [
+                            'updated_by' => Auth::user()->id,
+                        ]
+                    );
+                }
             }
 
             $user->id_hash = HashId::encode($id);
@@ -665,9 +638,7 @@ class UserController extends Controller
             DB::beginTransaction();
 
             foreach (request()->id as $ids) {
-                $delete = User::findOrFail($ids)->update([
-                    'deleted' => 1
-                ]);
+                $delete = User::findOrFail($ids)->delete();
             }
 
             DB::commit();
@@ -874,18 +845,17 @@ class UserController extends Controller
         // Store | Update User Profile Detail
         if ($user->detail) {
             $save = $user->detail;
-            $save->photo         = $uploaded;
+            $save->photo = $uploaded;
             $save->save();
         } else {
             $save = UserDetail::create([
                 'user_id'       => $id,
-                'join_date'     => $user->created_at,
                 'photo'         => $uploaded,
             ]);
         }
 
         if ($save) {
-            return User::with(['detail', 'profile'])->find($id);
+            return User::with(['detail'])->find($id);
         } else {
             return response()->json([
                 'message' => 'Failed Insert data',

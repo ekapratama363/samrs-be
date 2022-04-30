@@ -159,6 +159,7 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'user', 'nam
     Route::post('/update-profile', 'ProfileController@updateProfile');
     Route::get('/login-history', 'ProfileController@loginHistory');
     Route::post('/change-photo-profile', 'ProfileController@changePhotoProfile');
+    Route::post('/delete-photo-profile/{id}', 'ProfileController@deletePhotoProfile');
     Route::post('/change-password', 'ProfileController@changePassword');
     Route::get('/module-object-list', 'ProfileController@moduleList');
 });
