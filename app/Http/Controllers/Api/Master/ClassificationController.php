@@ -11,7 +11,7 @@ use DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
 
-use App\Models\ClassificationMaterial;
+use App\Models\Classification;
 use App\Models\ClassificationParameter;
 
 use App\Helpers\HashId;
@@ -20,11 +20,11 @@ class ClassificationController extends Controller
 {
     public function index()
     {
-        Auth::user()->cekRoleModules(['classification-material-view']);
+        Auth::user()->cekRoleModules(['classification-view']);
 
-        $classificationMat = (new ClassificationMaterial)->newQuery();
+        $classificationMat = (new Classification)->newQuery();
 
-        $classificationMat->where('deleted', false)->with(['classification_type', 'parameters', 'createdBy', 'updatedBy']);
+        $classificationMat->with(['parameters', 'createdBy', 'updatedBy']);
 
         if (request()->has('q')) {
             $q = strtolower(request()->input('q'));
@@ -52,9 +52,9 @@ class ClassificationController extends Controller
 
     public function list()
     {
-        Auth::user()->cekRoleModules(['classification-material-view']);
+        Auth::user()->cekRoleModules(['classification-view']);
 
-        $classificationMat = (new ClassificationMaterial)->newQuery();
+        $classificationMat = (new Classification)->newQuery();
 
         if (request()->has('q') && request()->input('q') != '') {
             $q = strtolower(request()->input('q'));
@@ -62,16 +62,8 @@ class ClassificationController extends Controller
                 $query->where(DB::raw("LOWER(name)"), 'LIKE', "%".$q."%");
             });
 
-            // search classy type
-            $classificationMat->where('classification_materials.deleted', false)->orWhereHas('classification_type', function ($query) use ($q) {
-                $query->where(DB::raw("LOWER(name)"), 'LIKE', "%".$q."%");
-            })
-            ->with(['classification_type' => function ($query) use ($q) {
-                $query->where(DB::raw("LOWER(name)"), 'LIKE', "%".$q."%");
-            }]);
-
             // search classy params
-            $classificationMat->where('classification_materials.deleted', false)->orWhereHas('parameters', function ($query) use ($q) {
+            $classificationMat->where('parameters', function ($query) use ($q) {
                 $query->where(DB::raw("LOWER(name)"), 'LIKE', "%".$q."%");
             })
             ->with(['parameters' => function ($query) use ($q) {
@@ -79,27 +71,11 @@ class ClassificationController extends Controller
             }]);
         }
 
-        $classificationMat->where('classification_materials.deleted', false);
-        $classificationMat->with(['classification_type', 'parameters', 'createdBy', 'updatedBy']);
-
-        if (request()->has('type')) {
-            $classificationMat->whereIn('classification_type_id', request()->input('type'));
-        }
+        $classificationMat->with(['parameters', 'createdBy', 'updatedBy']);
 
         if (request()->has('sort_field')) {
             $sort_order = request()->input('sort_order') == 'asc' ? 'asc' : 'desc';
-            $sort_field = request()->input('sort_field');
-            switch ($sort_field) {
-                case 'classification_type':
-                    $classificationMat->join('classification_types','classification_types.id','=','classification_materials.classification_type_id');
-                    $classificationMat->select('classification_materials.*');
-                    $classificationMat->orderBy('classification_types.name', $sort_order);
-                break;
-
-                default:
-                    $classificationMat->orderBy($sort_field,$sort_order);
-                break;
-            }
+            $classificationMat->orderBy(request()->input('sort_field'), $sort_order);
         } else {
             $classificationMat->orderBy('name', 'asc');
         }
@@ -124,30 +100,26 @@ class ClassificationController extends Controller
 
     public function store(Request $request)
     {
-        Auth::user()->cekRoleModules(['classification-material-create']);
+        Auth::user()->cekRoleModules(['classification-create']);
 
         $this->validate(request(), [
-            'name' => 'required|unique:classification_materials,name,NULL,NULL,deleted,false',
-            'classification_type_id' => 'required|exists:classification_types,id',
+            'name' => 'required|unique:classifications,name',
         ]);
 
         //update if add data already exsist but soft deleted
-        $classificationMaterial = ClassificationMaterial::where('name', $request->name)->first();
+        $classification = Classification::where('name', $request->name)->first();
 
-        if ($classificationMaterial) {
-            $save = $classificationMaterial->update([
-                'classification_type_id' => $request->classification_type_id,
-                'deleted'       => 0,
+        if ($classification) {
+            $save = $classification->update([
                 'updated_by'    => Auth::user()->id
             ]);
 
-            $classificationMaterial->id_hash = HashId::encode($classificationMaterial->id);
+            $classification->id_hash = HashId::encode($classification->id);
 
-            return $classificationMaterial;
+            return $classification;
         } else {
-            $save = ClassificationMaterial::create([
+            $save = Classification::create([
                 'name' => $request->name,
-                'classification_type_id' => $request->classification_type_id,
                 'created_by' => Auth::user()->id,
                 'updated_by' => Auth::user()->id
             ]);
@@ -160,7 +132,7 @@ class ClassificationController extends Controller
 
     public function show($id)
     {
-        Auth::user()->cekRoleModules(['classification-material-view']);
+        Auth::user()->cekRoleModules(['classification-view']);
 
         try {
             $id = HashId::decode($id);
@@ -170,13 +142,13 @@ class ClassificationController extends Controller
             ], 400);
         }
 
-        return ClassificationMaterial::with(['classification_type', 'parameters', 'createdBy', 'updatedBy'])
+        return Classification::with(['parameters', 'createdBy', 'updatedBy'])
         ->findOrFail($id);
     }
 
     public function log($id)
     {
-        Auth::user()->cekRoleModules(['classification-material-view']);
+        Auth::user()->cekRoleModules(['classification-view']);
 
         try {
             $id = HashId::decode($id);
@@ -189,7 +161,7 @@ class ClassificationController extends Controller
         $log = (new \App\Models\ActivityLog)->newQuery();
 
         $log->with('user')
-            ->where('log_name', 'ClassificationMaterial')
+            ->where('log_name', 'Classification')
             ->whereNotNull('causer_id')
             ->where('subject_id', $id);
 
@@ -221,7 +193,7 @@ class ClassificationController extends Controller
 
     public function update($id, Request $request)
     {
-        Auth::user()->cekRoleModules(['classification-material-update']);
+        Auth::user()->cekRoleModules(['classification-update']);
 
         try {
             $id = HashId::decode($id);
@@ -231,10 +203,10 @@ class ClassificationController extends Controller
             ], 400);
         }
 
-        $clasificationMaterial = ClassificationMaterial::findOrFail($id);
+        $clasificationMaterial = Classification::findOrFail($id);
 
         $this->validate(request(), [
-            'name' => 'required|unique:classification_materials,name,'. $id .'',
+            'name' => 'required|unique:classifications,name,'. $id .'',
             'classification_type_id' => 'required|exists:classification_types,id'
         ]);
 
@@ -255,7 +227,7 @@ class ClassificationController extends Controller
 
     public function delete($id)
     {
-        Auth::user()->cekRoleModules(['classification-material-update']);
+        Auth::user()->cekRoleModules(['classification-update']);
 
         try {
             $id = HashId::decode($id);
@@ -265,7 +237,7 @@ class ClassificationController extends Controller
             ], 400);
         }
 
-        $delete = ClassificationMaterial::findOrFail($id)->update([
+        $delete = Classification::findOrFail($id)->update([
             'deleted' => true, 'updated_by' => Auth::user()->id
         ]);
 
@@ -280,7 +252,7 @@ class ClassificationController extends Controller
 
     public function multipleDelete()
     {
-        Auth::user()->cekRoleModules(['classification-material-update']);
+        Auth::user()->cekRoleModules(['classification-update']);
 
         $data = [];
         foreach (request()->id as $key => $ids) {
@@ -302,16 +274,14 @@ class ClassificationController extends Controller
 
         $this->validate(request(), [
             'id'          => 'required|array',
-            'id.*'        => 'required|exists:classification_materials,id',
+            'id.*'        => 'required|exists:classifications,id',
         ]);
 
         try {
             DB::beginTransaction();
 
             foreach (request()->id as $ids) {
-                $delete = ClassificationMaterial::findOrFail($ids)->update([
-                    'deleted' => true, 'updated_by' => Auth::user()->id
-                ]);
+                $delete = Classification::findOrFail($ids)->delete();
             }
 
             DB::commit();
@@ -332,7 +302,7 @@ class ClassificationController extends Controller
 
     public function clasificationStoreParam($id, Request $request)
     {
-        Auth::user()->cekRoleModules(['classification-material-update']);
+        Auth::user()->cekRoleModules(['classification-update']);
 
         try {
             $id = HashId::decode($id);
@@ -342,86 +312,99 @@ class ClassificationController extends Controller
             ], 400);
         }
 
-        $this->validate(request(), [
-            'name' => 'required',
-            'type' => 'required|numeric|min:1',
-            'reading_indicator' => 'nullable|boolean'
-        ]);
+        $classification = Classification::findOrFail($id);
 
-        if (request()->input('type') == 1) {
-            // char
+        if (request()->input('name')) {
             $this->validate(request(), [
-                'length' => 'required|numeric'
+                'name' => 'required|unique:classifications,name,'. $id .'',
             ]);
-        } else if (request()->input('type') == 4) {
-            // numeric
-            $this->validate(request(), [
-                'length' => 'required|numeric',
-                'decimal' => 'required|numeric'
-            ]);
-        } else if (request()->input('type') == 5) {
-            // list
-            $this->validate(request(), [
-                'value' => 'required'
+
+            $save = $classification->update([
+                'name' => $request->name,
+                'updated_by' => Auth::user()->id
             ]);
         }
 
-        $classificationMaterial = ClassificationMaterial::findOrFail($id);
-
-        if (request()->input('type') == 1) {
-            // char
-            $save = ClassificationParameter::create([
-                'name' => $request->name,
-                'type' => $request->type,
-                'length' => $request->length,
-                'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
-                'classification_id' => $classificationMaterial->id,
-                'created_by' => Auth::user()->id,
-                'updated_by' => Auth::user()->id
+        if (request()->input('parameter_name')) {
+            $this->validate(request(), [
+                'parameter_name' => 'required',
+                'type' => 'required|numeric|min:1',
+                'reading_indicator' => 'nullable|boolean'
             ]);
-        } else if (request()->input('type') == 2) {
-            // date
-            $save = ClassificationParameter::create([
-                'name' => $request->name,
-                'type' => $request->type,
-                'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
-                'classification_id' => $classificationMaterial->id,
-                'created_by' => Auth::user()->id,
-                'updated_by' => Auth::user()->id
-            ]);
-        } else if (request()->input('type') == 3) {
-            // time
-            $save = ClassificationParameter::create([
-                'name' => $request->name,
-                'type' => $request->type,
-                'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
-                'classification_id' => $classificationMaterial->id,
-                'created_by' => Auth::user()->id,
-                'updated_by' => Auth::user()->id
-            ]);
-        } else if (request()->input('type') == 4) {
-            // numeric
-            $save = ClassificationParameter::create([
-                'name' => $request->name,
-                'type' => $request->type,
-                'length' => $request->length,
-                'decimal' => $request->decimal,
-                'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
-                'classification_id' => $classificationMaterial->id,
-                'created_by' => Auth::user()->id,
-                'updated_by' => Auth::user()->id
-            ]);
-        } else if (request()->input('type') == 5) {
-            // list
-            $save = ClassificationParameter::create([
-                'name' => $request->name,
-                'type' => $request->type,
-                'value' => $request->value,
-                'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
-                'classification_id' => $classificationMaterial->id,
-                'created_by' => Auth::user()->id,
-                'updated_by' => Auth::user()->id
-            ]);
+    
+            if (request()->input('type') == 1) {
+                // char
+                $this->validate(request(), [
+                    'length' => 'required|numeric'
+                ]);
+            } else if (request()->input('type') == 4) {
+                // numeric
+                $this->validate(request(), [
+                    'length' => 'required|numeric',
+                    'decimal' => 'required|numeric'
+                ]);
+            } else if (request()->input('type') == 5) {
+                // list
+                $this->validate(request(), [
+                    'value' => 'required'
+                ]);
+            }
+    
+            if (request()->input('type') == 1) {
+                // char
+                $save = ClassificationParameter::create([
+                    'name' => $request->parameter_name,
+                    'type' => $request->type,
+                    'length' => $request->length,
+                    'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
+                    'classification_id' => $classification->id,
+                    'created_by' => Auth::user()->id,
+                    'updated_by' => Auth::user()->id
+                ]);
+            } else if (request()->input('type') == 2) {
+                // date
+                $save = ClassificationParameter::create([
+                    'name' => $request->parameter_name,
+                    'type' => $request->type,
+                    'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
+                    'classification_id' => $classification->id,
+                    'created_by' => Auth::user()->id,
+                    'updated_by' => Auth::user()->id
+                ]);
+            } else if (request()->input('type') == 3) {
+                // time
+                $save = ClassificationParameter::create([
+                    'name' => $request->parameter_name,
+                    'type' => $request->type,
+                    'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
+                    'classification_id' => $classification->id,
+                    'created_by' => Auth::user()->id,
+                    'updated_by' => Auth::user()->id
+                ]);
+            } else if (request()->input('type') == 4) {
+                // numeric
+                $save = ClassificationParameter::create([
+                    'name' => $request->parameter_name,
+                    'type' => $request->type,
+                    'length' => $request->length,
+                    'decimal' => $request->decimal,
+                    'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
+                    'classification_id' => $classification->id,
+                    'created_by' => Auth::user()->id,
+                    'updated_by' => Auth::user()->id
+                ]);
+            } else if (request()->input('type') == 5) {
+                // list
+                $save = ClassificationParameter::create([
+                    'name' => $request->parameter_name,
+                    'type' => $request->type,
+                    'value' => $request->value,
+                    'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
+                    'classification_id' => $classification->id,
+                    'created_by' => Auth::user()->id,
+                    'updated_by' => Auth::user()->id
+                ]);
+            }
         }
 
         if ($save) {
@@ -435,14 +418,14 @@ class ClassificationController extends Controller
 
     public function showClassificationParameter($id)
     {
-        Auth::user()->cekRoleModules(['classification-material-view']);
+        Auth::user()->cekRoleModules(['classification-view']);
 
         return ClassificationParameter::findOrFail($id);
     }
 
     public function updateClassificationParameter($id, Request $request)
     {
-        Auth::user()->cekRoleModules(['classification-material-update']);
+        Auth::user()->cekRoleModules(['classification-update']);
 
         $this->validate(request(), [
             'name' => 'required',
@@ -528,7 +511,7 @@ class ClassificationController extends Controller
 
     public function deleteClassificationParameter($id)
     {
-        Auth::user()->cekRoleModules(['classification-material-update']);
+        Auth::user()->cekRoleModules(['classification-update']);
 
         $delete = ClassificationParameter::findOrFail($id)->delete();
 
@@ -543,7 +526,7 @@ class ClassificationController extends Controller
 
     public function multipleDeleteClassificationParam()
     {
-        Auth::user()->cekRoleModules(['classification-material-update']);
+        Auth::user()->cekRoleModules(['classification-update']);
 
         $this->validate(request(), [
             'id'          => 'required|array',
@@ -575,8 +558,8 @@ class ClassificationController extends Controller
 
     public function parameterByClassification($id)
     {
-        $classification = ClassificationMaterial::findOrFail($id);
+        $classification = Classification::findOrFail($id);
 
-        return ClassificationParameter::where('classification_id', $classification->id)->where('deleted', false)->get();
+        return ClassificationParameter::where('classification_id', $classification->id)->get();
     }
 }

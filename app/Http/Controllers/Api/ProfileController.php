@@ -228,16 +228,26 @@ class ProfileController extends Controller
         }
     }
 
-    public function changePhotoProfile(Request $request)
+    public function changePhotoProfile($id, Request $request)
     {
         Auth::user()->cekRoleModules(['user-update-profile']);
 
-        if (!Auth::user()->detail) {
+        try {
+            $id = HashId::decode($id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $user_detail = UserDetail::with('user')->where('user_id', $id)->first();
+
+        if (!$user_detail) {
             $this->validate($request, [
                 'image' => 'required|image'
             ]);
 
-            $id_user = Auth::user()->id;
+            $id_user = $id;
 
             if (request()->has('image')) {
                 $image_data = request()->file('image');
@@ -247,12 +257,12 @@ class ProfileController extends Controller
                 $uploaded = Storage::disk('public')->putFileAs($image_path, $image_data, $image_name);
 
                 $save = UserDetail::create([
-                    'user_id' => Auth::user()->id,
+                    'user_id' => $id_user,
                     'photo'   => $uploaded,
                 ]);
 
                 if ($uploaded) {
-                    return Auth::user()->detail;
+                    return $user_detail;
                 } else {
                     return response()->json([
                         'message' => 'Unable to upload profile Image'
@@ -264,7 +274,7 @@ class ProfileController extends Controller
                 'image' => 'required|image'
             ]);
 
-            $id_user = Auth::user()->id;
+            $id_user = $id;
 
             if (request()->has('image')) {
                 $image_data = request()->file('image');
@@ -273,23 +283,23 @@ class ProfileController extends Controller
 
                 $uploaded = Storage::disk('public')->putFileAs($image_path, $image_data, $image_name);
 
-                $profileImg = Auth::user()->detail->photo;
+                $profileImg = $user_detail->photo;
                 if ($profileImg != null) {
-                    if (Storage::disk('public')->exists(Auth::user()->detail->photo)) {
-                        Storage::disk('public')->delete(Auth::user()->detail->photo);
+                    if (Storage::disk('public')->exists($user_detail->photo)) {
+                        Storage::disk('public')->delete($user_detail->photo);
                     }
 
-                    $detail = Auth::user()->detail;
+                    $detail = $user_detail;
                     $detail->photo = $uploaded;
                     $detail->save();
                 } else {
-                    $detail = Auth::user()->detail;
+                    $detail = $user_detail;
                     $detail->photo = $uploaded;
                     $detail->save();
                 }
 
                 if ($uploaded) {
-                    return Auth::user()->detail;
+                    return $user_detail;
                 } else {
                     return response()->json([
                         'message' => 'Unable to upload profile Image'

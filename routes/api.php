@@ -91,7 +91,7 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
     Route::get('/classification-log/{id}', 'Master\ClassificationController@log');
     Route::put('/classification/{id}', 'Master\ClassificationController@update');
     Route::delete('/classification/{id}', 'Master\ClassificationController@delete');
-    Route::post('/multiple-delete-classification-mat', 'Master\ClassificationController@multipleDelete');
+    Route::post('/multiple-delete-classification', 'Master\ClassificationController@multipleDelete');
 
     /* Classification Parameter */
     Route::post('/classification/{id}/addparam', 'Master\ClassificationController@clasificationStoreParam');
@@ -158,7 +158,8 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'user', 'nam
     Route::post('/update-login-detail', 'ProfileController@updateLoginDetail');
     Route::post('/update-profile', 'ProfileController@updateProfile');
     Route::get('/login-history', 'ProfileController@loginHistory');
-    Route::post('/change-photo-profile', 'ProfileController@changePhotoProfile');
+    // Route::post('/change-photo-profile', 'ProfileController@changePhotoProfile');
+    Route::post('/change-photo-profile/{id}', 'ProfileController@changePhotoProfile');
     Route::post('/delete-photo-profile/{id}', 'ProfileController@deletePhotoProfile');
     Route::post('/change-password', 'ProfileController@changePassword');
     Route::get('/module-object-list', 'ProfileController@moduleList');
