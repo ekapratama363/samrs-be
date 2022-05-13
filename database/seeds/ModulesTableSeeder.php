@@ -121,20 +121,20 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Material - Edit']
         );
 
-        /** =========== UNIT ====================== */
+        /** =========== Unit of Measurement ====================== */
         Modules::updateOrCreate(
-            ['object' => 'unit-view'],
-            ['description' => 'Unit - Display']
+            ['object' => 'unit-of-measurement-view'],
+            ['description' => 'Unit of Measurement - Display']
         );
 
         Modules::updateOrCreate(
-            ['object' => 'unit-create'],
-            ['description' => 'Unit - Create']
+            ['object' => 'unit-of-measurement-create'],
+            ['description' => 'Unit of Measurement - Create']
         );
 
         Modules::updateOrCreate(
-            ['object' => 'unit-update'],
-            ['description' => 'Unit - Edit']
+            ['object' => 'unit-of-measurement-update'],
+            ['description' => 'Unit of Measurement - Edit']
         );
 
         /** =========== VENDOR ====================== */

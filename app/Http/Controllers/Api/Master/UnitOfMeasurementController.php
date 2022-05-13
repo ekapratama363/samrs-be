@@ -8,74 +8,74 @@ use Carbon\Carbon;
 use Auth;
 use Storage;
 use DB;
-use App\Models\Unit;
+use App\Models\UnitOfMeasurement;
 use App\Helpers\HashId;
 
-class UnitController extends Controller
+class UnitOfMeasurementController extends Controller
 {
     public function index()
     {
-        Auth::user()->cekRoleModules(['unit-view']);
+        Auth::user()->cekRoleModules(['unit-of-measurement-view']);
 
-        $unit = (new Unit)->newQuery();
+        $uom = (new UnitOfMeasurement)->newQuery();
 
         if (request()->has('q')) {
             $q = strtolower(request()->input('q'));
-            $unit->where(function($query) use ($q) {
+            $uom->where(function($query) use ($q) {
                 $query->where(DB::raw("LOWER(name)"), 'LIKE', "%".$q."%");
             });
         }
 
         if (request()->has('sort_field')) {
             $sort_order = request()->input('sort_order') == 'asc' ? 'asc' : 'desc';
-            $unit->orderBy(request()->input('sort_field'), $sort_order);
+            $uom->orderBy(request()->input('sort_field'), $sort_order);
         } else {
-            $unit->orderBy('name', 'asc');
+            $uom->orderBy('name', 'asc');
         }
 
         if (request()->has('per_page')) {
-            $unit = $unit->paginate(request()->input('per_page'))->appends(request()->input('page'))
+            $uom = $uom->paginate(request()->input('per_page'))->appends(request()->input('page'))
             ->withPath('')->toArray();
         } else {
-            $unit = $unit->paginate(20)->appends(request()->input('page'))
+            $uom = $uom->paginate(20)->appends(request()->input('page'))
             ->withPath('')->toArray();
         }
 
-        return $unit;
+        return $uom;
     }
 
     public function list()
     {
-        Auth::user()->cekRoleModules(['unit-view']);
+        Auth::user()->cekRoleModules(['unit-of-measurement-view']);
 
-        $unit = (new Unit)->newQuery();
+        $uom = (new UnitOfMeasurement)->newQuery();
 
         if (request()->has('q')) {
             $q = strtolower(request()->input('q'));
-            $unit->where(function($query) use ($q) {
+            $uom->where(function($query) use ($q) {
                 $query->where(DB::raw("LOWER(name)"), 'LIKE', "%".$q."%");
             });
         }
 
         if (request()->has('sort_field')) {
             $sort_order = request()->input('sort_order') == 'asc' ? 'asc' : 'desc';
-            $unit->orderBy(request()->input('sort_field'), $sort_order);
+            $uom->orderBy(request()->input('sort_field'), $sort_order);
         } else {
-            $unit->orderBy('name', 'asc');
+            $uom->orderBy('name', 'asc');
         }
 
         if (request()->has('per_page')) {
-            $unit = $unit->paginate(request()->input('per_page'))->appends(request()->input('page'))
+            $uom = $uom->paginate(request()->input('per_page'))->appends(request()->input('page'))
             ->withPath('')->toArray();
         } else {
-            $unit = $unit->paginate(20)->appends(request()->input('page'))
+            $uom = $uom->paginate(20)->appends(request()->input('page'))
             ->withPath('')->toArray();
         }
         
-        foreach($unit['data'] as $k => $v) {
+        foreach($uom['data'] as $k => $v) {
             try {
                 $v['id'] = HashId::encode($v['id']);
-                $unit['data'][$k] = $v;
+                $uom['data'][$k] = $v;
             }
             catch(\Exception $ex) {
                 return response()->json([
@@ -84,12 +84,12 @@ class UnitController extends Controller
             }
         }
 
-        return $unit;
+        return $uom;
     }
 
     public function store(Request $request)
     {
-    	Auth::user()->cekRoleModules(['unit-create']);
+    	Auth::user()->cekRoleModules(['unit-of-measurement-create']);
 
     	$this->validate($request, [
             'name' => 'required|max:20',
@@ -97,18 +97,18 @@ class UnitController extends Controller
     	]);
 
         //update if add data already exsist but soft deleted
-    	$unit = Unit::withTrashed()->where('name', $request->name)->first();
+    	$uom = UnitOfMeasurement::withTrashed()->where('name', $request->name)->first();
         
-        if ($unit) {
-            if($unit->deleted_at){
-                $unit->restore();
-                $unit->update([
+        if ($uom) {
+            if($uom->deleted_at){
+                $uom->restore();
+                $uom->update([
                     'name' => $request->name,
                     'description' => $request->description,
                     'updated_by' => Auth::user()->id
                 ]);
 
-                $save = $unit;
+                $save = $uom;
             } else {
                 return response()->json([
                     'message' => 'Data invalid',
@@ -118,14 +118,14 @@ class UnitController extends Controller
                 ],422);
             }
         } else {
-            $unit = [
+            $uom = [
                 'name' => $request->name,
                 'description' => $request->description,
                 'created_by' => Auth::user()->id,
                 'updated_by' => Auth::user()->id,
             ];
 
-            $save = Unit::create($unit);            
+            $save = UnitOfMeasurement::create($uom);            
         }
 
         return $save;
@@ -133,7 +133,7 @@ class UnitController extends Controller
 
     public function show($id)
     {
-        Auth::user()->cekRoleModules(['unit-view']);
+        Auth::user()->cekRoleModules(['unit-of-measurement-view']);
 
         try {
             $id = HashId::decode($id);
@@ -143,14 +143,14 @@ class UnitController extends Controller
             ], 400);
         }
 
-        $unit = Unit::findOrFail($id);
+        $uom = UnitOfMeasurement::findOrFail($id);
 
-        return $unit;
+        return $uom;
     }
 
     public function update($id, Request $request)
     {
-        Auth::user()->cekRoleModules(['unit-update']);
+        Auth::user()->cekRoleModules(['unit-of-measurement-update']);
 
         try {
             $id = HashId::decode($id);
@@ -160,21 +160,21 @@ class UnitController extends Controller
             ], 400);
         }
 
-        $unit = Unit::findOrFail($id);
+        $uom = UnitOfMeasurement::findOrFail($id);
 
         $this->validate(request(), [
             'name' => 'required|max:20|unique:units,name,'. $id .'',
             'description' => 'nullable',
         ]);
 
-        $save = $unit->update([
+        $save = $uom->update([
             'name' => $request->name,
             'description' => $request->description,
             'updated_by' => Auth::user()->id,
         ]);
 
         if ($save) {
-            return $unit;
+            return $uom;
         } else {
             return response()->json([
                 'message' => 'Failed Update Data',
@@ -184,7 +184,7 @@ class UnitController extends Controller
 
     public function destroy($id)
     {
-        Auth::user()->cekRoleModules(['unit-delete']);
+        Auth::user()->cekRoleModules(['unit-of-measurement-delete']);
 
         try {
             $id = HashId::decode($id);
@@ -194,9 +194,9 @@ class UnitController extends Controller
             ], 400);
         }
 
-        $unit = Unit::findOrFail($id);
+        $uom = UnitOfMeasurement::findOrFail($id);
 
-        $delete = $unit->delete();
+        $delete = $uom->delete();
 
         if ($delete) {
             return response()->json($delete);
@@ -209,7 +209,7 @@ class UnitController extends Controller
 
     public function multipleDelete()
     {
-        Auth::user()->cekRoleModules(['unit-delete']);
+        Auth::user()->cekRoleModules(['unit-of-measurement-delete']);
 
         $data = [];
         foreach (request()->id as $key => $ids) {
@@ -238,7 +238,7 @@ class UnitController extends Controller
             DB::beginTransaction();
 
             foreach (request()->id as $ids) {
-                $delete = Unit::findOrFail($ids)->delete();
+                $delete = UnitOfMeasurement::findOrFail($ids)->delete();
             }
 
             DB::commit();

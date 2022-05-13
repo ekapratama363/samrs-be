@@ -100,19 +100,28 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
     Route::delete('/classification-parameter/{id}', 'Master\ClassificationController@deleteClassificationParameter');
     Route::post('/multiple-delete-classification-param', 'Master\ClassificationController@multipleDeleteClassificationParam');
 
+    /* Material  */
+    Route::get('/material', 'Master\MaterialController@index');
+    Route::get('/material-list', 'Master\MaterialController@list');
+    Route::post('/material', 'Master\MaterialController@store');
+    Route::get('/material/{id}', 'Master\MaterialController@show');
+    Route::put('/material/{id}', 'Master\MaterialController@update');
+    Route::delete('/material/{id}', 'Master\MaterialController@delete');
+    Route::post('/multiple-delete-material', 'Master\MaterialController@multipleDelete');
+
     // Settings
     Route::get('/setting', 'Master\SettingController@index');
     Route::get('/setting/{key}', 'Master\SettingController@show');
     Route::post('/setting/{key}', 'Master\SettingController@update');
 
-     // Unit
-    Route::get('/unit', 'Master\UnitController@index');
-    Route::get('/unit-list-hash', 'Master\UnitController@list');
-    Route::post('/unit', 'Master\UnitController@store');
-    Route::get('/unit/{id}', 'Master\UnitController@show');
-    Route::put('/unit/{id}', 'Master\UnitController@update');
-    Route::delete('/unit/{id}', 'Master\UnitController@destroy');
-    Route::post('/multiple-delete-unit', 'Master\UnitController@multipleDelete');
+     // Uom
+    Route::get('/uom', 'Master\UnitOfMeasurementController@index');
+    Route::get('/uom-list-hash', 'Master\UnitOfMeasurementController@list');
+    Route::post('/uom', 'Master\UnitOfMeasurementController@store');
+    Route::get('/uom/{id}', 'Master\UnitOfMeasurementController@show');
+    Route::put('/uom/{id}', 'Master\UnitOfMeasurementController@update');
+    Route::delete('/uom/{id}', 'Master\UnitOfMeasurementController@destroy');
+    Route::post('/multiple-delete-uom', 'Master\UnitOfMeasurementController@multipleDelete');
 
     /** Setting */
     Route::get('/setting', 'Master\SettingController@index');

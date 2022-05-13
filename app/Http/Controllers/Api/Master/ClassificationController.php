@@ -45,7 +45,19 @@ class ClassificationController extends Controller
         }
 
         $classificationMat = $classificationMat->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(request()->except('page'));
+            ->appends(request()->except('page'))
+            ->toArray();
+
+        foreach($classificationMat['data'] as $k => $v) {
+            try {
+                $v['id_hash'] = HashId::encode($v['id']);
+                $classificationMat['data'][$k] = $v;
+            } catch(\Exception $ex) {
+                return response()->json([
+                    'message' => 'ERROR : Cannot hash ID. '.$ex->getMessage(),
+                ], 400);
+            }
+        }
 
         return $classificationMat;
     }
@@ -61,14 +73,6 @@ class ClassificationController extends Controller
             $classificationMat->where(function($query) use ($q) {
                 $query->where(DB::raw("LOWER(name)"), 'LIKE', "%".$q."%");
             });
-
-            // search classy params
-            $classificationMat->where('parameters', function ($query) use ($q) {
-                $query->where(DB::raw("LOWER(name)"), 'LIKE', "%".$q."%");
-            })
-            ->with(['parameters' => function ($query) use ($q) {
-                $query->where(DB::raw("LOWER(name)"), 'LIKE', "%".$q."%");
-            }]);
         }
 
         $classificationMat->with(['parameters', 'createdBy', 'updatedBy']);
