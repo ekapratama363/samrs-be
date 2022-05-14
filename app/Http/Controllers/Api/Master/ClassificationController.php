@@ -139,15 +139,17 @@ class ClassificationController extends Controller
         Auth::user()->cekRoleModules(['classification-view']);
 
         try {
-            $id = HashId::decode($id);
+            if (HashId::decode($id)) {
+                $id = HashId::decode($id);
+            } else {
+                $id = $id;
+            }
+            return Classification::with(['parameters', 'createdBy', 'updatedBy'])->findOrFail($id);
         } catch(\Exception $ex) {
             return response()->json([
                 'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
             ], 400);
         }
-
-        return Classification::with(['parameters', 'createdBy', 'updatedBy'])
-        ->findOrFail($id);
     }
 
     public function log($id)

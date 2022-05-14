@@ -108,6 +108,9 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
     Route::put('/material/{id}', 'Master\MaterialController@update');
     Route::delete('/material/{id}', 'Master\MaterialController@delete');
     Route::post('/multiple-delete-material', 'Master\MaterialController@multipleDelete');
+    Route::post('/material/list-image/{material_id}', 'Master\MaterialController@listImage');
+    Route::post('/material/upload-image/{material_id}', 'Master\MaterialController@uploadImage');
+    Route::post('/material/delete-image/{id}', 'Master\MaterialController@deleteImage');
 
     // Settings
     Route::get('/setting', 'Master\SettingController@index');

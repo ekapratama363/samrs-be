@@ -198,7 +198,7 @@ class ProfileController extends Controller
         return User::with(['detail', 'profile'])->find($user->id);
     }
 
-    public function deletePhotoProfile($id, Request $request)
+    public function deletePhotoProfile($id)
     {
         Auth::user()->cekRoleModules(['user-update-profile']);
 

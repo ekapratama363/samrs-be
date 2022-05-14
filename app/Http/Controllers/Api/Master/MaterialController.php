@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Mail;
 
 use App\Models\Material;
 use App\Models\MaterialParameter;
+use App\Models\MaterialImage;
 
 use App\Helpers\HashId;
 
@@ -146,6 +147,8 @@ class MaterialController extends Controller
             }
 
             DB::commit();
+
+            $save->id_hash = HashId::encode($save->id);
             return $save;
         } catch (\Throwable $th) {
             DB::rollback();
@@ -316,6 +319,96 @@ class MaterialController extends Controller
                 'detail' => $e->getMessage(),
                 'trace' => $e->getTrace()
             ], 400);
+        }
+    }
+
+    public function listImage($material_id)
+    {
+        Auth::user()->cekRoleModules(['material-view']);
+
+        try {
+            $id = HashId::decode($material_id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $material = (new MaterialImage)->newQuery();
+
+        $material->where('material_id', $id);
+
+        $material = $material->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
+            ->appends(request()->except('page'));
+
+        return $material;
+    }
+
+
+    public function uploadImage($material_id, Request $request)
+    {
+        Auth::user()->cekRoleModules(['material-update']);
+
+        try {
+            $id = HashId::decode($material_id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $this->validate($request, [
+            'image' => 'required|image'
+        ]);
+
+        if (request()->has('image')) {
+            $image_data = request()->file('image');
+            $image_name = md5(time()) . $id . ".jpg";
+            $image_path = 'images/material';
+
+            $uploaded = Storage::disk('public')->putFileAs($image_path, $image_data, $image_name);
+
+            $save = MaterialImage::create([
+                'material_id' => $id,
+                'image'   => $uploaded,
+            ]);
+
+            if ($uploaded) {
+                return $save;
+            } else {
+                return response()->json([
+                    'message' => 'Unable to upload profile Image'
+                ], 422);
+            }
+        }
+    }
+
+    public function deleteImage($id)
+    {
+        Auth::user()->cekRoleModules(['material-update']);
+
+        // try {
+        //     $id = HashId::decode($id);
+        // } catch(\Exception $ex) {
+        //     return response()->json([
+        //         'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+        //     ], 400);
+        // }
+
+        $material = MaterialImage::find($id);
+
+        if (Storage::disk('public')->exists($material->image)) {
+            Storage::disk('public')->delete($material->image);
+        }
+
+        $material->delete();
+
+        if ($material) {
+            return $material;
+        } else {
+            return response()->json([
+                'message' => 'Unable to delete Image'
+            ], 422);
         }
     }
 }
