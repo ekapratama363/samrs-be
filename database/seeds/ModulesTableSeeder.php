@@ -168,6 +168,22 @@ class ModulesTableSeeder extends Seeder
             ['object' => 'room-update'],
             ['description' => 'Room - Edit']
         );
+
+        /** =========== RESERVATION ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'reservation-view'],
+            ['description' => 'Reservation - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'reservation-create'],
+            ['description' => 'Reservation - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'reservation-update'],
+            ['description' => 'Reservation - Edit']
+        );
         
         //Assign All Module To Admin Role
         $role_admin = Role::where(DB::raw("LOWER(name)"), 'admin')->first();

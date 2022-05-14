@@ -22,7 +22,7 @@ class RoomController extends Controller
 
         $room = (new Room)->newQuery();
 
-        $room->with(['plant', 'createdBy', 'updatedBy']);
+        $room->with(['plant', 'responsible_person', 'createdBy', 'updatedBy']);
 
         if (request()->has('q')) {
             $q = strtolower(request()->input('q'));
@@ -36,14 +36,19 @@ class RoomController extends Controller
             $sort_order = request()->input('sort_order') == 'asc' ? 'asc' : 'desc';
             $room->orderBy(request()->input('sort_field'), $sort_order);
         } else {
-            $room->orderBy('code', 'asc');
+            $room->orderBy('id', 'desc');
         }
 
         // if have organization parameter
         $room_id = Auth::user()->roleOrgParam(['room']);
-
         if (count($room_id) > 0) {
             $room->whereIn('id', $room_id);
+        }
+
+        // if have organization parameter
+        $plant_id = Auth::user()->roleOrgParam(['plant']);
+        if (count($plant_id) > 0) {
+            $room->whereIn('plant_id', $plant_id);
         }
 
         $room = $room->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
@@ -58,7 +63,7 @@ class RoomController extends Controller
 
         $room = (new Room)->newQuery();
 
-        $room->with(['plant', 'createdBy', 'updatedBy']);
+        $room->with(['plant', 'responsible_person', 'createdBy', 'updatedBy']);
 
         if (request()->has('q') && request()->input('q') != '') {
             $q = strtolower(request()->input('q'));
@@ -72,7 +77,7 @@ class RoomController extends Controller
             $sort_order = request()->input('sort_order') == 'asc' ? 'asc' : 'desc';
             $room->orderBy(request()->input('sort_field'), $sort_order);
         } else {
-            $room->orderBy('code', 'asc');
+            $room->orderBy('id', 'desc');
         }
 
         // if have organization parameter
@@ -80,6 +85,12 @@ class RoomController extends Controller
 
         if (count($room_id) > 0) {
             $room->whereIn('id', $room_id);
+        }
+
+        // if have organization parameter
+        $plant_id = Auth::user()->roleOrgParam(['plant']);
+        if (count($plant_id) > 0) {
+            $room->whereIn('plant_id', $plant_id);
         }
 
         $room = $room->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
@@ -108,6 +119,7 @@ class RoomController extends Controller
             'code' => 'required|max:4',
             'name' => 'required|max:30',
             'plant_id' => 'required|exists:plants,id',
+            'responsible_person' => 'required|exists:users,id',
             'description' => 'required|max:200',
         ]);
 
@@ -121,6 +133,7 @@ class RoomController extends Controller
                     'name' => $request->name,
                     'description' => $request->description,
                     'plant_id' => $request->plant_id,
+                    'responsible_person' => $request->responsible_person,
                     'updated_by'    => Auth::user()->id
                 ]);
 
@@ -139,6 +152,7 @@ class RoomController extends Controller
                 'name' => $request->name,
                 'description' => $request->description,
                 'plant_id' => $request->plant_id,
+                'responsible_person' => $request->responsible_person,
                 'created_by' => Auth::user()->id,
                 'updated_by' => Auth::user()->id
             ]);
@@ -181,6 +195,7 @@ class RoomController extends Controller
             'name' => 'required|max:30',
             'description' => 'required|max:200',
             'plant_id' => 'required|exists:plants,id',
+            'responsible_person' => 'required|exists:users,id',
             // 'latitude' => 'required',
             // 'longitude' => 'required'
         ]);
@@ -190,6 +205,7 @@ class RoomController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'plant_id' => $request->plant_id,
+            'responsible_person' => $request->responsible_person,
             // 'latitude' => $request->latitude,
             // 'longitude' => $request->longitude,
             'updated_by' => Auth::user()->id

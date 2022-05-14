@@ -163,7 +163,7 @@ class UnitOfMeasurementController extends Controller
         $uom = UnitOfMeasurement::findOrFail($id);
 
         $this->validate(request(), [
-            'name' => 'required|max:20|unique:units,name,'. $id .'',
+            'name' => 'required|max:20|unique:unit_of_measurements,name,'. $id .'',
             'description' => 'nullable',
         ]);
 

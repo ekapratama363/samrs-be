@@ -460,54 +460,26 @@ class RoleController extends Controller
         }
 
         $this->validate(request(), [
-            'plant'     => 'nullable|array',
-            'plant.*'   => 'nullable|exists:plants,id',
-            'storage'   => 'nullable|array',
-            'storage.*' => 'nullable|exists:storages,id',
-            'movement_type'   => 'nullable|array',
-            'movement_type.*' => 'nullable|exists:movement_types,id',
-            'procurement_group'   => 'nullable|array',
-            'procurement_group.*' => 'nullable|exists:procurement_groups,id',
-            'valuation_group'   => 'nullable|array',
-            'valuation_group.*' => 'nullable|exists:valuation_groups,id',
-            'cost_center'   => 'nullable|array',
-            'cost_center.*' => 'nullable|exists:cost_centers,id',
+            'plant'   => 'nullable|array',
+            'plant.*' => 'nullable|exists:plants,id',
+            'room'    => 'nullable|array',
+            'room.*'  => 'nullable|exists:rooms,id',
         ]);
 
         $role = Role::find($id);
 
         // Encode Org Param
         $plant = $request->plant ? json_encode($request->plant) : json_encode([]);
-        $storage = $request->storage ? json_encode($request->storage) : json_encode([]);
-        $movement_type = $request->movement_type ? json_encode($request->movement_type) : json_encode([]);
-        $procurement_group = $request->procurement_group ? json_encode($request->procurement_group) : json_encode([]);
-        $valuation_group = $request->valuation_group ? json_encode($request->valuation_group) : json_encode([]);
-        $cost_center = $request->cost_center ? json_encode($request->cost_center) : json_encode([]);
+        $room = $request->room ? json_encode($request->room) : json_encode([]);
 
         // Update or create org param
         $rplant = OrganizationParameter::updateOrCreate(
             ['key' => 'plant', 'role_id' => $id],
             ['value' => $plant, 'updated_by' => Auth::user()->id, 'created_by' => Auth::user()->id,]
         );
-        $rstorage = OrganizationParameter::updateOrCreate(
-            ['key' => 'storage', 'role_id' => $id],
-            ['value' => $storage, 'updated_by' => Auth::user()->id, 'created_by' => Auth::user()->id,]
-        );
-        $rmovement_type = OrganizationParameter::updateOrCreate(
-            ['key' => 'movement_type', 'role_id' => $id],
-            ['value' => $movement_type, 'updated_by' => Auth::user()->id, 'created_by' => Auth::user()->id,]
-        );
-        $rprocurement_group = OrganizationParameter::updateOrCreate(
-            ['key' => 'procurement_group', 'role_id' => $id],
-            ['value' => $procurement_group, 'updated_by' => Auth::user()->id, 'created_by' => Auth::user()->id,]
-        );
-        $rvaluation_group = OrganizationParameter::updateOrCreate(
-            ['key' => 'valuation_group', 'role_id' => $id],
-            ['value' => $valuation_group, 'updated_by' => Auth::user()->id, 'created_by' => Auth::user()->id,]
-        );
-        $rcost_center = OrganizationParameter::updateOrCreate(
-            ['key' => 'cost_center', 'role_id' => $id],
-            ['value' => $cost_center, 'updated_by' => Auth::user()->id, 'created_by' => Auth::user()->id,]
+        $rroom = OrganizationParameter::updateOrCreate(
+            ['key' => 'room', 'role_id' => $id],
+            ['value' => $room, 'updated_by' => Auth::user()->id, 'created_by' => Auth::user()->id,]
         );
 
         $role->update([
@@ -546,56 +518,28 @@ class RoleController extends Controller
         }
 
         $this->validate(request(), [
-            'plant'     => 'nullable|array',
-            'plant.*'   => 'nullable|exists:plants,id',
-            'storage'   => 'nullable|array',
-            'storage.*' => 'nullable|exists:storages,id',
-            'movement_type'   => 'nullable|array',
-            'movement_type.*' => 'nullable|exists:movement_types,id',
-            'procurement_group'   => 'nullable|array',
-            'procurement_group.*' => 'nullable|exists:procurement_groups,id',
-            'valuation_group'   => 'nullable|array',
-            'valuation_group.*' => 'nullable|exists:valuation_groups,id',
-            'cost_center'   => 'nullable|array',
-            'cost_center.*' => 'nullable|exists:cost_centers,id',
+            'plant'   => 'nullable|array',
+            'plant.*' => 'nullable|exists:plants,id',
+            'room'    => 'nullable|array',
+            'room.*'  => 'nullable|exists:rooms,id',
         ]);
 
         $role = Role::find($id);
 
         // Encode Org Param
         $plant = $request->plant ? json_encode($request->plant) : json_encode([]);
-        $storage = $request->storage ? json_encode($request->storage) : json_encode([]);
-        $movement_type = $request->movement_type ? json_encode($request->movement_type) : json_encode([]);
-        $procurement_group = $request->procurement_group ? json_encode($request->procurement_group) : json_encode([]);
-        $valuation_group = $request->valuation_group ? json_encode($request->valuation_group) : json_encode([]);
-        $cost_center = $request->cost_center ? json_encode($request->cost_center) : json_encode([]);
+        $room = $request->room ? json_encode($request->room) : json_encode([]);
 
         // Update or create org param
         $rplant = OrganizationParameter::updateOrCreate(
             ['key' => 'plant', 'role_id' => $id],
             ['value' => $plant, 'updated_by' => Auth::user()->id]
         );
-        $rstorage = OrganizationParameter::updateOrCreate(
-            ['key' => 'storage', 'role_id' => $id],
-            ['value' => $storage, 'updated_by' => Auth::user()->id]
+        $rroom = OrganizationParameter::updateOrCreate(
+            ['key' => 'room', 'role_id' => $id],
+            ['value' => $room, 'updated_by' => Auth::user()->id]
         );
-        $rmovement_type = OrganizationParameter::updateOrCreate(
-            ['key' => 'movement_type', 'role_id' => $id],
-            ['value' => $movement_type, 'updated_by' => Auth::user()->id]
-        );
-        $rprocurement_group = OrganizationParameter::updateOrCreate(
-            ['key' => 'procurement_group', 'role_id' => $id],
-            ['value' => $procurement_group, 'updated_by' => Auth::user()->id]
-        );
-        $rvaluation_group = OrganizationParameter::updateOrCreate(
-            ['key' => 'valuation_group', 'role_id' => $id],
-            ['value' => $valuation_group, 'updated_by' => Auth::user()->id]
-        );
-        $rcost_center = OrganizationParameter::updateOrCreate(
-            ['key' => 'cost_center', 'role_id' => $id],
-            ['value' => $cost_center, 'updated_by' => Auth::user()->id]
-        );
-
+        
         $role->update([
             'updated_by' => Auth::user()->id,
             'updated_at' => now()

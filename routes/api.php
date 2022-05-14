@@ -119,7 +119,7 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
 
      // Uom
     Route::get('/uom', 'Master\UnitOfMeasurementController@index');
-    Route::get('/uom-list-hash', 'Master\UnitOfMeasurementController@list');
+    Route::get('/uom-list', 'Master\UnitOfMeasurementController@list');
     Route::post('/uom', 'Master\UnitOfMeasurementController@store');
     Route::get('/uom/{id}', 'Master\UnitOfMeasurementController@show');
     Route::put('/uom/{id}', 'Master\UnitOfMeasurementController@update');
