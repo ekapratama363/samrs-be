@@ -200,10 +200,12 @@ class RoleController extends Controller
 
         $plant = $orgparam->where('key', 'plant')->first();
         $room  = $orgparam->where('key', 'room')->first();
+        $vendor  = $orgparam->where('key', 'vendor')->first();
 
         $datamap = [
             'plant' => $plant ? array_map('intval', json_decode($plant->value)) : null,
             'room' => $room ? array_map('intval', json_decode($room->value)) : null,
+            'vendor' => $vendor ? array_map('intval', json_decode($vendor->value)) : null,
         ];
 
         $role->organization_parameter_value = $datamap;
@@ -464,6 +466,8 @@ class RoleController extends Controller
             'plant.*' => 'nullable|exists:plants,id',
             'room'    => 'nullable|array',
             'room.*'  => 'nullable|exists:rooms,id',
+            'vendor'   => 'nullable|array',
+            'vendor.*' => 'nullable|exists:vendors,id',
         ]);
 
         $role = Role::find($id);
@@ -471,6 +475,7 @@ class RoleController extends Controller
         // Encode Org Param
         $plant = $request->plant ? json_encode($request->plant) : json_encode([]);
         $room = $request->room ? json_encode($request->room) : json_encode([]);
+        $vendor = $request->vendor ? json_encode($request->vendor) : json_encode([]);
 
         // Update or create org param
         $rplant = OrganizationParameter::updateOrCreate(
@@ -481,6 +486,11 @@ class RoleController extends Controller
             ['key' => 'room', 'role_id' => $id],
             ['value' => $room, 'updated_by' => Auth::user()->id, 'created_by' => Auth::user()->id,]
         );
+        $rvendor = OrganizationParameter::updateOrCreate(
+            ['key' => 'vendor', 'role_id' => $id],
+            ['value' => $vendor, 'updated_by' => Auth::user()->id]
+        );
+        
 
         $role->update([
             'updated_by' => Auth::user()->id,
@@ -518,10 +528,12 @@ class RoleController extends Controller
         }
 
         $this->validate(request(), [
-            'plant'   => 'nullable|array',
-            'plant.*' => 'nullable|exists:plants,id',
-            'room'    => 'nullable|array',
-            'room.*'  => 'nullable|exists:rooms,id',
+            'plant'    => 'nullable|array',
+            'plant.*'  => 'nullable|exists:plants,id',
+            'room'     => 'nullable|array',
+            'room.*'   => 'nullable|exists:rooms,id',
+            'vendor'   => 'nullable|array',
+            'vendor.*' => 'nullable|exists:vendors,id',
         ]);
 
         $role = Role::find($id);
@@ -529,6 +541,7 @@ class RoleController extends Controller
         // Encode Org Param
         $plant = $request->plant ? json_encode($request->plant) : json_encode([]);
         $room = $request->room ? json_encode($request->room) : json_encode([]);
+        $vendor = $request->vendor ? json_encode($request->vendor) : json_encode([]);
 
         // Update or create org param
         $rplant = OrganizationParameter::updateOrCreate(
@@ -538,6 +551,10 @@ class RoleController extends Controller
         $rroom = OrganizationParameter::updateOrCreate(
             ['key' => 'room', 'role_id' => $id],
             ['value' => $room, 'updated_by' => Auth::user()->id]
+        );
+        $rvendor = OrganizationParameter::updateOrCreate(
+            ['key' => 'vendor', 'role_id' => $id],
+            ['value' => $vendor, 'updated_by' => Auth::user()->id]
         );
         
         $role->update([

@@ -61,6 +61,10 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Role - Edit']
         );
 
+        Modules::updateOrCreate(
+            ['object' => 'role-delete'],
+            ['description' => 'Role - Delete']
+        );
 
         /** =========== SETTING ====================== */
         Modules::updateOrCreate(
@@ -89,6 +93,11 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Classification Master - Edit']
         );
 
+        Modules::updateOrCreate(
+            ['object' => 'classification-delete'],
+            ['description' => 'Classification Master - Delete']
+        );
+
         /** =========== PLANT ====================== */
         Modules::updateOrCreate(
             ['object' => 'plant-view'],
@@ -103,6 +112,11 @@ class ModulesTableSeeder extends Seeder
         Modules::updateOrCreate(
             ['object' => 'plant-update'],
             ['description' => 'Plant - Edit']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'plant-delete'],
+            ['description' => 'Plant - Delete']
         );
 
         /** =========== MATERIAL ====================== */
@@ -121,6 +135,11 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Material - Edit']
         );
 
+        Modules::updateOrCreate(
+            ['object' => 'material-delete'],
+            ['description' => 'Material - Delete']
+        );
+
         /** =========== Unit of Measurement ====================== */
         Modules::updateOrCreate(
             ['object' => 'unit-of-measurement-view'],
@@ -135,6 +154,11 @@ class ModulesTableSeeder extends Seeder
         Modules::updateOrCreate(
             ['object' => 'unit-of-measurement-update'],
             ['description' => 'Unit of Measurement - Edit']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'unit-of-measurement-delete'],
+            ['description' => 'Unit of Measurement - Delete']
         );
 
         /** =========== VENDOR ====================== */
@@ -153,6 +177,11 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Vendor - Edit']
         );
 
+        Modules::updateOrCreate(
+            ['object' => 'vendor-delete'],
+            ['description' => 'Vendor - Delete']
+        );
+
         /** =========== ROOM ====================== */
         Modules::updateOrCreate(
             ['object' => 'room-view'],
@@ -169,6 +198,11 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Room - Edit']
         );
 
+        Modules::updateOrCreate(
+            ['object' => 'room-delete'],
+            ['description' => 'Room - Delete']
+        );
+
         /** =========== RESERVATION ====================== */
         Modules::updateOrCreate(
             ['object' => 'reservation-view'],
@@ -183,6 +217,11 @@ class ModulesTableSeeder extends Seeder
         Modules::updateOrCreate(
             ['object' => 'reservation-update'],
             ['description' => 'Reservation - Edit']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'reservation-delete'],
+            ['description' => 'Reservation - Delete']
         );
         
         //Assign All Module To Admin Role
