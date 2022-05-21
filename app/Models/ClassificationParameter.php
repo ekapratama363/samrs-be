@@ -18,6 +18,16 @@ class ClassificationParameter extends Model
         'deleted',
         'reading_indicator'
 	];
+    
+    protected $casts = [
+        'id' => 'integer',
+        'classification_id' => 'integer',
+        'type' => 'integer',
+        'length' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer',
+        'reading_indicator' => 'integer'
+    ];
 
     public function classification_material()
     {

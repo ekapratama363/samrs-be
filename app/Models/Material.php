@@ -11,7 +11,7 @@ class Material extends Model
 
     protected $guarded = [
         'id', 'created_at', 'updated_at', 'deleted_at'
-    ];
+    ];   
 
 	public function classification()
     {
@@ -32,7 +32,6 @@ class Material extends Model
     {
         return $this->hasOne('App\Models\UnitOfMeasurement', 'id', 'unit_of_measurement_id');
     }
-
 
 	public function createdBy()
     {

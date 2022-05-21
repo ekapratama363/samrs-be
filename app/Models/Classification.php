@@ -28,6 +28,12 @@ class Classification extends Model
         'updated_by',
 	];
     
+    protected $casts = [
+        'id' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];
+    
     public function parameters()
     {
         return $this->hasMany('App\Models\ClassificationParameter', 'classification_id');

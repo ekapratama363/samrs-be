@@ -13,6 +13,13 @@ class MaterialImage extends Model
     protected $appends = [
         'image_url_full'
     ];
+    
+    protected $casts = [
+        'id' => 'integer',
+        'material_id' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer',
+    ];
 
     public function getImageUrlFullAttribute()
     {

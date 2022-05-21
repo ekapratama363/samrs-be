@@ -112,6 +112,15 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
     Route::post('/material/upload-image/{material_id}', 'Master\MaterialController@uploadImage');
     Route::post('/material/delete-image/{id}', 'Master\MaterialController@deleteImage');
 
+    /* Material Sourcing */
+    Route::get('/material-sourcing', 'Master\MaterialSourcingController@index');
+    Route::get('/material-sourcing-list', 'Master\MaterialSourcingController@list');
+    Route::post('/material-sourcing', 'Master\MaterialSourcingController@store');
+    Route::get('/material-sourcing/{id}', 'Master\MaterialSourcingController@show');
+    Route::put('/material-sourcing/{id}', 'Master\MaterialSourcingController@update');
+    Route::delete('/material-sourcing/{id}', 'Master\MaterialSourcingController@delete');
+    Route::post('/multiple-delete-material', 'Master\MaterialSourcingController@multipleDelete');
+
     // Settings
     Route::get('/setting', 'Master\SettingController@index');
     Route::get('/setting/{key}', 'Master\SettingController@show');

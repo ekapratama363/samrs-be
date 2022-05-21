@@ -24,6 +24,22 @@ class RoomController extends Controller
 
         $room->with(['plant', 'responsible_person', 'createdBy', 'updatedBy']);
 
+        // if have organization parameter
+        $room_id = Auth::user()->roleOrgParam(['room']);
+        if (count($room_id) > 0) {
+            $room->whereIn('id', $room_id);
+        }
+
+        // if have organization parameter
+        $plant_id = Auth::user()->roleOrgParam(['plant']);
+        if (count($plant_id) > 0) {
+            $room->whereIn('plant_id', $plant_id);
+        }
+
+        if (request()->has('plant_id')) {
+            $room->whereIn('plant_id', request()->input('plant_id'));
+        }
+
         if (request()->has('q')) {
             $q = strtolower(request()->input('q'));
             $room->where(function($query) use ($q) {
@@ -37,18 +53,6 @@ class RoomController extends Controller
             $room->orderBy(request()->input('sort_field'), $sort_order);
         } else {
             $room->orderBy('id', 'desc');
-        }
-
-        // if have organization parameter
-        $room_id = Auth::user()->roleOrgParam(['room']);
-        if (count($room_id) > 0) {
-            $room->whereIn('id', $room_id);
-        }
-
-        // if have organization parameter
-        $plant_id = Auth::user()->roleOrgParam(['plant']);
-        if (count($plant_id) > 0) {
-            $room->whereIn('plant_id', $plant_id);
         }
 
         $room = $room->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
@@ -65,6 +69,23 @@ class RoomController extends Controller
 
         $room->with(['plant', 'responsible_person', 'createdBy', 'updatedBy']);
 
+        // if have organization parameter
+        $room_id = Auth::user()->roleOrgParam(['room']);
+
+        if (count($room_id) > 0) {
+            $room->whereIn('id', $room_id);
+        }
+
+        // if have organization parameter
+        $plant_id = Auth::user()->roleOrgParam(['plant']);
+        if (count($plant_id) > 0) {
+            $room->whereIn('plant_id', $plant_id);
+        }
+
+        if (request()->has('plant_id')) {
+            $room->whereIn('plant_id', request()->input('plant_id'));
+        }
+
         if (request()->has('q') && request()->input('q') != '') {
             $q = strtolower(request()->input('q'));
             $room->where(function($query) use ($q) {
@@ -78,19 +99,6 @@ class RoomController extends Controller
             $room->orderBy(request()->input('sort_field'), $sort_order);
         } else {
             $room->orderBy('id', 'desc');
-        }
-
-        // if have organization parameter
-        $room_id = Auth::user()->roleOrgParam(['room']);
-
-        if (count($room_id) > 0) {
-            $room->whereIn('id', $room_id);
-        }
-
-        // if have organization parameter
-        $plant_id = Auth::user()->roleOrgParam(['plant']);
-        if (count($plant_id) > 0) {
-            $room->whereIn('plant_id', $plant_id);
         }
 
         $room = $room->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))

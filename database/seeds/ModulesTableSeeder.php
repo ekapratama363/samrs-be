@@ -140,6 +140,27 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Material - Delete']
         );
 
+        /** =========== MATERIAL SOURCING ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'material-sourcing-view'],
+            ['description' => 'Material Sourcing- Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'material-sourcing-create'],
+            ['description' => 'Material Sourcing- Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'material-sourcing-update'],
+            ['description' => 'Material Sourcing- Edit']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'material-sourcing-delete'],
+            ['description' => 'Material Sourcing- Delete']
+        );
+
         /** =========== Unit of Measurement ====================== */
         Modules::updateOrCreate(
             ['object' => 'unit-of-measurement-view'],
