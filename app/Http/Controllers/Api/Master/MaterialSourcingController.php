@@ -25,6 +25,7 @@ class MaterialSourcingController extends Controller
         $material_sourcing->with(['material', 'room', 'vendor']);
         $material_sourcing->with(['material.uom']);
         $material_sourcing->with(['material.classification']);
+        $material_sourcing->with(['room.plant']);
 
         // if have organization parameter
         $room_id = Auth::user()->roleOrgParam(['room']);
@@ -45,7 +46,9 @@ class MaterialSourcingController extends Controller
         }
 
         if (request()->has('plant_id')) {
-            $material_sourcing->whereIn('plant_id', request()->input('plant_id'));
+            $material_sourcing->whereHas('room', function($q) {
+                $q->whereIn('plant_id', request()->input('plant_id'));
+            });
         }
 
         if (request()->has('room_id')) {
@@ -57,13 +60,17 @@ class MaterialSourcingController extends Controller
         }
 
         if (request()->has('created_at')) {
-            $material_sourcing->whereBetween('created_at', [request()->created_at[0], request()->created_at[1]]);
+            $start = trim(request()->created_at[0], '"');
+            $end   = trim(request()->created_at[1], '"');
+            $material_sourcing->whereBetween('created_at', [$start, $end]);
         }
 
         if (request()->has('q')) {
             $q = strtolower(request()->input('q'));
-            $material_sourcing->where(function($query) use ($q) {
-                $query->where(DB::raw("LOWER(material_code)"), 'LIKE', "%".$q."%");
+            $material_sourcing->whereHas('material', function ($data) use ($q) {
+                $data->where(function($query) use ($q) {
+	                $query->orWhere(DB::raw("LOWER(material_code)"), 'LIKE', "%".$q."%");
+	            });
             });
         }
 
@@ -86,16 +93,10 @@ class MaterialSourcingController extends Controller
 
         $material_sourcing = (new MaterialSourcing)->newQuery();
 
-        if (request()->has('q') && request()->input('q') != '') {
-            $q = strtolower(request()->input('q'));
-            $material_sourcing->where(function($query) use ($q) {
-                $query->where(DB::raw("LOWER(material_code)"), 'LIKE', "%".$q."%");
-            });
-        }
-
         $material_sourcing->with(['material', 'room', 'vendor']);
         $material_sourcing->with(['material.uom']);
         $material_sourcing->with(['material.classification']);
+        $material_sourcing->with(['room.plant']);
 
         // if have organization parameter
         $room_id = Auth::user()->roleOrgParam(['room']);
@@ -116,7 +117,9 @@ class MaterialSourcingController extends Controller
         }
 
         if (request()->has('plant_id')) {
-            $material_sourcing->whereIn('plant_id', request()->input('plant_id'));
+            $material_sourcing->whereHas('room', function($q) {
+                $q->whereIn('plant_id', request()->input('plant_id'));
+            });
         }
 
         if (request()->has('room_id')) {
@@ -128,7 +131,18 @@ class MaterialSourcingController extends Controller
         }
 
         if (request()->has('created_at')) {
-            $material_sourcing->whereBetween('created_at', [request()->created_at[0], request()->created_at[1]]);
+            $start = trim(request()->created_at[0], '"');
+            $end   = trim(request()->created_at[1], '"');
+            $material_sourcing->whereBetween('created_at', [$start, $end]);
+        }
+
+        if (request()->has('q')) {
+            $q = strtolower(request()->input('q'));
+            $material_sourcing->whereHas('material', function ($data) use ($q) {
+                $data->where(function($query) use ($q) {
+	                $query->orWhere(DB::raw("LOWER(material_code)"), 'LIKE', "%".$q."%");
+	            });
+            });
         }
 
         if (request()->has('sort_field')) {

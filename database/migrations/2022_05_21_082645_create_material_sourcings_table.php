@@ -18,8 +18,8 @@ class CreateMaterialSourcingsTable extends Migration
             $table->bigInteger('material_id')->unsigned()->nullable();
             $table->bigInteger('room_id')->unsigned()->nullable();
             $table->bigInteger('vendor_id')->unsigned()->nullable();
-            $table->integer('quantity')->unsigned()->default(0);
-            $table->integer('quantity_stock_minimum')->unsigned()->default(0);
+            $table->integer('stock')->unsigned()->default(0);
+            $table->integer('minimum_stock')->unsigned()->default(0);
             $table->integer('quantity_in_transit')->unsigned()->default(0);
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->bigInteger('updated_by')->unsigned()->nullable();

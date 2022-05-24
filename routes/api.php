@@ -171,7 +171,11 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
     Route::post('/multiple-delete-room', 'Master\RoomController@multipleDelete');
 });
 
-
+Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'transaction', 'namespace' => 'Api'], function () {
+    /* Stock */
+    Route::get('/stock', 'StockController@index');
+    Route::get('/stock-list', 'StockController@list');
+});
 
 // Authenticated User API (Dashboard)
 Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'user', 'namespace' => 'Api'], function () {

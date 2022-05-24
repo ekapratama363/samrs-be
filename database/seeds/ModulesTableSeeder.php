@@ -161,6 +161,27 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Material Sourcing- Delete']
         );
 
+        /** =========== STOCK ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'stock-view'],
+            ['description' => 'Stock- Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'stock-create'],
+            ['description' => 'Stock- Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'stock-update'],
+            ['description' => 'Stock- Edit']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'stock-delete'],
+            ['description' => 'Stock- Delete']
+        );
+
         /** =========== Unit of Measurement ====================== */
         Modules::updateOrCreate(
             ['object' => 'unit-of-measurement-view'],

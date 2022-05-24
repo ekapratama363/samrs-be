@@ -30,7 +30,7 @@ class Material extends Model
 
 	public function uom()
     {
-        return $this->hasOne('App\Models\UnitOfMeasurement', 'id', 'unit_of_measurement_id');
+        return $this->hasOne('App\Models\UnitOfMeasurement', 'id', 'unit_of_measurement_id')->withTrashed();
     }
 
 	public function createdBy()
