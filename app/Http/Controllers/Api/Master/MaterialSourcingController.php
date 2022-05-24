@@ -170,69 +170,42 @@ class MaterialSourcingController extends Controller
         return $material_sourcing;
     }
 
-    public function store(Request $request)
+    public function updateOrCreate(Request $request)
     {
         Auth::user()->cekRoleModules(['material-sourcing-create']);
 
         $this->validate(request(), [
-            'material_code' => 'required|max:30',
-            'description' => 'required',
-            'classification_id' => 'required|exists:classifications,id',
-            'serial_number' => 'nullable|between:0,1',
+            'plant_id' => 'required|exists:plants,id',
+            'room_id' => 'required|exists:rooms,id',
+            'materials' => 'required|array',
+            'materials.*.id'  => 'required|exists:materials,id,deleted_at,NULL',
+            'materials.*.minimum_stock'  => 'required|numeric',
         ]);
 
         DB::beginTransaction();
         try {
-            $material_sourcing = MaterialSourcing::withTrashed()->whereRaw('LOWER(material_code) = ?', strtolower($request->material_code))->first();
-    
-            if ($material_sourcing) {
-                if($material_sourcing->deleted_at){
-                    $material_sourcing->restore();
-                    $save = $material_sourcing->update([
-                        'material_code' => $request->material_code,
-                        'description' => $request->description,
-                        'classification_id' => $request->classification_id,
-                        'unit_of_measurement_id' => $request->unit_of_measurement_id,
-                        'serial_number' => $request->serial_number ? $request->serial_number : 0,
-                        'updated_by'    => Auth::user()->id
-                    ]);
-                    $save = $material_sourcing;
-                } else {
-                    return response()->json([
-                        'message' => 'Data invalid',
-                        'errors' => [
-                            'material_code' => ['Material code already taken']
-                        ]
-                    ],422);
-                }
-            } else {
-                $save = MaterialSourcing::create([
-                    'material_code' => $request->material_code,
-                    'description' => $request->description,
-                    'classification_id' => $request->classification_id,
-                    'unit_of_measurement_id' => $request->unit_of_measurement_id,
-                    'serial_number' => $request->serial_number ? $request->serial_number : 0,
-                    'created_by' => Auth::user()->id,
-                    'updated_by' => Auth::user()->id
-                ]);
+            foreach($request->materials as $material) {
+                $materials_id[] = $material['id'];
+
+                MaterialSourcing::updateOrCreate(
+                    [
+                        'material_id' => $material['id'],
+                        'room_id' => $request->room_id
+                    ],
+                    [
+                        'minimum_stock' => $material['minimum_stock'],
+                        'created_by' => Auth::user()->id,
+                        'updated_by' => Auth::user()->id
+                    ]
+                );
             }
-    
-            if (count($request->parameters) > 0) {
-                foreach($request->parameters as $parameters) {
-                    foreach($parameters as $key => $value) {
-                        MaterialParameter::create([
-                            'material_id' => $save->id,
-                            'classification_parameter_id' => $key,
-                            'value' => $value,
-                        ]);
-                    }
-                }
-            }
+
+            MaterialSourcing::where('room_id', $request->room_id)
+                ->whereNotIn('material_id', $materials_id)->delete();
 
             DB::commit();
 
-            $save->id_hash = HashId::encode($save->id);
-            return $save;
+            return $request->all();
         } catch (\Throwable $th) {
             DB::rollback();
             return response()->json([
@@ -254,105 +227,31 @@ class MaterialSourcingController extends Controller
         }
 
         $material_sourcing = MaterialSourcing::with([
-            'uom', 'classification', 'classification.parameters', 'material_images', 
-            'material_parameters', 'material_parameters.classification_parameter', 'createdBy', 'updatedBy'
+            'material', 'material.uom', 'material.classification',
+            'room', 'room.plant',
+            'createdBy', 'updatedBy',
         ])->find($id);
-
-        if ($material_sourcing) {
-            $material_sourcing->classification_id_hash = HashId::encode($material_sourcing->id);
-        }
 
         return $material_sourcing;
     }
 
-    public function update($id, Request $request)
+    public function showMaterialByRoom($room_id)
     {
-        Auth::user()->cekRoleModules(['material-sourcing-update']);
+        Auth::user()->cekRoleModules(['material-sourcing-view']);
 
-        try {
-            $id = HashId::decode($id);
-        } catch(\Exception $ex) {
-            return response()->json([
-                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
-            ], 400);
-        }
+        $material_sourcing = MaterialSourcing::with([
+            'material', 'material.uom', 'material.classification', 
+            'room', 'room.plant',
+            'createdBy', 'updatedBy',
+        ])->where('room_id', $room_id)->get();
 
-        $material_sourcing = MaterialSourcing::with('material_parameters')->findOrFail($id);
-
-        $this->validate(request(), [
-            'material_code' => 'required|max:30|unique:materials,material_code,'. $id .'',
-            'description' => 'required',
-            'classification_id' => 'required|exists:classifications,id',
-            'serial_number' => 'nullable|between:0,1',
-        ]);
-
-        DB::beginTransaction();
-        try {
-
-            $material_sourcing->update([
-                'material_code' => $request->material_code,
-                'description' => $request->description,
-                'classification_id' => $request->classification_id,
-                'unit_of_measurement_id' => $request->unit_of_measurement_id,
-                'serial_number' => $request->serial_number ? $request->serial_number : 0,
-                'updated_by'    => Auth::user()->id
-            ]);
-
-            if (count($material_sourcing->material_parameters) > 0) {
-                foreach($material_sourcing->material_parameters as $parameter) {
-                    MaterialParameter::where('material_id', $material_sourcing->id)
-                        ->where('classification_parameter_id', $parameter->classification_parameter_id)
-                        ->delete();
-                }
+        if ($material_sourcing) {
+            foreach($material_sourcing as $key => $value) {
+                $material_sourcing[$key]['material']['minimum_stock'] = $value->minimum_stock;
             }
-        
-            if (count($request->parameters) > 0) {
-                foreach($request->parameters as $parameters) {
-                    foreach($parameters as $key => $value) {
-                        MaterialParameter::create([
-                            'material_id' => $material_sourcing->id,
-                            'classification_parameter_id' => $key,
-                            'value' => $value,
-                        ]);
-                    }
-                }
-            }
-            
-            DB::commit();
-            
-            return $material_sourcing;
-
-        } catch (\Throwable $th) {
-            DB::rollback();
-            return response()->json([
-                'message' => $th->getMessage(),
-            ], 400);
-        }
-    }
-
-    public function delete($id)
-    {
-        Auth::user()->cekRoleModules(['material-sourcing-update']);
-
-        try {
-            $id = HashId::decode($id);
-        } catch(\Exception $ex) {
-            return response()->json([
-                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
-            ], 400);
         }
 
-        $material_sourcing = MaterialSourcing::findOrFail($id);
-
-        $delete = $material_sourcing->delete();
-
-        if ($delete) {
-            return response()->json($delete);
-        } else {
-            return response()->json([
-                'message' => 'Failed Delete Data',
-            ], 400);
-        }
+        return $material_sourcing;
     }
 
     public function multipleDelete()
@@ -379,7 +278,7 @@ class MaterialSourcingController extends Controller
 
         $this->validate(request(), [
             'id'          => 'required|array',
-            'id.*'        => 'required|exists:materials,id',
+            'id.*'        => 'required|exists:material_sourcings,id',
         ]);
 
         try {

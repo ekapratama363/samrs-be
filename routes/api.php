@@ -115,11 +115,10 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'master', 'n
     /* Material Sourcing */
     Route::get('/material-sourcing', 'Master\MaterialSourcingController@index');
     Route::get('/material-sourcing-list', 'Master\MaterialSourcingController@list');
-    Route::post('/material-sourcing', 'Master\MaterialSourcingController@store');
+    Route::post('/material-sourcing', 'Master\MaterialSourcingController@updateOrCreate');
     Route::get('/material-sourcing/{id}', 'Master\MaterialSourcingController@show');
-    Route::put('/material-sourcing/{id}', 'Master\MaterialSourcingController@update');
-    Route::delete('/material-sourcing/{id}', 'Master\MaterialSourcingController@delete');
-    Route::post('/multiple-delete-material', 'Master\MaterialSourcingController@multipleDelete');
+    Route::get('/material-sourcing/{room_id}/room', 'Master\MaterialSourcingController@showMaterialByRoom');
+    Route::post('/multiple-delete-material-sourcing', 'Master\MaterialSourcingController@multipleDelete');
 
     // Settings
     Route::get('/setting', 'Master\SettingController@index');

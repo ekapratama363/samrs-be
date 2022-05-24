@@ -27,4 +27,14 @@ class MaterialSourcing extends Model
     {
         return $this->hasOne('App\Models\Room', 'id', 'room_id')->withTrashed();
     }
+
+	public function createdBy()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'created_by');
+    }
+
+    public function updatedBy()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'updated_by');
+    }
 }
