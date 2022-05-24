@@ -59,10 +59,12 @@ class StockController extends Controller
             $stock->whereIn('vendor_id', request()->input('vendor_id'));
         }
 
-        if (request()->has('created_at')) {
-            $start = trim(request()->created_at[0], '"');
-            $end   = trim(request()->created_at[1], '"');
-            $stock->whereBetween('created_at', [$start, $end]);
+        if (request()->has('material_id')) {
+            $stock->whereIn('material_id', request()->input('material_id'));
+        }
+
+        if (request()->input('ready_stock') === 'true') {
+            $stock->where('stock', '>', 0);
         }
 
         if (request()->has('q')) {
@@ -130,10 +132,12 @@ class StockController extends Controller
             $stock->whereIn('vendor_id', request()->input('vendor_id'));
         }
 
-        if (request()->has('created_at')) {
-            $start = trim(request()->created_at[0], '"');
-            $end   = trim(request()->created_at[1], '"');
-            $stock->whereBetween('created_at', [$start, $end]);
+        if (request()->has('material_id')) {
+            $stock->whereIn('material_id', request()->input('material_id'));
+        }
+
+        if (request()->input('ready_stock') === 'true') {
+            $stock->where('stock', '>', 0);
         }
 
         if (request()->has('q')) {
