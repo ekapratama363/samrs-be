@@ -14,6 +14,9 @@ use App\Models\Stock;
 
 use App\Helpers\HashId;
 
+use App\Exports\StocksExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class StockController extends Controller
 {
     public function index()
@@ -173,5 +176,51 @@ class StockController extends Controller
         ])->find($id);
 
         return $stock;
+    }
+
+    public function export()
+    {
+        Auth::user()->cekRoleModules(['stock-view']);
+
+        $this->validate(request(), [
+            'id'          => 'required|array',
+        ]);
+
+        $data = [];
+        foreach (request()->input('id') as $key => $ids) {
+            try {
+                $ids = HashId::decode($ids);
+            } catch(\Exception $ex) {
+                return response()->json([
+                    'message'   => 'Data invalid',
+                    'errors'    => [
+                        'id.'.$key  => ['id not found']
+                    ]
+                ], 422);
+            }
+
+            $data[] = $ids;
+        }
+
+        request()->merge(['id' => $data]);
+
+        $this->validate(request(), [
+            'id'          => 'required|array',
+            'id.*'        => 'required|exists:stocks,id',
+        ]);
+
+        $stocks = (new Stock)->newQuery();
+
+        $stocks->with(['material', 'room']);
+        $stocks->with(['material.uom']);
+        $stocks->with(['material.classification']);
+        $stocks->with(['room.plant']);
+        $stocks->with(['stock_histories']);
+
+        $stocks->whereIn('id', request()->input('id'));
+        
+        $stocks = $stocks->get();
+
+        return Excel::download(new StocksExport('report.excel.stock', $stocks), 'Stocks.xlsx');
     }
 }

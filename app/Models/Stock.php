@@ -17,6 +17,11 @@ class Stock extends Model
     {
         return $this->hasOne('App\Models\Material', 'id', 'material_id')->withTrashed();
     }
+    
+    public function stock_histories()
+    {
+        return $this->hasMany('App\Models\StockHistory', 'stock_id');
+    }
 
 	// public function vendor()
     // {
