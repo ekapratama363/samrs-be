@@ -79,9 +79,9 @@ class User extends Authenticatable implements JWTSubject
         // 'roles'
     ];
 
-    protected $appends = ['name'];
+    protected $appends = ['fullname'];
 
-    public function getNameAttribute()
+    public function getFullNameAttribute()
     {
         return $this->firstname.' '.$this->lastname;
     }

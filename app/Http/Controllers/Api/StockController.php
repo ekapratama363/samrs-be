@@ -22,7 +22,7 @@ class StockController extends Controller
 
         $stock = (new Stock)->newQuery();
 
-        $stock->with(['material', 'room', 'vendor']);
+        $stock->with(['material', 'room']);
         $stock->with(['material.uom']);
         $stock->with(['material.classification']);
         $stock->with(['room.plant']);
@@ -39,12 +39,6 @@ class StockController extends Controller
             $stock->whereIn('plant_id', $plant_id);
         }
 
-        // if have organization parameter
-        $vendor_id = Auth::user()->roleOrgParam(['vendor']);
-        if (count($vendor_id) > 0) {
-            $stock->whereIn('vendor_id', $vendor_id);
-        }
-
         if (request()->has('plant_id')) {
             $stock->whereHas('room', function($q) {
                 $q->whereIn('plant_id', request()->input('plant_id'));
@@ -53,10 +47,6 @@ class StockController extends Controller
 
         if (request()->has('room_id')) {
             $stock->whereIn('room_id', request()->input('room_id'));
-        }
-
-        if (request()->has('vendor_id')) {
-            $stock->whereIn('vendor_id', request()->input('vendor_id'));
         }
 
         if (request()->has('material_id')) {
@@ -95,7 +85,7 @@ class StockController extends Controller
 
         $stock = (new Stock)->newQuery();
 
-        $stock->with(['material', 'room', 'vendor']);
+        $stock->with(['material', 'room']);
         $stock->with(['material.uom']);
         $stock->with(['material.classification']);
         $stock->with(['room.plant']);
@@ -112,12 +102,6 @@ class StockController extends Controller
             $stock->whereIn('plant_id', $plant_id);
         }
 
-        // if have organization parameter
-        $vendor_id = Auth::user()->roleOrgParam(['vendor']);
-        if (count($vendor_id) > 0) {
-            $stock->whereIn('vendor_id', $vendor_id);
-        }
-
         if (request()->has('plant_id')) {
             $stock->whereHas('room', function($q) {
                 $q->whereIn('plant_id', request()->input('plant_id'));
@@ -126,10 +110,6 @@ class StockController extends Controller
 
         if (request()->has('room_id')) {
             $stock->whereIn('room_id', request()->input('room_id'));
-        }
-
-        if (request()->has('vendor_id')) {
-            $stock->whereIn('vendor_id', request()->input('vendor_id'));
         }
 
         if (request()->has('material_id')) {
@@ -188,7 +168,7 @@ class StockController extends Controller
 
         $stock = Stock::with([
             'material', 'material.uom', 'material.classification',
-            'room', 'room.plant', 'vendor',
+            'room', 'room.plant',
             'createdBy', 'updatedBy',
         ])->find($id);
 

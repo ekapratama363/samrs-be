@@ -18,10 +18,10 @@ class Stock extends Model
         return $this->hasOne('App\Models\Material', 'id', 'material_id')->withTrashed();
     }
 
-	public function vendor()
-    {
-        return $this->hasOne('App\Models\Vendor', 'id', 'vendor_id')->withTrashed();
-    }
+	// public function vendor()
+    // {
+    //     return $this->hasOne('App\Models\Vendor', 'id', 'vendor_id')->withTrashed();
+    // }
 
 	public function room()
     {

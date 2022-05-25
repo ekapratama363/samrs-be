@@ -22,7 +22,7 @@ class MaterialSourcingController extends Controller
 
         $material_sourcing = (new MaterialSourcing)->newQuery();
 
-        $material_sourcing->with(['material', 'room', 'vendor']);
+        $material_sourcing->with(['material', 'room']);
         $material_sourcing->with(['material.uom']);
         $material_sourcing->with(['material.classification']);
         $material_sourcing->with(['room.plant']);
@@ -39,12 +39,6 @@ class MaterialSourcingController extends Controller
             $material_sourcing->whereIn('plant_id', $plant_id);
         }
 
-        // if have organization parameter
-        $vendor_id = Auth::user()->roleOrgParam(['vendor']);
-        if (count($vendor_id) > 0) {
-            $material_sourcing->whereIn('vendor_id', $vendor_id);
-        }
-
         if (request()->has('plant_id')) {
             $material_sourcing->whereHas('room', function($q) {
                 $q->whereIn('plant_id', request()->input('plant_id'));
@@ -53,10 +47,6 @@ class MaterialSourcingController extends Controller
 
         if (request()->has('room_id')) {
             $material_sourcing->whereIn('room_id', request()->input('room_id'));
-        }
-
-        if (request()->has('vendor_id')) {
-            $material_sourcing->whereIn('vendor_id', request()->input('vendor_id'));
         }
 
         if (request()->has('created_at')) {
@@ -93,7 +83,7 @@ class MaterialSourcingController extends Controller
 
         $material_sourcing = (new MaterialSourcing)->newQuery();
 
-        $material_sourcing->with(['material', 'room', 'vendor']);
+        $material_sourcing->with(['material', 'room']);
         $material_sourcing->with(['material.uom']);
         $material_sourcing->with(['material.classification']);
         $material_sourcing->with(['room.plant']);
@@ -110,12 +100,6 @@ class MaterialSourcingController extends Controller
             $material_sourcing->whereIn('plant_id', $plant_id);
         }
 
-        // if have organization parameter
-        $vendor_id = Auth::user()->roleOrgParam(['vendor']);
-        if (count($vendor_id) > 0) {
-            $material_sourcing->whereIn('vendor_id', $vendor_id);
-        }
-
         if (request()->has('plant_id')) {
             $material_sourcing->whereHas('room', function($q) {
                 $q->whereIn('plant_id', request()->input('plant_id'));
@@ -124,10 +108,6 @@ class MaterialSourcingController extends Controller
 
         if (request()->has('room_id')) {
             $material_sourcing->whereIn('room_id', request()->input('room_id'));
-        }
-
-        if (request()->has('vendor_id')) {
-            $material_sourcing->whereIn('vendor_id', request()->input('vendor_id'));
         }
 
         if (request()->has('created_at')) {
