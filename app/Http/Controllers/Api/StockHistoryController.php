@@ -10,10 +10,12 @@ use Storage;
 use DB;
 use Illuminate\Support\Facades\Input;
 
-use App\Models\MaterialSourcing as Stock;
+use App\Models\Stock;
 use App\Models\StockHistory;
 
 use App\Helpers\HashId;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use PDF;
 
 class StockHistoryController extends Controller
 {
@@ -145,6 +147,57 @@ class StockHistoryController extends Controller
         }
 
         return $stock_hitory;
+    }
+
+    public function pdf()
+    {
+        // Auth::user()->cekRoleModules(['stock-view']);
+
+        // $this->validate(request(), [
+        //     'id'          => 'required|array',
+        // ]);
+
+        // $data = [];
+        // foreach (request()->input('id') as $key => $ids) {
+        //     try {
+        //         $ids = HashId::decode($ids);
+        //     } catch(\Exception $ex) {
+        //         return response()->json([
+        //             'message'   => 'Data invalid',
+        //             'errors'    => [
+        //                 'id.'.$key  => ['id not found']
+        //             ]
+        //         ], 422);
+        //     }
+
+        //     $data[] = $ids;
+        // }
+
+        // request()->merge(['id' => $data]);
+
+        $this->validate(request(), [
+            'id'          => 'required|array',
+            'id.*'        => 'required|exists:stocks,id',
+            'size'        => 'required|in:m24,s24',
+        ]);
+
+        $stock_histories = (new StockHistory)->newQuery();
+
+        $stock_histories->whereIn('id', request()->input('id'));
+
+        $stock_histories->with(['stock']);
+        $stock_histories->with(['stock.material']);
+        $stock_histories->with(['stock.material.classification']);
+        $stock_histories->with(['stock.room']);
+        
+        $stock_histories = $stock_histories->get();
+
+        $data['stock_histories'] = $stock_histories;
+        $data['remove_text'] = '<?xml version="1.0" encoding="UTF-8"?>';
+
+        $size = request()->input('size');
+        $pdf = PDF::loadView("report.pdf.qrcode_$size" , $data);
+        return $pdf->stream('document.pdf');
     }
 
     public function getStockHistorySerialNumberByStockId($stock_id)

@@ -224,7 +224,7 @@ class StockController extends Controller
         $contents = Excel::raw(new StocksExport('report.excel.stock', $stocks), \Maatwebsite\Excel\Excel::XLSX);
         
         $response = [
-            'name' => 'Stocks.xls', 
+            'name' => 'Stocks.xlsx', 
             'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," .base64_encode($contents)
         ];
     
