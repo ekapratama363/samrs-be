@@ -175,7 +175,7 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'transaction
     Route::get('/stock', 'StockController@index');
     Route::get('/stock-list', 'StockController@list');
     Route::get('/stock/{id}', 'StockController@show');
-    Route::post('/stock-export', 'StockController@export');
+    Route::get('/stock-export', 'StockController@export');
     /* Stock History*/
     Route::get('/stock-history', 'StockHistoryController@index');
     Route::get('/stock-history-list', 'StockHistoryController@list');
