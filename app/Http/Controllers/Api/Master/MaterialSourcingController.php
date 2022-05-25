@@ -10,7 +10,7 @@ use Storage;
 use DB;
 use Illuminate\Support\Facades\Input;
 
-use App\Models\MaterialSourcing;
+use App\Models\Stock as MaterialSourcing;
 
 use App\Helpers\HashId;
 

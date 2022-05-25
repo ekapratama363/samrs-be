@@ -174,6 +174,12 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'transaction
     /* Stock */
     Route::get('/stock', 'StockController@index');
     Route::get('/stock-list', 'StockController@list');
+    Route::get('/stock/{id}', 'StockController@show');
+    /* Stock History*/
+    Route::get('/stock-history', 'StockHistoryController@index');
+    Route::get('/stock-history-list', 'StockHistoryController@list');
+    Route::get('/stock-history/{stock_id}/stock', 'StockHistoryController@stockHistoryByStockId');
+    Route::get('/stock-history/{stock_id}/serial-number', 'StockHistoryController@getStockHistorySerialNumberByStockId');
 });
 
 // Authenticated User API (Dashboard)

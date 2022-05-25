@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMaterialSourcingsTable extends Migration
+class CreateStocksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateMaterialSourcingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('material_sourcings', function (Blueprint $table) {
+        Schema::create('stocks', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('material_id')->unsigned()->nullable();
             $table->bigInteger('room_id')->unsigned()->nullable();
@@ -41,6 +41,6 @@ class CreateMaterialSourcingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('material_sourcings');
+        Schema::dropIfExists('stocks');
     }
 }

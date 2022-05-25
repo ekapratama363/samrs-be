@@ -10,7 +10,7 @@ use Storage;
 use DB;
 use Illuminate\Support\Facades\Input;
 
-use App\Models\MaterialSourcing as Stock;
+use App\Models\Stock;
 
 use App\Helpers\HashId;
 
@@ -170,6 +170,27 @@ class StockController extends Controller
                 ], 400);
             }
         }
+
+        return $stock;
+    }
+
+    public function show($id)
+    {
+        Auth::user()->cekRoleModules(['stock-view']);
+
+        try {
+            $id = HashId::decode($id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $stock = Stock::with([
+            'material', 'material.uom', 'material.classification',
+            'room', 'room.plant', 'vendor',
+            'createdBy', 'updatedBy',
+        ])->find($id);
 
         return $stock;
     }
