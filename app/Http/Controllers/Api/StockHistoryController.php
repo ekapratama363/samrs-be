@@ -149,31 +149,31 @@ class StockHistoryController extends Controller
         return $stock_hitory;
     }
 
-    public function pdf()
+    public function qrcode()
     {
         // Auth::user()->cekRoleModules(['stock-view']);
 
-        // $this->validate(request(), [
-        //     'id'          => 'required|array',
-        // ]);
+        $this->validate(request(), [
+            'id'          => 'required|array',
+        ]);
 
-        // $data = [];
-        // foreach (request()->input('id') as $key => $ids) {
-        //     try {
-        //         $ids = HashId::decode($ids);
-        //     } catch(\Exception $ex) {
-        //         return response()->json([
-        //             'message'   => 'Data invalid',
-        //             'errors'    => [
-        //                 'id.'.$key  => ['id not found']
-        //             ]
-        //         ], 422);
-        //     }
+        $data = [];
+        foreach (request()->input('id') as $key => $ids) {
+            try {
+                $ids = HashId::decode($ids);
+            } catch(\Exception $ex) {
+                return response()->json([
+                    'message'   => 'Data invalid',
+                    'errors'    => [
+                        'id.'.$key  => ['id not found']
+                    ]
+                ], 422);
+            }
 
-        //     $data[] = $ids;
-        // }
+            $data[] = $ids;
+        }
 
-        // request()->merge(['id' => $data]);
+        request()->merge(['id' => $data]);
 
         $this->validate(request(), [
             'id'          => 'required|array',
