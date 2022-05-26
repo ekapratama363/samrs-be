@@ -12,9 +12,29 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return 'Connected';
 });
 
 // Auth::routes();
+// Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::group(['prefix' => 'terminal'], function () {
+    Route::get('/composer-install', function () {
+        exec('composer install');
+    });
+
+    Route::get('/dbseed', function () {
+        \Artisan::call('db:seed');
+        dd("Db is seedered");
+    });
+    
+    Route::get('/migrate', function () {
+        \Artisan::call('migrate');
+        dd("Db is migrated");
+    });
+    
+    Route::get('/storage-link', function () {
+        \Artisan::call('storage:link');
+        dd("Storage is linked");
+    });
+});
