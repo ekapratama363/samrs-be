@@ -16,6 +16,6 @@ class HashId {
         $salt = env('HASHIDS_SALT', '');
         $pepper = !empty(\Auth::user()) ? substr(\Auth::user()->api_token, 0, 8) : '';
         $hashids = new Hashids($salt.$pepper);
-        return $hashids->decode($hash)[1];
+        return $hashids->decode($hash) ? $hashids->decode($hash)[1] : false;
     }
 }

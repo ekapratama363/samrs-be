@@ -95,6 +95,7 @@ class MaterialController extends Controller
             'material_code' => 'required|max:30',
             'description' => 'required',
             'classification_id' => 'required|exists:classifications,id',
+            'unit_of_measurement_id' => 'nullable|exists:unit_of_measurements,id',
             'serial_number' => 'nullable|between:0,1',
         ]);
 
@@ -200,6 +201,7 @@ class MaterialController extends Controller
             'material_code' => 'required|max:30|unique:materials,material_code,'. $id .'',
             'description' => 'required',
             'classification_id' => 'required|exists:classifications,id',
+            'unit_of_measurement_id' => 'nullable|exists:unit_of_measurements,id',
             'serial_number' => 'nullable|between:0,1',
         ]);
 
