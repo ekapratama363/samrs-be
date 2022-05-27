@@ -109,7 +109,7 @@ class VendorController extends Controller
         Auth::user()->cekRoleModules(['vendor-create']);
 
         $this->validate(request(), [
-            'code' => 'required|max:4',
+            'code' => 'required|max:15',
             'name' => 'required|max:30',
             'contact' => 'required',
             'email' => 'required|email',
@@ -187,7 +187,7 @@ class VendorController extends Controller
         $vendor = Vendor::findOrFail($id);
 
         $this->validate(request(), [
-            'code' => 'required|max:4|unique:vendors,code,'. $id .'',
+            'code' => 'required|max:15|unique:vendors,code,'. $id .'',
             'name' => 'required|max:30',
             'contact' => 'required',
             'email' => 'required|email',

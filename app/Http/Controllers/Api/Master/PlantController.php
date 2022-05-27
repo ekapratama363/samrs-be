@@ -105,7 +105,7 @@ class PlantController extends Controller
         Auth::user()->cekRoleModules(['plant-create']);
 
         $this->validate(request(), [
-            'code' => 'required|max:4',
+            'code' => 'required|max:15',
             'name' => 'required|max:30',
             'description' => 'required|max:200',
         ]);
@@ -174,7 +174,7 @@ class PlantController extends Controller
         $plant = Plant::findOrFail($id);
 
         $this->validate(request(), [
-            'code' => 'required|max:4|unique:plants,code,'. $id .'',
+            'code' => 'required|max:15|unique:plants,code,'. $id .'',
             'name' => 'required|max:30',
             'description' => 'required|max:200',
             // 'latitude' => 'required',

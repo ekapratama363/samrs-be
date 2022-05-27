@@ -39,9 +39,7 @@
             <tr>
                 <td style="padding:0mm 0px 0px 0px; text-align: center">
                     <div style="display:inline;margin:0">  
-                        @php  
-                            echo str_replace($remove_text, '', QrCode::format('svg')->size(55)->generate($stock_history->code)) 
-                        @endphp
+                        {!! str_replace($remove_text, '', QrCode::size(55)->generate($stock_history->code)) !!}
                     </div>
                 </td>
 

@@ -28,28 +28,25 @@
             </tr>
             <tr>
                 <td style="width:50px; padding:5px 3px 0px 5px;  text-align: center">
-                    
                     {{--
                         <img style="display:block;margin:0"
                             src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(56)->generate($stock_history->code)) !!} ">
                     --}}
 
                     <div style="display:block;margin:0">  
-                    @php  
-                        echo str_replace($remove_text, '', QrCode::format('svg')->size(55)->generate($stock_history->code)) 
-                    @endphp
+                        {!! str_replace($remove_text, '', QrCode::size(55)->generate($stock_history->code)) !!}
                     </div>
                 </td>
                 <td style="padding:5px 3px 0px 3px; vertical-align:top; width:100%">
                     <table class="tl" style="font-size:10px;width:100%;color: #000000; margin:10 10 10 10px;">
                         <tr>
                             <td>
-                                {{$stock_history->stock->material->material_code}}
+                                {{$stock_history->stock->material ? $stock_history->stock->material->material_code : ''}}
                             <td>
                         </tr>
                         <tr>
                             <td>
-                                {{$stock_history->stock->material->classification->name}}
+                                {{$stock_history->stock->material ? $stock_history->stock->material->classification->name : ''}}
                             <td>
                         </tr>
                         <tr>
@@ -59,7 +56,7 @@
                         </tr>
                         <tr>
                             <td>
-                                {{$stock_history->stock->room->name}}
+                                {{$stock_history->stock->room ? $stock_history->stock->room->name : ''}}
                             <td>
                         </tr>
                         <tr>

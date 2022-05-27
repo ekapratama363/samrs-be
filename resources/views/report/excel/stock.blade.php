@@ -24,15 +24,22 @@
         @foreach($stocks as $stock)
         <tr>
             <td>{{$loop->iteration}}</td>
-            <td>{{ $stock->room->plant->name }}</td>
-            <td>{{ $stock->room->name }}</td>
-            <td>{{ $stock->material->material_code }}</td>
-            <td>{{ $stock->material->description }}</td>
-            <td>{{ $stock->material->uom->name }}</td>
+            <td>{{ $stock->room->plant ? $stock->room->plant->name : '' }}</td>
+            <td>{{ $stock->room ? $stock->room->name : '' }}</td>
+            <td>{{ $stock->material ? $stock->material->material_code : '' }}</td>
+            <td>{{ $stock->material ? $stock->material->description : '' }}</td>
+            <td>{{ $stock->material->uom ? $stock->material->uom->name : '' }}</td>
             <td>{{ $stock->stock }}</td>
             <td>{{ $stock->quantity_in_transit }}</td>
             <td>{{ $stock->minimum_stock }}</td>
-            <td>{{ $stock->material->serial_number ? 'Yes' : 'No' }}</td>
+            <td>
+                {{ 
+                    $stock->material 
+                    ? 
+                    $stock->material->serial_number ? 'Yes' : 'No' 
+                    : '' 
+                }}
+            </td>
             <td>
                 @if (count($stock->stock_histories) > 0) 
                     @foreach($stock->stock_histories as $history)

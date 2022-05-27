@@ -124,7 +124,7 @@ class RoomController extends Controller
         Auth::user()->cekRoleModules(['room-create']);
 
         $this->validate(request(), [
-            'code' => 'required|max:4',
+            'code' => 'required|max:15',
             'name' => 'required|max:30',
             'plant_id' => 'required|exists:plants,id',
             'responsible_person' => 'required|exists:users,id',
@@ -199,7 +199,7 @@ class RoomController extends Controller
         $room = Room::findOrFail($id);
 
         $this->validate(request(), [
-            'code' => 'required|max:4|unique:rooms,code,'. $id .'',
+            'code' => 'required|max:15|unique:rooms,code,'. $id .'',
             'name' => 'required|max:30',
             'description' => 'required|max:200',
             'plant_id' => 'required|exists:plants,id',
