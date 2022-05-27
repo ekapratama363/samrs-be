@@ -79,11 +79,20 @@ class User extends Authenticatable implements JWTSubject
         // 'roles'
     ];
 
-    protected $appends = ['fullname'];
+    protected $appends = ['fullname', 'photo_url_full'];
 
     public function getFullNameAttribute()
     {
         return $this->firstname.' '.$this->lastname;
+    }
+
+    public function getPhotoUrlFullAttribute()
+    {
+        if ($this->detail->photo && \Storage::disk('public')->exists($this->detail->photo)) {
+            return \Storage::disk('public')->url($this->detail->photo);
+        } else {
+            return null;
+        }
     }
 
     public function roles()
@@ -147,7 +156,7 @@ class User extends Authenticatable implements JWTSubject
         $modules_id = ModulesRole::whereIn('role_id', $all_role)->pluck('modules_id');
         $modules = Modules::whereIn('id', $modules_id)->where('object', $object)->first();
         $object_name = Modules::where('object', $object)->first();
-        return $modules || abort(403);
+        return $modules || abort( response()->json(['message' => 'Unauthenticated'], 401) );//abort(403, $object_name ? $object_name->description : '');
     }
 
     public function roleOrgParam($key)

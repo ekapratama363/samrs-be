@@ -18,7 +18,7 @@
             <th>Ready Stock</th>
             <th>Quantity in Transit</th>
             <th>Minimum Stock</th>
-            <th>Serial Number is Required?</th>
+            <th>Require Serial Number?</th>
             <th>Serial Numbers</th>
         </tr>
         @foreach($stocks as $stock)
