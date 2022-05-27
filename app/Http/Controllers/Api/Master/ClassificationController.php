@@ -434,9 +434,8 @@ class ClassificationController extends Controller
         Auth::user()->cekRoleModules(['classification-update']);
 
         $this->validate(request(), [
-            'name' => 'required',
+            'parameter_name' => 'required',
             'type' => 'required|numeric|min:1',
-            'reading_indicator' => 'nullable|boolean'
         ]);
 
         if (request()->input('type') == 1) {
@@ -462,51 +461,57 @@ class ClassificationController extends Controller
         if (request()->input('type') == 1) {
             // char
             $save = $param->update([
-                'name' => $request->name,
+                'name' => $request->parameter_name,
                 'type' => $request->type,
                 'length' => $request->length,
-                'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
+                'decimal' => null,
+                'value' => null,
                 'updated_by' => Auth::user()->id
             ]);
         } else if (request()->input('type') == 2) {
             // date
             $save = $param->update([
-                'name' => $request->name,
+                'name' => $request->parameter_name,
                 'type' => $request->type,
-                'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
+                'length' => null,
+                'decimal' => null,
+                'value' => null,
                 'updated_by' => Auth::user()->id
             ]);
         } else if (request()->input('type') == 3) {
             // time
             $save = $param->update([
-                'name' => $request->name,
+                'name' => $request->parameter_name,
                 'type' => $request->type,
-                'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
+                'length' => null,
+                'decimal' => null,
+                'value' => null,
                 'updated_by' => Auth::user()->id
             ]);
         } else if (request()->input('type') == 4) {
             // numeric
             $save = $param->update([
-                'name' => $request->name,
+                'name' => $request->parameter_name,
                 'type' => $request->type,
                 'length' => $request->length,
                 'decimal' => $request->decimal,
-                'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
+                'value' => null,
                 'updated_by' => Auth::user()->id
             ]);
         } else if (request()->input('type') == 5) {
             // list
             $save = $param->update([
-                'name' => $request->name,
+                'name' => $request->parameter_name,
                 'type' => $request->type,
+                'length' => null,
+                'decimal' => null,
                 'value' => $request->value,
-                'reading_indicator' => $request->reading_indicator ? $request->reading_indicator : 0,
                 'updated_by' => Auth::user()->id
             ]);
         }
 
         if ($save) {
-            $param->classification_id = HashId::encode($param->classification_id);
+            // $param->classification_id = HashId::encode($param->classification_id);
             return $param;
         } else {
             return response()->json([
