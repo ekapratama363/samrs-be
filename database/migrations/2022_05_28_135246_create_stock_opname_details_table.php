@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStockHistoriesTable extends Migration
+class CreateStockOpnameDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,22 @@ class CreateStockHistoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('stock_details', function (Blueprint $table) {
+        Schema::create('stock_opname_details', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
+            $table->bigInteger('stock_opname_id')->unsigned()->nullable();
             $table->bigInteger('stock_id')->unsigned()->nullable();
-            $table->string('serial_number')->unique()->nullable();
+            $table->integer('system_stock')->unsigned()->nullable();
+            $table->integer('actual_stock')->unsigned()->nullable();
+            $table->integer('total_scanned')->unsigned()->nullable();
+            $table->text('serial_numbers')->nullable();
+            $table->string('note')->nullable();
+            $table->string('remark')->nullable();
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->bigInteger('updated_by')->unsigned()->nullable();
-            $table->tinyInteger('status')->comment('0 = rejected, 1 = delivered, 2 = in transit, 3 = stock opname');
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreign('stock_opname_id')->references('id')->on('stock_opnames')->onDelete('set null');
             $table->foreign('stock_id')->references('id')->on('stocks')->onDelete('set null');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
@@ -37,6 +42,6 @@ class CreateStockHistoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stock_histories');
+        Schema::dropIfExists('stock_opname_details');
     }
 }

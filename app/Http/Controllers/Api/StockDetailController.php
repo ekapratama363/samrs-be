@@ -11,22 +11,22 @@ use DB;
 use Illuminate\Support\Facades\Input;
 
 use App\Models\Stock;
-use App\Models\StockHistory;
+use App\Models\StockDetail;
 
 use App\Helpers\HashId;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use PDF;
 
-class StockHistoryController extends Controller
+class StockDetailController extends Controller
 {
     public function index()
     {
         Auth::user()->cekRoleModules(['stock-view']);
 
-        $stock_hitory = (new StockHistory)->newQuery();
+        $stock_detail = (new StockDetail)->newQuery();
 
-        $stock_hitory->with(['stock']);
-        $stock_hitory->with(['stock.material']);
+        $stock_detail->with(['stock']);
+        $stock_detail->with(['stock.material']);
 
         if (request()->has('status')) {
             $stock->whereIn('status', request()->input('status'));
@@ -34,32 +34,32 @@ class StockHistoryController extends Controller
 
         if (request()->has('q')) {
             $q = strtolower(request()->input('q'));
-            $stock_hitory->where(function($query) use ($q) {
+            $stock_detail->where(function($query) use ($q) {
                 $query->where(DB::raw("LOWER(serial_number)"), 'LIKE', "%".$q."%");
             });
         }
 
         if (request()->has('sort_field')) {
             $sort_order = request()->input('sort_order') == 'asc' ? 'asc' : 'desc';
-            $stock_hitory->orderBy(request()->input('sort_field'), $sort_order);
+            $stock_detail->orderBy(request()->input('sort_field'), $sort_order);
         } else {
-            $stock_hitory->orderBy('id', 'desc');
+            $stock_detail->orderBy('id', 'desc');
         }
 
-        $stock_hitory = $stock_hitory->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
+        $stock_detail = $stock_detail->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
             ->appends(request()->except('page'));
 
-        return $stock_hitory;
+        return $stock_detail;
     }
 
     public function list()
     {
         Auth::user()->cekRoleModules(['stock-view']);
 
-        $stock_hitory = (new StockHistory)->newQuery();
+        $stock_detail = (new StockDetail)->newQuery();
 
-        $stock_hitory->with(['stock']);
-        $stock_hitory->with(['stock.material']);
+        $stock_detail->with(['stock']);
+        $stock_detail->with(['stock.material']);
 
         if (request()->has('status')) {
             $stock->whereIn('status', request()->input('status'));
@@ -67,26 +67,26 @@ class StockHistoryController extends Controller
 
         if (request()->has('q')) {
             $q = strtolower(request()->input('q'));
-            $stock_hitory->where(function($query) use ($q) {
+            $stock_detail->where(function($query) use ($q) {
                 $query->where(DB::raw("LOWER(serial_number)"), 'LIKE', "%".$q."%");
             });
         }
 
         if (request()->has('sort_field')) {
             $sort_order = request()->input('sort_order') == 'asc' ? 'asc' : 'desc';
-            $stock_hitory->orderBy(request()->input('sort_field'), $sort_order);
+            $stock_detail->orderBy(request()->input('sort_field'), $sort_order);
         } else {
-            $stock_hitory->orderBy('id', 'desc');
+            $stock_detail->orderBy('id', 'desc');
         }
 
-        $stock_hitory = $stock_hitory->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
+        $stock_detail = $stock_detail->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
             ->appends(request()->except('page'))
             ->toArray();
 
-        foreach($stock_hitory['data'] as $k => $v) {
+        foreach($stock_detail['data'] as $k => $v) {
             try {
                 $v['id'] = HashId::encode($v['id']);
-                $stock_hitory['data'][$k] = $v;
+                $stock_detail['data'][$k] = $v;
             } catch(\Exception $ex) {
                 return response()->json([
                     'message' => 'ERROR : Cannot hash ID. '.$ex->getMessage(),
@@ -94,10 +94,10 @@ class StockHistoryController extends Controller
             }
         }
 
-        return $stock_hitory;
+        return $stock_detail;
     }
 
-    public function stockHistoryByStockId($stock_id)
+    public function StockDetailByStockId($stock_id)
     {
         Auth::user()->cekRoleModules(['stock-view']);
 
@@ -109,36 +109,36 @@ class StockHistoryController extends Controller
             ], 400);
         }
 
-        $stock_hitory = (new StockHistory)->newQuery();
+        $stock_detail = (new StockDetail)->newQuery();
 
-        $stock_hitory->where('stock_id', $stock_id);
-        $stock_hitory->whereIn('status', [1, 3]);
+        $stock_detail->where('stock_id', $stock_id);
+        $stock_detail->whereIn('status', [1, 3]);
 
-        $stock_hitory->with(['stock']);
-        $stock_hitory->with(['stock.material']);
+        $stock_detail->with(['stock']);
+        $stock_detail->with(['stock.material']);
 
         if (request()->has('q')) {
             $q = strtolower(request()->input('q'));
-            $stock_hitory->where(function($query) use ($q) {
+            $stock_detail->where(function($query) use ($q) {
                 $query->where(DB::raw("LOWER(serial_number)"), 'LIKE', "%".$q."%");
             });
         }
 
         if (request()->has('sort_field')) {
             $sort_order = request()->input('sort_order') == 'asc' ? 'asc' : 'desc';
-            $stock_hitory->orderBy(request()->input('sort_field'), $sort_order);
+            $stock_detail->orderBy(request()->input('sort_field'), $sort_order);
         } else {
-            $stock_hitory->orderBy('id', 'desc');
+            $stock_detail->orderBy('id', 'desc');
         }
 
-        $stock_hitory = $stock_hitory->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
+        $stock_detail = $stock_detail->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
             ->appends(request()->except('page'))
             ->toArray();
 
-        foreach($stock_hitory['data'] as $k => $v) {
+        foreach($stock_detail['data'] as $k => $v) {
             try {
                 $v['id'] = HashId::encode($v['id']);
-                $stock_hitory['data'][$k] = $v;
+                $stock_detail['data'][$k] = $v;
             } catch(\Exception $ex) {
                 return response()->json([
                     'message' => 'ERROR : Cannot hash ID. '.$ex->getMessage(),
@@ -146,7 +146,7 @@ class StockHistoryController extends Controller
             }
         }
 
-        return $stock_hitory;
+        return $stock_detail;
     }
 
     public function qrcode()
@@ -181,7 +181,7 @@ class StockHistoryController extends Controller
             'size'        => 'required|in:m24,s24',
         ]);
 
-        $stock_histories = (new StockHistory)->newQuery();
+        $stock_histories = (new StockDetail)->newQuery();
 
         $stock_histories->whereIn('id', request()->input('id'));
 
@@ -200,7 +200,7 @@ class StockHistoryController extends Controller
         return $pdf->stream('document.pdf');
     }
 
-    public function getStockHistorySerialNumberByStockId($stock_id)
+    public function getStockDetailSerialNumberByStockId($stock_id)
     {
         Auth::user()->cekRoleModules(['stock-view']);
 
@@ -212,20 +212,20 @@ class StockHistoryController extends Controller
             ], 400);
         }
 
-        $stock_hitory = (new StockHistory)->newQuery();
+        $stock_detail = (new StockDetail)->newQuery();
 
-        $stock_hitory->select('serial_number');
+        $stock_detail->select('serial_number');
 
-        $stock_hitory->where('stock_id', $stock_id);
+        $stock_detail->where('stock_id', $stock_id);
 
         if (request()->has('status')) {
-            $stock_hitory->whereIn('status', request()->input('status'));
+            $stock_detail->whereIn('status', request()->input('status'));
         }
 
-        $stock_hitory->orderBy('id', 'desc');
+        $stock_detail->orderBy('id', 'desc');
 
-        $stock_hitory = $stock_hitory->get();
+        $stock_detail = $stock_detail->get();
 
-        return $stock_hitory;
+        return $stock_detail;
     }
 }

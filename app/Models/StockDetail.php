@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class StockHistory extends Model
+class StockDetail extends Model
 {
     use SoftDeletes;
 

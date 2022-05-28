@@ -33,6 +33,21 @@ Route::group(['prefix' => 'terminal'], function () {
         dd("Db is migrated");
     });
     
+    Route::get('/migrate-rollback', function () {
+        \Artisan::call('migrate:rollback');
+        dd("Db is rollbacked");
+    });
+    
+    Route::get('/migrate-fresh', function () {
+        \Artisan::call('migrate:fresh');
+        dd("Db is rollbacked");
+    });
+    
+    Route::get('/migrate-rollback', function () {
+        \Artisan::call('migrate:rollback');
+        dd("Db is rollbacked");
+    });
+    
     Route::get('/storage-link', function () {
         \Artisan::call('storage:link');
         dd("Storage is linked");
