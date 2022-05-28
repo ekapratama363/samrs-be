@@ -88,7 +88,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function getPhotoUrlFullAttribute()
     {
-        if ($this->detail->photo && \Storage::disk('public')->exists($this->detail->photo)) {
+        if ($this->detail && $this->detail->photo && \Storage::disk('public')->exists($this->detail->photo)) {
             return \Storage::disk('public')->url($this->detail->photo);
         } else {
             return null;
