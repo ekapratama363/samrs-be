@@ -15,11 +15,11 @@ class CreateStockOpnamesTable extends Migration
     {
         Schema::create('stock_opnames', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 50)->unique();
-            $table->bigInteger('room_id')->unsigned()->nullable();
+            $table->string('code', 50)->unique()->index('idx_code');
+            $table->bigInteger('room_id')->unsigned()->nullable()->index('idx_room_id');
             $table->tinyInteger('status')->comment('0 = waiting approve, 1 = approved, 2 = rejected');
-            $table->bigInteger('created_by')->unsigned()->nullable();
-            $table->bigInteger('updated_by')->unsigned()->nullable();
+            $table->bigInteger('created_by')->unsigned()->nullable()->index('idx_created_by');
+            $table->bigInteger('updated_by')->unsigned()->nullable()->index('idx_updated_by');
             $table->timestamps();
             $table->softDeletes();
 

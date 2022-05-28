@@ -15,16 +15,16 @@ class CreateStockOpnameDetailsTable extends Migration
     {
         Schema::create('stock_opname_details', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('stock_opname_id')->unsigned()->nullable();
-            $table->bigInteger('stock_id')->unsigned()->nullable();
+            $table->bigInteger('stock_opname_id')->unsigned()->nullable()->index('idx_stock_opname_id');
+            $table->bigInteger('stock_id')->unsigned()->nullable()->index('idx_room_id');
             $table->integer('system_stock')->unsigned()->nullable();
             $table->integer('actual_stock')->unsigned()->nullable();
             $table->integer('total_scanned')->unsigned()->nullable();
             $table->text('serial_numbers')->nullable();
             $table->string('note')->nullable();
             $table->string('remark')->nullable();
-            $table->bigInteger('created_by')->unsigned()->nullable();
-            $table->bigInteger('updated_by')->unsigned()->nullable();
+            $table->bigInteger('created_by')->unsigned()->nullable()->index('idx_created_by');
+            $table->bigInteger('updated_by')->unsigned()->nullable()->index('idx_updated_by');
             $table->timestamps();
             $table->softDeletes();
 

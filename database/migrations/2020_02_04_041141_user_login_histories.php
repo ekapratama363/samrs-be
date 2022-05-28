@@ -17,7 +17,7 @@ class UserLoginHistories extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->unsigned()->nullable();
             $table->string('ip_address')->nullable();
-            $table->string('device')->nullable();
+            $table->text('device')->nullable();
             $table->string('os')->nullable();
             $table->string('imei')->nullable();
             $table->string('imsi')->nullable();
