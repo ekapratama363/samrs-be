@@ -28,11 +28,6 @@
             </tr>
             <tr>
                 <td style="width:50px; padding:5px 3px 0px 5px;  text-align: center">
-                    {{--
-                        <img style="display:block;margin:0"
-                            src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(56)->generate($stock_history->code)) !!} ">
-                    --}}
-
                     <div style="display:block;margin:0">  
                         {!! str_replace($remove_text, '', QrCode::size(55)->generate($stock_history->code)) !!}
                     </div>

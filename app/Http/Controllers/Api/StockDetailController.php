@@ -117,11 +117,9 @@ class StockDetailController extends Controller
         $stock_detail->with(['stock']);
         $stock_detail->with(['stock.material']);
 
-        if (request()->has('q')) {
+        if (request()->has('q') && request()->input('q')) {
             $q = strtolower(request()->input('q'));
-            $stock_detail->where(function($query) use ($q) {
-                $query->where(DB::raw("LOWER(serial_number)"), 'LIKE', "%".$q."%");
-            });
+            $stock_detail->where(DB::raw("LOWER(serial_number)"), 'LIKE', "%".$q."%");
         }
 
         if (request()->has('sort_field')) {

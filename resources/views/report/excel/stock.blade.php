@@ -41,8 +41,8 @@
                 }}
             </td>
             <td>
-                @if (count($stock->stock_histories) > 0) 
-                    @foreach($stock->stock_histories as $history)
+                @if (count($stock->stock_details) > 0) 
+                    @foreach($stock->stock_details as $history)
                         @if ($history->status == 1 || $history->status == 3)
                             <p>{{$history->serial_number}}</p>,
                         @endif

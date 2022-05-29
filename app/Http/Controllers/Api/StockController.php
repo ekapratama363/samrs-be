@@ -215,7 +215,7 @@ class StockController extends Controller
         $stocks->with(['material.uom']);
         $stocks->with(['material.classification']);
         $stocks->with(['room.plant']);
-        $stocks->with(['stock_histories']);
+        $stocks->with(['stock_details']);
 
         $stocks->whereIn('id', request()->input('id'));
         
