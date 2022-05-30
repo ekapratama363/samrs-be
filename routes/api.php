@@ -176,12 +176,18 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'transaction
     Route::get('/stock-list', 'StockController@list');
     Route::get('/stock/{id}', 'StockController@show');
     Route::get('/stock-export', 'StockController@export');
-    /* Stock History*/
+    
+    /* Stock Detail*/
     Route::get('/stock-detail', 'StockDetailController@index');
     Route::get('/stock-detail-list', 'StockDetailController@list');
     Route::get('/stock-detail/{stock_id}/stock', 'StockDetailController@StockDetailByStockId');
     Route::get('/stock-detail/{stock_id}/serial-number', 'StockDetailController@getStockDetailSerialNumberByStockId');
+    
+    /* Stock Opname*/
+    Route::get('/stock-opname', 'StockOpnameController@index');
+    Route::get('/stock-opname-list', 'StockOpnameController@list');
 });
+
 Route::get('/transaction/stock-detail/qrcode', 'Api\StockDetailController@qrcode');
 
 // Authenticated User API (Dashboard)

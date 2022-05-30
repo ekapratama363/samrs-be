@@ -143,43 +143,64 @@ class ModulesTableSeeder extends Seeder
         /** =========== MATERIAL SOURCING ====================== */
         Modules::updateOrCreate(
             ['object' => 'material-sourcing-view'],
-            ['description' => 'Material Sourcing- Display']
+            ['description' => 'Material Sourcing - Display']
         );
 
         Modules::updateOrCreate(
             ['object' => 'material-sourcing-create'],
-            ['description' => 'Material Sourcing- Create']
+            ['description' => 'Material Sourcing - Create']
         );
 
         Modules::updateOrCreate(
             ['object' => 'material-sourcing-update'],
-            ['description' => 'Material Sourcing- Edit']
+            ['description' => 'Material Sourcing - Edit']
         );
 
         Modules::updateOrCreate(
             ['object' => 'material-sourcing-delete'],
-            ['description' => 'Material Sourcing- Delete']
+            ['description' => 'Material Sourcing - Delete']
         );
 
         /** =========== STOCK ====================== */
         Modules::updateOrCreate(
             ['object' => 'stock-view'],
-            ['description' => 'Stock- Display']
+            ['description' => 'Stock - Display']
         );
 
         Modules::updateOrCreate(
             ['object' => 'stock-create'],
-            ['description' => 'Stock- Create']
+            ['description' => 'Stock - Create']
         );
 
         Modules::updateOrCreate(
             ['object' => 'stock-update'],
-            ['description' => 'Stock- Edit']
+            ['description' => 'Stock - Edit']
         );
 
         Modules::updateOrCreate(
             ['object' => 'stock-delete'],
-            ['description' => 'Stock- Delete']
+            ['description' => 'Stock - Delete']
+        );
+
+        /** =========== STOCK OPNAME ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'stock-opname-view'],
+            ['description' => 'Stock Opname - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'stock-opname-create'],
+            ['description' => 'Stock Opname - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'stock-opname-update'],
+            ['description' => 'Stock Opname - Edit']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'stock-opname-delete'],
+            ['description' => 'Stock Opname - Delete']
         );
 
         /** =========== Unit of Measurement ====================== */
