@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStockHistoriesTable extends Migration
+class CreateStockDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -37,6 +37,6 @@ class CreateStockHistoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stock_histories');
+        Schema::dropIfExists('stock_details');
     }
 }

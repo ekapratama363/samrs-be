@@ -14,7 +14,7 @@
     <!-- <table style="width:65mm;margin:2.5mm 1mm 2mm 1mm;page-break-after: always"> -->
 
 
-    @foreach($stock_histories as $stock_history)
+    @foreach($stock_details as $stock_detail)
     <table style="width:65mm;margin:2.5mm 1mm 2mm 1mm;">
         <tbody border="1">
             <tr style="border-bottom:1px solid #000;position:relative;">
@@ -29,34 +29,34 @@
             <tr>
                 <td style="width:50px; padding:5px 3px 0px 5px;  text-align: center">
                     <div style="display:block;margin:0">  
-                        {!! str_replace($remove_text, '', QrCode::size(55)->generate($stock_history->code)) !!}
+                        {!! str_replace($remove_text, '', QrCode::size(55)->generate($stock_detail->code)) !!}
                     </div>
                 </td>
                 <td style="padding:5px 3px 0px 3px; vertical-align:top; width:100%">
                     <table class="tl" style="font-size:10px;width:100%;color: #000000; margin:10 10 10 10px;">
                         <tr>
                             <td>
-                                {{$stock_history->stock->material ? $stock_history->stock->material->material_code : ''}}
+                                {{$stock_detail->stock->material ? $stock_detail->stock->material->material_code : ''}}
                             <td>
                         </tr>
                         <tr>
                             <td>
-                                {{$stock_history->stock->material ? $stock_history->stock->material->classification->name : ''}}
+                                {{$stock_detail->stock->material ? $stock_detail->stock->material->classification->name : ''}}
                             <td>
                         </tr>
                         <tr>
                             <td style="width:100%;padding-right: 5px">
-                                SN : {{$stock_history->serial_number ? $stock_history->serial_number : '-'}}
+                                SN : {{$stock_detail->serial_number ? $stock_detail->serial_number : '-'}}
                             <td>
                         </tr>
                         <tr>
                             <td>
-                                {{$stock_history->stock->room ? $stock_history->stock->room->name : ''}}
+                                {{$stock_detail->stock->room ? $stock_detail->stock->room->name : ''}}
                             <td>
                         </tr>
                         <tr>
                             <td align="right">
-                                <div style="font-size:10px; font-weight: bold">{{$stock_history->code}}</div>
+                                <div style="font-size:10px; font-weight: bold">{{$stock_detail->code}}</div>
                             <td>
                         </tr>
 

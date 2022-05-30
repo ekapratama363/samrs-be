@@ -33,20 +33,20 @@
     </style>
 
     <!-- set width = 25mm -->
-    @foreach($stock_histories as $stock_history)
+    @foreach($stock_details as $stock_detail)
     <table style="width:24mm;margin:2.5mm 0mm 1mm 0mm;">
         <tbody>
             <tr>
                 <td style="padding:0mm 0px 0px 0px; text-align: center">
                     <div style="display:inline;margin:0">  
-                        {!! str_replace($remove_text, '', QrCode::size(55)->generate($stock_history->code)) !!}
+                        {!! str_replace($remove_text, '', QrCode::size(55)->generate($stock_detail->code)) !!}
                     </div>
                 </td>
 
             </tr>
             <tr>
                 <td>
-                    <div style="font-size:8px; font-weight: bold">{{$stock_history->code}}</div>
+                    <div style="font-size:8px; font-weight: bold">{{$stock_detail->code}}</div>
                 <td>
             </tr>
             <tr>

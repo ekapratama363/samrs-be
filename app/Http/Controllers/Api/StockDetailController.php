@@ -183,18 +183,18 @@ class StockDetailController extends Controller
             'size'        => 'required|in:m24,s24',
         ]);
 
-        $stock_histories = (new StockDetail)->newQuery();
+        $stock_details = (new StockDetail)->newQuery();
 
-        $stock_histories->whereIn('id', request()->input('id'));
+        $stock_details->whereIn('id', request()->input('id'));
 
-        $stock_histories->with(['stock']);
-        $stock_histories->with(['stock.material']);
-        $stock_histories->with(['stock.material.classification']);
-        $stock_histories->with(['stock.room']);
+        $stock_details->with(['stock']);
+        $stock_details->with(['stock.material']);
+        $stock_details->with(['stock.material.classification']);
+        $stock_details->with(['stock.room']);
         
-        $stock_histories = $stock_histories->get();
+        $stock_details = $stock_details->get();
 
-        $data['stock_histories'] = $stock_histories;
+        $data['stock_details'] = $stock_details;
         $data['remove_text'] = '<?xml version="1.0" encoding="UTF-8"?>';
 
         $size = request()->input('size');
