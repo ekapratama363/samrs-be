@@ -10,9 +10,8 @@ use Storage;
 use DB;
 use Illuminate\Support\Facades\Input;
 
-use App\Models\Stock;
 use App\Models\StockOpname;
-use App\Models\StockDetail;
+use App\Models\StockOpnameDetail;
 
 use App\Helpers\HashId;
 
@@ -114,5 +113,182 @@ class StockOpnameController extends Controller
         }
 
         return $stock_opname;
+    }
+
+    public function store(Request $request)
+    {
+        Auth::user()->cekRoleModules(['stock-opname-create']);
+
+        $this->validate(request(), [
+            'plant_id' => 'required|exists:plants,id',
+            'room_id' => 'required|exists:rooms,id',
+            'stocks' => 'required|array',
+            'stocks.*.id'  => 'required|exists:stocks,id,deleted_at,NULL',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $save = StockOpname::create([
+                'code' => 'SO/' . date('ymd/His'),
+                'room_id' => $request->room_id,
+                'status' => 0, //draft
+                'created_by' => Auth::user()->id,
+                'updated_by' => Auth::user()->id
+            ]);
+
+            foreach($request->stocks as $stock) {
+                StockOpnameDetail::create([
+                    'stock_opname_id' => $save->id,
+                    'stock_id' => $stock['id'],
+                    'system_stock' => $stock['stock'],
+                    'actual_stock' => 0,
+                    'total_scanned' => 0,
+                    'serial_numbers' => null,
+                    'note' => null,
+                    'remark' => null,
+                    'created_by' => Auth::user()->id,
+                    'updated_by' => Auth::user()->id
+
+                ]);
+            }
+
+            DB::commit();
+
+            return $request->all();
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function update($id, Request $request)
+    {
+        Auth::user()->cekRoleModules(['stock-opname-create']);
+
+        try {
+            $id = HashId::decode($id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $this->validate(request(), [
+            // 'plant_id' => 'required|exists:plants,id',
+            // 'room_id' => 'required|exists:rooms,id',
+            'stocks' => 'required|array',
+            'stocks.*.id'  => 'required|exists:stocks,id,deleted_at,NULL',
+        ]);
+
+
+        DB::beginTransaction();
+        try {
+
+            $serials = [];
+            foreach($request->serials as $serial) {
+                $serials[$serial['id']][$serial['key']] = $serial['val'];
+            }
+
+            $stock_opname = StockOpname::find($id);
+
+            $stock_opname->update([
+                'status' => 1, //waiting approve
+                'updated_by' => Auth::user()->id
+            ]);
+
+            foreach($serials as $key => $serial) {
+                StockOpnameDetail::where('stock_opname_id', $id)
+                    ->where('stock_id', $key)
+                    ->update([
+                        'actual_stock' => count($serials[$key]),
+                        'serial_numbers' => json_encode($serials[$key]),
+                    ]);
+            }
+
+            DB::commit();
+
+            return $stock_opname;
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function show($id)
+    {
+        Auth::user()->cekRoleModules(['stock-opname-view']);
+
+        try {
+            $id = HashId::decode($id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $stock_opname = StockOpname::with([
+            'room', 'details', 
+            'details.stock.material.classification', 
+            'details.stock.material.uom',
+            'details.stock.stock_details',
+            'room.plant',
+            'createdBy', 'updatedBy',
+        ])->find($id);
+
+        return $stock_opname;
+    }
+
+    public function multipleDelete()
+    {
+        Auth::user()->cekRoleModules(['stock-opname-update']);
+
+        $data = [];
+        foreach (request()->id as $key => $ids) {
+            try {
+                $ids = HashId::decode($ids);
+            } catch(\Exception $ex) {
+                return response()->json([
+                    'message'   => 'Data invalid',
+                    'errors'    => [
+                        'id.'.$key  => ['id not found']
+                    ]
+                ], 422);
+            }
+
+            $data[] = $ids;
+        }
+
+        request()->merge(['id' => $data]);
+
+        $this->validate(request(), [
+            'id'          => 'required|array',
+            'id.*'        => 'required|exists:stock_opnames,id',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            foreach (request()->id as $ids) {
+                $delete = StockOpname::findOrFail($ids)->delete();
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Success delete data'
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                'message' => 'error delete data',
+                'detail' => $e->getMessage(),
+                'trace' => $e->getTrace()
+            ], 400);
+        }
     }
 }

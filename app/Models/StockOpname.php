@@ -27,4 +27,9 @@ class StockOpname extends Model
     {
         return $this->hasOne('App\Models\User', 'id', 'updated_by');
     }
+    
+    public function details()
+    {
+        return $this->hasMany('App\Models\StockOpnameDetail', 'stock_opname_id');
+    }
 }

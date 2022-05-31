@@ -25,7 +25,7 @@ class StockController extends Controller
 
         $stock = (new Stock)->newQuery();
 
-        $stock->with(['material', 'room']);
+        $stock->with(['material', 'room', 'stock_details']);
         $stock->with(['material.uom']);
         $stock->with(['material.classification']);
         $stock->with(['room.plant']);
@@ -60,13 +60,15 @@ class StockController extends Controller
             $stock->where('stock', '>', 0);
         }
 
-        if (request()->has('q')) {
+        if (request()->has('q') && request()->input('q')) {
             $q = strtolower(request()->input('q'));
             $stock->whereHas('material', function ($data) use ($q) {
                 $data->where(function($query) use ($q) {
 	                $query->orWhere(DB::raw("LOWER(material_code)"), 'LIKE', "%".$q."%");
 	            });
             });
+
+            $stock->orWhere(DB::raw("LOWER(stock)"), 'LIKE', "%".$q."%");
         }
 
         if (request()->has('sort_field')) {
