@@ -186,9 +186,23 @@ class StockOpnameController extends Controller
         DB::beginTransaction();
         try {
 
+            $actual_stocks = [];
+            foreach($request->stocks as $stock) {
+                $actual_stocks[$stock['id']] = $stock['actual_stock'] > 0 ? range(0, $stock['actual_stock'] - 1) : [];
+            }
+
             $serials = [];
             foreach($request->serials as $serial) {
-                $serials[$serial['id']][$serial['key']] = $serial['val'];
+                $serials[$serial['id']][$serial['key']] = $serial;
+            }
+
+            $serial_stocks = [];
+            foreach($actual_stocks as $key_1 => $value_1) {
+                foreach($value_1 as $key_2 => $value_2) {
+                    if (isset($serials[$key_1][$key_2])) {
+                        $serial_stocks[$key_1][$key_2] = $serials[$key_1][$key_2]['val'];
+                    } 
+                }
             }
 
             $stock_opname = StockOpname::find($id);
@@ -198,12 +212,12 @@ class StockOpnameController extends Controller
                 'updated_by' => Auth::user()->id
             ]);
 
-            foreach($serials as $key => $serial) {
+            foreach($actual_stocks as $key => $stock) {
                 StockOpnameDetail::where('stock_opname_id', $id)
                     ->where('stock_id', $key)
                     ->update([
-                        'actual_stock' => count($serials[$key]),
-                        'serial_numbers' => json_encode($serials[$key]),
+                        'actual_stock' => isset($actual_stocks[$key]) ? count($actual_stocks[$key]) : 0,
+                        'serial_numbers' => isset($serial_stocks[$key]) ? json_encode($serial_stocks[$key]) : null,
                     ]);
             }
 
