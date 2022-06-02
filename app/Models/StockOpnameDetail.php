@@ -13,16 +13,19 @@ class StockOpnameDetail extends Model
         'id', 'created_at', 'updated_at', 'deleted_at'
     ];   
 
-    protected $appends = ['serials'];
-
-    public function getSerialsAttribute()
-    {
-        return $this->serial_numbers ? json_decode($this->serial_numbers) : [];
-    }
-
 	public function stock()
     {
         return $this->hasOne('App\Models\Stock', 'id', 'stock_id')->withTrashed();
+    }  
+
+	public function stock_opname()
+    {
+        return $this->hasOne('App\Models\StockOpname', 'id', 'stock_opname_id')->withTrashed();
+    }  
+
+	public function serials()
+    {
+        return $this->hasMany('App\Models\StockOpnameSerial', 'stock_opname_detail_id');
     } 
     
 	public function createdBy()

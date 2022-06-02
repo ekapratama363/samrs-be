@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStockOpnamesTable extends Migration
+class CreateStockOpnameSerialsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,16 @@ class CreateStockOpnamesTable extends Migration
      */
     public function up()
     {
-        Schema::create('stock_opnames', function (Blueprint $table) {
+        Schema::create('stock_opname_serials', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 50)->unique()->index('idx_code');
-            $table->bigInteger('room_id')->unsigned()->nullable()->index('idx_room_id');
-            $table->tinyInteger('status')->comment('0 = draft, 1 = waiting approve, 2 = approved, 3 = rejected');
+            $table->bigInteger('stock_opname_detail_id')->unsigned()->nullable()->index('idx_stock_opname_detail');
+            $table->string('serial_number');
             $table->bigInteger('created_by')->unsigned()->nullable()->index('idx_created_by');
             $table->bigInteger('updated_by')->unsigned()->nullable()->index('idx_updated_by');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('set null');
+            $table->foreign('stock_opname_detail_id')->references('id')->on('stock_opname_details')->onDelete('set null');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
         });
@@ -36,6 +35,6 @@ class CreateStockOpnamesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stock_opnames');
+        Schema::dropIfExists('stock_opname_serials');
     }
 }

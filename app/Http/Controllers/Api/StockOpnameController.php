@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Input;
 
 use App\Models\StockOpname;
 use App\Models\StockOpnameDetail;
+use App\Models\StockOpnameSerial;
+use App\Models\StockDetail;
+use App\Models\Stock;
 
 use App\Helpers\HashId;
 
@@ -23,7 +26,7 @@ class StockOpnameController extends Controller
 
         $stock_opname = (new StockOpname)->newQuery();
 
-        $stock_opname->with(['room', 'createdBy', 'updatedBy']);
+        $stock_opname->with(['details.serials', 'room', 'createdBy', 'updatedBy']);
         $stock_opname->with(['room.plant']);
 
         // if have organization parameter
@@ -66,7 +69,7 @@ class StockOpnameController extends Controller
 
         $stock_opname = (new StockOpname)->newQuery();
 
-        $stock_opname->with(['room', 'createdBy', 'updatedBy']);
+        $stock_opname->with(['details.serials', 'room', 'createdBy', 'updatedBy']);
         $stock_opname->with(['room.plant']);
 
         // if have organization parameter
@@ -124,6 +127,7 @@ class StockOpnameController extends Controller
             'room_id' => 'required|exists:rooms,id',
             'stocks' => 'required|array',
             'stocks.*.id'  => 'required|exists:stocks,id,deleted_at,NULL',
+            'note'  => 'nullable',
         ]);
 
         DB::beginTransaction();
@@ -131,6 +135,7 @@ class StockOpnameController extends Controller
             $save = StockOpname::create([
                 'code' => 'SO/' . date('ymd/His'),
                 'room_id' => $request->room_id,
+                'note' => $request->note,
                 'status' => 0, //draft
                 'created_by' => Auth::user()->id,
                 'updated_by' => Auth::user()->id
@@ -180,6 +185,7 @@ class StockOpnameController extends Controller
             // 'room_id' => 'required|exists:rooms,id',
             'stocks' => 'required|array',
             'stocks.*.id'  => 'required|exists:stocks,id,deleted_at,NULL',
+            'note'  => 'nullable',
         ]);
 
 
@@ -192,15 +198,94 @@ class StockOpnameController extends Controller
             }
 
             $serials = [];
+            $serials_value = [];
             foreach($request->serials as $serial) {
+                $serials_value[$serial['id']][$serial['key']] = $serial['val'];
                 $serials[$serial['id']][$serial['key']] = $serial;
             }
 
+            $duplicate_serials = [];
+            foreach($serials_value as $value) {
+                foreach($value as $v) {
+                    $duplicate_serials[] = $v;
+                }
+            }
+
+            if (count($duplicate_serials) != count(array_unique($duplicate_serials))) {
+
+                $duplicate_value = array_values(
+                    array_diff(
+                        $duplicate_serials, 
+                        array_unique($duplicate_serials)) + array_diff_assoc($duplicate_serials, array_unique($duplicate_serials)
+                    )
+                );
+                
+                return response()->json([
+                    'message'   => 'Data invalid',
+                    'errors'    => [
+                        'material'  => ["Duplicate Serial number {$duplicate_value[0]}"]
+                    ]
+                ], 422);
+            }
+
             $serial_stocks = [];
-            foreach($actual_stocks as $key_1 => $value_1) {
-                foreach($value_1 as $key_2 => $value_2) {
-                    if (isset($serials[$key_1][$key_2])) {
-                        $serial_stocks[$key_1][$key_2] = $serials[$key_1][$key_2]['val'];
+            foreach($actual_stocks as $stock_id => $stock) {
+
+                $get_stock = Stock::with('material')->find($stock_id);
+                if (empty($serials[$stock_id]) && $get_stock->material->serial_number == 1) {
+                    return response()->json([
+                        'message'   => 'Data invalid',
+                        'errors'    => [
+                            'material'  => ["Serial number for {$get_stock->material->material_code} cannot be empty"]
+                        ]
+                    ], 422);
+                }
+
+                if (
+                    isset($serials[$stock_id])
+                    && 
+                    count($serials[$stock_id]) 
+                    != 
+                    count($actual_stocks[$stock_id])
+                ) {
+                    return response()->json([
+                        'message'   => 'Data invalid',
+                        'errors'    => [
+                            'material'  => ["Serial number for {$get_stock->material->material_code} cannot be empty"]
+                        ]
+                    ], 422);
+                }
+
+                foreach(array_keys($stock) as $position_serial) {
+
+                    if (isset($serials[$stock_id][$position_serial])) {
+                        $serial = $serials[$stock_id][$position_serial]['val'];
+
+                        if (!$serial) {
+                            return response()->json([
+                                'message'   => 'Data invalid',
+                                'errors'    => [
+                                    'material'  => ["Serial number for {$get_stock->material->material_code} cannot be empty"]
+                                ]
+                            ], 422);
+                        }
+
+                        $serial_exist_stock = StockDetail::with(['stock.material', 'stock.room'])->where('serial_number', $serial)->first();
+
+                        if ($serial_exist_stock) {
+                            if ($serial_exist_stock->stock->room_id != $request->room_id) {
+                                return response()->json([
+                                    'message'   => 'Data invalid',
+                                    'errors'    => [
+                                        'material'  => [
+                                            "Serial number {$serial} has been used by {$serial_exist_stock->stock->material->material_code} in {$serial_exist_stock->stock->room->name}"
+                                        ]
+                                    ]
+                                ], 422);
+                            }
+                        }
+
+                        $serial_stocks[$stock_id][$position_serial] = $serial;
                     } 
                 }
             }
@@ -208,17 +293,61 @@ class StockOpnameController extends Controller
             $stock_opname = StockOpname::find($id);
 
             $stock_opname->update([
+                'note' => $request->note,
                 'status' => 1, //waiting approve
                 'updated_by' => Auth::user()->id
             ]);
 
             foreach($actual_stocks as $key => $stock) {
-                StockOpnameDetail::where('stock_opname_id', $id)
-                    ->where('stock_id', $key)
-                    ->update([
+
+                $stock_opname_detail =  StockOpnameDetail::where('stock_opname_id', $id)
+                    ->where('stock_id', $key)->first();
+
+                if ($stock_opname_detail) {
+                    $stock_opname_detail->update([
                         'actual_stock' => isset($actual_stocks[$key]) ? count($actual_stocks[$key]) : 0,
                         'serial_numbers' => isset($serial_stocks[$key]) ? json_encode($serial_stocks[$key]) : null,
+                        'updated_by' => Auth::user()->id
                     ]);
+                    
+                    if (isset($serial_stocks[$key])) {
+
+                        foreach($serial_stocks[$key] as $serial) {
+                            $serial_exist_stock_opname = StockOpnameSerial::with('stock_opname_detail.stock_opname')->where('serial_number', $serial)->first();
+                            
+                            if (
+                                $serial_exist_stock_opname 
+                                && 
+                                ($serial_exist_stock_opname->stock_opname_detail->id != $stock_opname_detail->id) 
+                                &&
+                                (in_array($serial_exist_stock_opname->stock_opname_detail->stock_opname->status, [0, 1]))
+                            ) {
+                                    return response()->json([
+                                    'message'   => 'Data invalid',
+                                    'errors'    => [
+                                        'material'  => [
+                                            "Serial number {$serial} has been used by Stock Opname {$serial_exist_stock_opname->stock_opname_detail->stock_opname->code}"
+                                        ]
+                                    ]
+                                ], 422);
+                            }
+
+                            StockOpnameSerial::updateOrCreate(
+                                [
+                                    'stock_opname_detail_id' => $stock_opname_detail->id,
+                                    'serial_number' => $serial
+                                ],
+                                [
+                                    'created_by' => Auth::user()->id,
+                                    'updated_by' => Auth::user()->id
+                                ]
+                            );
+                        }
+
+                        StockOpnameSerial::where('stock_opname_detail_id', $stock_opname_detail->id)
+                            ->whereNotIn('serial_number', $serial_stocks[$key])->delete();
+                    }
+                }
             }
 
             DB::commit();
@@ -245,7 +374,7 @@ class StockOpnameController extends Controller
         }
 
         $stock_opname = StockOpname::with([
-            'room', 'details', 
+            'room', 'details', 'details.serials',
             'details.stock.material.classification', 
             'details.stock.material.uom',
             'details.stock.stock_details',
