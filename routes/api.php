@@ -190,6 +190,7 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'transaction
     Route::get('/stock-opname/{id}', 'StockOpnameController@show');
     Route::put('/stock-opname/{id}', 'StockOpnameController@update');
     Route::post('/multiple-delete-stock-opname', 'StockOpnameController@multipleDelete');
+    Route::put('/stock-opname-reject/{id}', 'StockOpnameController@reject');
 });
 
 Route::get('/transaction/stock-detail/qrcode', 'Api\StockDetailController@qrcode');

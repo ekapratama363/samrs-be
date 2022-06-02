@@ -188,6 +188,16 @@ class StockOpnameController extends Controller
             'note'  => 'nullable',
         ]);
 
+        $stock_opname = StockOpname::find($id);
+
+        if (!in_array($stock_opname->status, [0, 1])) {
+            return response()->json([
+                'message'   => 'Data invalid',
+                'errors'    => [
+                    'material'  => ["Stock Opname status must draft or waiting approve"]
+                ]
+            ], 422);
+        }
 
         DB::beginTransaction();
         try {
@@ -232,21 +242,13 @@ class StockOpnameController extends Controller
             foreach($actual_stocks as $stock_id => $stock) {
 
                 $get_stock = Stock::with('material')->find($stock_id);
-                if (empty($serials[$stock_id]) && $get_stock->material->serial_number == 1) {
-                    return response()->json([
-                        'message'   => 'Data invalid',
-                        'errors'    => [
-                            'material'  => ["Serial number for {$get_stock->material->material_code} cannot be empty"]
-                        ]
-                    ], 422);
-                }
 
                 if (
-                    isset($serials[$stock_id])
+                    empty($serials[$stock_id]) 
                     && 
-                    count($serials[$stock_id]) 
-                    != 
-                    count($actual_stocks[$stock_id])
+                    count($actual_stocks[$stock_id]) > 0
+                    && 
+                    $get_stock->material->serial_number == 1
                 ) {
                     return response()->json([
                         'message'   => 'Data invalid',
@@ -256,11 +258,27 @@ class StockOpnameController extends Controller
                     ], 422);
                 }
 
+                // if (
+                //     isset($serials[$stock_id])
+                //     && 
+                //     count($serials[$stock_id]) 
+                //     != 
+                //     count($actual_stocks[$stock_id])
+                // ) {
+                //     return response()->json([
+                //         'message'   => 'Data invalid',
+                //         'errors'    => [
+                //             'material'  => ["Serial number for {$get_stock->material->material_code} cannot be empty"]
+                //         ]
+                //     ], 422);
+                // }
+
                 foreach(array_keys($stock) as $position_serial) {
 
                     if (isset($serials[$stock_id][$position_serial])) {
                         $serial = $serials[$stock_id][$position_serial]['val'];
 
+                        // jika serial == ''
                         if (!$serial) {
                             return response()->json([
                                 'message'   => 'Data invalid',
@@ -381,6 +399,28 @@ class StockOpnameController extends Controller
             'room.plant',
             'createdBy', 'updatedBy',
         ])->find($id);
+
+        return $stock_opname;
+    }
+
+    public function reject($id, Request $request)
+    {
+        Auth::user()->cekRoleModules(['stock-opname-reject']);
+
+        try {
+            $id = HashId::decode($id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $stock_opname = StockOpname::find($id);
+
+        $stock_opname->update([
+            'status' => 3, //reject
+            'remark' => $request->remark
+        ]);
 
         return $stock_opname;
     }
