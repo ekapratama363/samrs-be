@@ -179,7 +179,7 @@ class StockDetailController extends Controller
 
         $this->validate(request(), [
             'id'          => 'required|array',
-            'id.*'        => 'required|exists:stocks,id',
+            'id.*'        => 'required|exists:stock_details,id',
             'size'        => 'required|in:m24,s24',
         ]);
 

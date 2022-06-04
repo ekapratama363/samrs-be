@@ -201,9 +201,7 @@ class StockOpnameController extends Controller
             'note'  => 'nullable',
         ]);
 
-        $response = [
-            'message' => 'Data Invalid',
-        ];
+        $response['message'] = 'Data invalid';
 
         $stock_opname = StockOpname::with('details')->find($id);
 
@@ -237,21 +235,33 @@ class StockOpnameController extends Controller
             }
         }
 
-        $this->validationSerial($material_actual_stocks, $all_serials, $request);
+        $response = $this->validationSerial($material_actual_stocks, $all_serials, $request);
+        if (!$response['status']) {
+            $response['message'] = 'Data invalid';
+            return response()->json($response, 422);
+        }
 
         if (count($all_serials) > 0) {
             $stock_opname_serials = StockOpnameSerial::with('stock_opname_detail.stock_opname')->whereIn('serial_number', $all_serials)->get();
             if (count($stock_opname_serials) > 0) {
+
                 $stock_opname_details_id = [];
                 foreach($stock_opname->details as $stock_opname_detail) {
                     $stock_opname_details_id[] = $stock_opname_detail->id;
                 }
 
+                $stock_opname_statuses = [];
                 foreach($stock_opname_serials as $stock_opname_serial) {
+                    $stock_opname_statuses[] = $stock_opname_serial->stock_opname_detail->stock_opname->status;
+                }
+
+                $allowed_status = array_intersect([0, 1], $stock_opname_statuses);
+                foreach($stock_opname_serials as $stock_opname_serial) {
+                    $stock_opname_statuses[] = $stock_opname_serial->stock_opname_detail->stock_opname->status;
                     if (
                         !in_array($stock_opname_serial->stock_opname_detail->id, $stock_opname_details_id)
                         &&
-                        in_array($stock_opname->status, [0, 1])
+                        count($allowed_status) > 0
                     ) 
                     {
                         $response['errors']['material'] = [
@@ -279,7 +289,7 @@ class StockOpnameController extends Controller
 
                 if ($stock_opname_detail) {
                     $stock_opname_detail->update([
-                        'actual_stock' => $material['actual_stock'],
+                        'actual_stock' => $material['actual_stock'] ? $material['actual_stock'] : 0,
                         'serial_numbers' => isset($material['serials_valid']) ? json_encode($material['serials_valid']) : null,
                         'updated_by' => Auth::user()->id
                     ]);
@@ -380,6 +390,7 @@ class StockOpnameController extends Controller
 
     private function validationSerial($material_actual_stocks, $all_serials, $request)
     {
+        $response = ['status' => true];
         foreach($material_actual_stocks as $stock_id => $material) {
             if (
                 $material['actual_stock'] > 0
@@ -388,8 +399,8 @@ class StockOpnameController extends Controller
                 && 
                 empty($material['serials_valid'])
             ) {
+                $response['status'] = false;
                 $response['errors']['material'] = ['Serial number ' . $material['material']['material_code'] . ' tidak boleh kosong'];
-                return response()->json($response, 422);
             }
 
             if (
@@ -399,24 +410,24 @@ class StockOpnameController extends Controller
                 && 
                 count($material['serials_valid']) != $material['actual_stock']
             ) {
+                $response['status'] = false;
                 $response['errors']['material'] = ['Serial number ' . $material['material']['material_code'] . ' ada yang belum terisi'];
-                return response()->json($response, 422);
             }
 
 
             if (isset($material['serials_valid'])) {
                 $duplicate_serials = $this->uniqueSerials($material['serials_valid']);
                 if (isset($duplicate_serials[0])) {
+                    $response['status'] = false;
                     $response['errors']['material'] = ['Duplicate Serial number '. $duplicate_serials[0]];
-                    return response()->json($response, 422);
                 }
             }
         }
 
         $duplicate_serials = $this->uniqueSerials($all_serials);;
         if (isset($duplicate_serials[0])) {
+            $response['status'] = false;
             $response['errors']['material'] = ['Duplicate Serial number '. $duplicate_serials[0]];
-            return response()->json($response, 422);
         }
 
         if (count($all_serials) > 0) {
@@ -424,17 +435,17 @@ class StockOpnameController extends Controller
             if (count($stock_details) > 0) {
                 foreach ($stock_details as $stock_detail) {
                     if ($stock_detail->stock->room_id != $request->room_id) {
+                        $response['status'] = false;
                         $response['errors']['material'] = [
                             "Serial number {$stock_detail->serial_number} sudah digunakan {$stock_detail->stock->material->material_code} di {$stock_detail->stock->room->name}"
                         ];
-                        return response()->json($response, 422);
                     }
     
                 }
             }
         }
 
-        return true;
+        return $response;
     }
 
     public function approve($id, Request $request)
@@ -449,6 +460,8 @@ class StockOpnameController extends Controller
             ], 400);
         }
 
+        $response['message'] = 'Data invalid';
+
         $stock_opname = StockOpname::with([
             'room', 'details', 'details.serials',
             'details.stock.material.classification', 
@@ -460,12 +473,8 @@ class StockOpnameController extends Controller
         ->toArray();
 
         if ($stock_opname['status'] != 1) {
-            return response()->json([
-                'message'   => 'Data invalid',
-                'errors'    => [
-                    'status'  => ["Stock Opname status must waiting approve"]
-                ]
-            ], 422);
+            $response['errors']['status'] = ["Stock Opname status must waiting approve"];
+            return $response->json($response, 422);
         }
 
         $material_actual_stocks = [];
@@ -491,7 +500,10 @@ class StockOpnameController extends Controller
             }
         }
 
-        $this->validationSerial($material_actual_stocks, $all_serials, $request);
+        $response = $this->validationSerial($material_actual_stocks, $all_serials, $request);
+        if (!$response['status']) {
+            return response()->json($response, 422);
+        }
 
         DB::beginTransaction();
         try {
