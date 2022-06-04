@@ -475,7 +475,7 @@ class StockOpnameController extends Controller
         $material_id = $code[1];
         $serial_number = isset($code[2]) ? $code[2] : null;
 
-        $stock_opname_detail = StockOpnameDetail::with('stock')
+        $stock_opname_detail = StockOpnameDetail::with('stock.material')
             ->whereHas('stock', function($query) use($material_id) {
                 $query->where('material_id', $material_id);
             })
