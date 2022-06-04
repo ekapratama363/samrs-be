@@ -208,6 +208,11 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Stock Opname - Reject']
         );
 
+        Modules::updateOrCreate(
+            ['object' => 'stock-opname-approve'],
+            ['description' => 'Stock Opname - Approve']
+        );
+
         /** =========== Unit of Measurement ====================== */
         Modules::updateOrCreate(
             ['object' => 'unit-of-measurement-view'],
