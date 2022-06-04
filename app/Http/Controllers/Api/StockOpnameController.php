@@ -183,7 +183,7 @@ class StockOpnameController extends Controller
 
     public function update($id, Request $request)
     {
-        Auth::user()->cekRoleModules(['stock-opname-create']);
+        Auth::user()->cekRoleModules(['stock-opname-update']);
 
         try {
             $id = HashId::decode($id);
@@ -371,7 +371,7 @@ class StockOpnameController extends Controller
 
         $stock_opname = StockOpname::find($id);
 
-        if ($stock_opname != 1) { //waiting approve
+        if ($stock_opname->status != 1) { //waiting approve
             return response()->json([
                 'message'   => 'Data invalid',
                 'errors'    => [
