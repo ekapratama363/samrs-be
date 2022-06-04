@@ -448,6 +448,78 @@ class StockOpnameController extends Controller
         return $response;
     }
 
+
+    public function scan($id, Request $request)
+    {
+        Auth::user()->cekRoleModules(['stock-opname-approve']);
+
+        try {
+            $id = HashId::decode($id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $this->validate(request(), [
+            'code' => 'required|exists:stock_details,code',
+        ]);
+
+        $response = [
+            'status'  => false,
+            'message' => 'Data Invalid'
+        ];
+
+        $code = explode('/', $request->code);
+
+        $material_id = $code[1];
+        $serial_number = isset($code[2]) ? $code[2] : null;
+
+        $stock_opname_detail = StockOpnameDetail::with('stock')
+            ->whereHas('stock', function($query) use($material_id) {
+                $query->where('material_id', $material_id);
+            })
+            ->where('stock_opname_id', $id)
+            ->first();
+
+        if (!$stock_opname_detail) {
+            $response['errors']['material'] = 'code material qrcode tidak valid';
+            return $response;
+        }
+
+        DB::beginTransaction();
+        try {
+
+            $stock_opname_detail->update([
+                'actual_stock' => $stock_opname_detail->actual_stock + 1,
+                'total_scanned' => $stock_opname_detail->total_scanned + 1,
+            ]);
+    
+            if ($serial_number) {
+                StockOpnameSerial::updateOrCreate(
+                    [
+                        'stock_opname_detail_id' => $stock_opname_detail->id,
+                        'serial_number' => $serial_number
+                    ],
+                    [
+                        'created_by' => Auth::user()->id,
+                        'updated_by' => Auth::user()->id
+                    ]
+                );
+            }
+
+            DB::commit();
+            
+            $stock_opname_detail->serial = $serial_number;
+            return $stock_opname_detail;
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
+        }
+    }
+
     public function approve($id, Request $request)
     {
         Auth::user()->cekRoleModules(['stock-opname-approve']);
