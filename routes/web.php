@@ -43,13 +43,28 @@ Route::group(['prefix' => 'terminal'], function () {
         dd("Db is rollbacked");
     });
     
-    Route::get('/migrate-rollback', function () {
-        \Artisan::call('migrate:rollback');
-        dd("Db is rollbacked");
-    });
-    
     Route::get('/storage-link', function () {
         \Artisan::call('storage:link');
         dd("Storage is linked");
+    });
+
+    Route::get('/cache-clear', function () {
+        \Artisan::call('cache:clear');
+        dd("cache clear");
+    });
+
+    Route::get('/route-clear', function () {
+        \Artisan::call('route:clear');
+        dd("route clear");
+    });
+
+    Route::get('/view-clear', function () {
+        \Artisan::call('view:clear');
+        dd("view clear");
+    });
+
+    Route::get('/config-cache', function () {
+        \Artisan::call('config:cache');
+        dd("config cache");
     });
 });
