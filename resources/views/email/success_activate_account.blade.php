@@ -21,18 +21,10 @@
     <div style="margin-left: 20px;margin-right: 20px;">
         <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
             <h1 style="margin-top: 5px;margin-bottom: 0;font-style: normal;font-weight: normal;color: {{$primary}};font-size: 16px;line-height: 31px;font-family: Ubuntu,sans-serif;text-align: center;">
-            Your Izora account is now active
+            Your account is now active
             </h1>
         </div>
     </div>
-
-    {{--<div style="margin-left: 20px;margin-right: 20px;">
-        <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-            <h1 style="margin-top: 5px;margin-bottom: 0;font-style: normal;font-weight: normal;color: #3e4751;font-size: 14px;line-height: 24px;font-family: Ubuntu,sans-serif;text-align: center;">
-                Izora
-            </h1>
-        </div>
-    </div>--}}
     
     <div style="margin-left: 20px;margin-right: 20px;text-align: center;">
         <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">

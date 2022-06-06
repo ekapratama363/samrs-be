@@ -29,7 +29,7 @@
     <div style="margin-left: 20px;margin-right: 20px;">
         <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
             <h1 style="margin-top: 5px;margin-bottom: 0;font-style: normal;font-weight: normal;color: #3e4751;font-size: 14px;line-height: 24px;font-family: Ubuntu,sans-serif;text-align: center;">
-                Izora
+                Inventaris
             </h1>
         </div>
     </div>
@@ -41,7 +41,7 @@
             </h2>
             <p style="margin-top: 5px;margin-bottom: 0; font-size: 12px;font-family: Ubuntu,sans-serif;">
                 <p style="margin: 0; font-size: 12px; font-family: Ubuntu,sans-serif;">
-                    You recently requested to reset your Izora account's password. Click the link below to reset it.
+                    You recently requested to reset your account's password. Click the link below to reset it.
                 </p>
                 
                 <a style="font-family: Helvetica,sans-serif;background-color: {{$primary}};
@@ -55,7 +55,7 @@
                     font-size: 12px;
                     cursor: pointer;
                     border-radius: 5px"  
-                    href="{{ appsetting('WEB_URL') }}/reset-password/{{$code}}" target="_blank">
+                    href="{{ appsetting('WEB_URL') }}/create-new-password/{{$code}}" target="_blank">
                     RESET PASSWORD
                 </a>
             </p>

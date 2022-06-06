@@ -213,6 +213,37 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Stock Opname - Approve']
         );
 
+        /** =========== RESERVATION ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'reservation-view'],
+            ['description' => 'Reservation - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'reservation-create'],
+            ['description' => 'Reservation - Create']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'reservation-update'],
+            ['description' => 'Reservation - Edit']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'reservation-delete'],
+            ['description' => 'Reservation - Delete']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'reservation-reject'],
+            ['description' => 'Reservation - Reject']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'reservation-approve'],
+            ['description' => 'Reservation - Approve']
+        );
+
         /** =========== Unit of Measurement ====================== */
         Modules::updateOrCreate(
             ['object' => 'unit-of-measurement-view'],
@@ -274,27 +305,6 @@ class ModulesTableSeeder extends Seeder
         Modules::updateOrCreate(
             ['object' => 'room-delete'],
             ['description' => 'Room - Delete']
-        );
-
-        /** =========== RESERVATION ====================== */
-        Modules::updateOrCreate(
-            ['object' => 'reservation-view'],
-            ['description' => 'Reservation - Display']
-        );
-
-        Modules::updateOrCreate(
-            ['object' => 'reservation-create'],
-            ['description' => 'Reservation - Create']
-        );
-
-        Modules::updateOrCreate(
-            ['object' => 'reservation-update'],
-            ['description' => 'Reservation - Edit']
-        );
-
-        Modules::updateOrCreate(
-            ['object' => 'reservation-delete'],
-            ['description' => 'Reservation - Delete']
         );
         
         //Assign All Module To Admin Role

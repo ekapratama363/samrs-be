@@ -361,7 +361,7 @@ class UserController extends Controller
                 }
             }
 
-            // \Mail::send(new \App\Mail\RegisterMail($save, $code));
+            \Mail::send(new \App\Mail\RegisterMail($save, $code));
 
             \DB::commit();
 

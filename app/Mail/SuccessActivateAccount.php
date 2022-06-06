@@ -35,6 +35,6 @@ class SuccessActivateAccount extends Mailable implements ShouldQueue
             'user' => $this->user
         ])->to(
             $this->user->email
-        )->subject('Your Izora account is now active');
+        )->subject('Your account is now active');
     }
 }

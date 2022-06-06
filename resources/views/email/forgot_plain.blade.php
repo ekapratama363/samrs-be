@@ -1,12 +1,12 @@
 Reset Your Password
 
-Izora
+Inventaris
 
 Hi {{$user->firstname.' '.$user->lastname}}
 
 You recently requested to reset 
 
-your Izora account's password.
+your account's password.
 
 Click the link below to reset it.
 

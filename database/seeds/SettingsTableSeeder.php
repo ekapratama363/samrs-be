@@ -64,7 +64,7 @@ class SettingsTableSeeder extends Seeder
             ['key' => 'USER_INACTIVE_LIMIT', 'value' => '90', 'sort' => 19],
             //['key' => 'ASSET_DEPRECIATION_DATE', 'value' => '', 'sort' => 20],
             //['key' => 'UNIT_COST_WITH_TAX', 'value' => '', 'sort' => 21],
-            ['key' => 'WEB_URL', 'value' => 'https://izora.mindaperdana.com/#', 'sort' => 22],
+            ['key' => 'WEB_URL', 'value' => 'https://fe.inventaris.net', 'sort' => 22],
             //['key' => 'VENDOR_INVOICE_DIFF', 'value' => '', 'sort' => 23],
         ];
     }

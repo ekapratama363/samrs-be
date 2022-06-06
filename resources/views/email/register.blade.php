@@ -25,24 +25,16 @@
             </h1>
         </div>
     </div>
-
-    {{-- <div style="margin-left: 20px;margin-right: 20px;">
-        <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-            <h1 style="margin-top: 12px;margin-bottom: 0;font-style: normal;font-weight: normal;color: #3e4751;font-size: 22px;line-height: 31px;font-family: Helvetica,sans-serif;text-align: center;">
-                Izora
-            </h1>
-        </div>
-    </div> --}}
     
     <div style="margin-left: 20px;margin-right: 20px; text-align: center;">
         <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
             <h2 style="margin-top: 0;margin-bottom: 0;font-style: normal;font-weight: normal;color: #3e4751;font-size: 14px;line-height: 24px;font-family: Helvetica,sans-serif;">
                 <strong>Hi {{$user->firstname.' '.$user->lastname}}</strong>
             </h2>
-            <p style="margin-top: 0px;margin-bottom: 0; font-size: 12px; font-family: Helvetica,sans-serif;">Welcome to <strong>IZORA</strong> !</p>
+            <p style="margin-top: 0px;margin-bottom: 0; font-size: 12px; font-family: Helvetica,sans-serif;">Welcome to <strong>Inventaris</strong> !</p>
             <p style="margin-top: 10px;margin-bottom: 0; font-size: 12px; font-family: Helvetica,sans-serif;">   
                 <p style="margin: 0; font-size: 12px; font-family: Helvetica,sans-serif;">
-                    Confirming your account will give you full access to Izora and all future notifications will be sent to this email address</p>
+                    Confirming your account will give you full access to Inventaris and all future notifications will be sent to this email address</p>
                 {{-- <br>                            --}}
                 <a 
                     style="font-family: Helvetica,sans-serif;background-color: {{$primary}};
@@ -56,7 +48,7 @@
                     font-size: 12px;
                     cursor: pointer;
                     border-radius: 5px" 
-                    href="{{ appsetting('WEB_URL') }}/create-password/{{$code}}" target="_blank">
+                    href="{{ appsetting('WEB_URL') }}/create-new-password/{{$code}}" target="_blank">
                     CONFIRM YOUR ACCOUNT
                 </a>
             </p>

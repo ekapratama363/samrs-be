@@ -38,6 +38,6 @@ class SuspendInactiveUsers extends Mailable implements ShouldQueue
             'code' => $this->code
         ])->to(
             $this->user->email
-        )->subject('Your Izora account has been temporarily suspended');
+        )->subject('Your Inventaris account has been temporarily suspended');
     }
 }

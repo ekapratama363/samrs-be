@@ -564,69 +564,12 @@
                     <div role="section">
                         <div class="layout one-col fixed-width" style="margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
                             <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #ffffff;" emb-background-style="">
-                              {{-- <div style="background-color: red"> --}}
                                 <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-fixed-width" emb-background-style><td style="width: 600px" class="w560"><![endif]-->
                                 <div class="column" style="padding:0px; text-align: left;color: #7c7e7f;font-size: 14px;line-height: 21px;font-family: PT Serif,Georgia,serif;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);">
-                        
-                                  {{--<div style="margin-left: 20px;margin-right: 20px;margin-top: 24px;">
-                                        <div style="mso-line-height-rule: exactly;line-height: 10px;font-size: 1px;">&nbsp;</div>
-                                    </div>--}}
-                                
-                                    {{-- <div style="margin-left: 20px;margin-right: 20px;">
-                                        <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-                                            <h1 style="margin-top: 12px;margin-bottom: 0;font-style: normal;font-weight: normal;color: #3e4751;font-size: 22px;line-height: 31px;font-family: Ubuntu,sans-serif;text-align: center;">
-                                                Inventory
-                                            </h1>
-                                            <p style="margin-top: 20px;margin-bottom: 20px;">
-                                                <span>
-                                                    
-                                                </span>
-                                            </p>
-                                        </div>
-                                    </div> --}}
-                                
-                                    {{-- <div style="margin-left: 20px;margin-right: 20px;">
-                                        <div class="divider" style="display: block;font-size: 2px;line-height: 2px;margin-left: auto;margin-right: auto;width: 40px;background-color: #b4b4c4;margin-bottom: 20px;">&nbsp;</div>
-                                    </div> --}}
-                                
-                                    {{-- <div style="margin-left: 20px;margin-right: 20px;">
-                                        <div style="mso-line-height-rule: exactly;line-height: 5px;font-size: 1px;">&nbsp;</div>
-                                    </div> --}}
                                 
                                     @yield('content')
-                                
-                                    {{-- <div style="margin-left: 20px;margin-right: 20px;">
-                                        <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-                                            <p style="margin-top: 0;margin-bottom: 20px; font-family: Ubuntu,sans-serif; text-align: center;">
-                                                Our apps is now available at
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div style="margin-left: 20px;margin-right: 20px;">
-                                      <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-                                          <p style="margin-top: 0;margin-bottom: 20px; font-family: Ubuntu,sans-serif; text-align: center;">
-                                            <img style="margin-top: 12px;margin-bottom: 0;" src="{{ url('assets/images/izora.png') }}"/>
-                                          </p>
-                                      </div>
-                                    </div> --}}
 
                                     <br>
-                                    {{--<div style="background-color: white; margin-left: 20px;margin-right: 20px;">
-                                        <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-                                            <p style="margin-top: 16px;margin-bottom: 0; text-align: center">
-                                            Our app is available on
-                                            </p>
-                                            <center>
-                                                <a href="https://play.google.com/store/apps/details?id=com.izorakoperasi">
-                                                    <img class="img-fluid" height="50px" src="{{ asset('assets/email/playstore.png') }}" alt="" />
-                                                </a>
-                                                <a href="https://play.google.com/store/apps/details?id=com.izorakoperasi">
-                                                    <img class="img-fluid" height="50px" src="{{ asset('assets/email/appstore.jpg') }}" alt="" />
-                                                </a>
-                                            </center>
-                                        </div>
-                                    </div>--}}
                                 </div>
 
                                   
@@ -646,7 +589,7 @@
                               <div style="margin-left: 20px;margin-right: 20px;">
                                 <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
                                     <p style="margin-top: 10px;margin-bottom: 10px; font-family: Ubuntu,sans-serif; text-align: center;">
-                                      <img style="margin-top: 12px;margin-bottom: 0;" alt="Izora Logo" src="{{ url('assets/images/izora.png') }}"/>
+                                      <img style="margin-top: 12px;margin-bottom: 0;" alt="Inventaris Logo" src="{{ url('assets/images/izora.png') }}"/>
                                     </p>
                                 </div>
                               </div>

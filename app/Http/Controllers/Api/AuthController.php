@@ -39,7 +39,7 @@ class AuthController extends Controller
                     [
                         'ip_address'=> $ip_address,
                         'device'    => request()->header('User-Agent'),
-                        'status'    => LOGIN_FAILED
+                        'status'    => User::LOGIN_FAILED
                     ]
                 );
                 return response()->json([
@@ -53,7 +53,7 @@ class AuthController extends Controller
                         'user_id'   => $user->id,
                         'ip_address'=> $ip_address,
                         'device'    => request()->header('User-Agent'),
-                        'status'    => LOGIN_FAILED_INACTIVE
+                        'status'    => User::LOGIN_FAILED_INACTIVE
                     ]
                 );
 
@@ -97,7 +97,7 @@ class AuthController extends Controller
                         'user_id'   => $user->id,
                         'ip_address'=> $ip_address,
                         'device'    => request()->header('User-Agent'),
-                        'status'    => LOGIN_SUCCESS
+                        'status'    => User::LOGIN_SUCCESS
                     ]
                 );
 
@@ -109,7 +109,7 @@ class AuthController extends Controller
                         'user_id'   => $user->id,
                         'ip_address'=> $ip_address,
                         'device'    => request()->header('User-Agent'),
-                        'status'    => LOGIN_FAILED
+                        'status'    => User::LOGIN_FAILED
                     ]
                 );
 
@@ -139,7 +139,7 @@ class AuthController extends Controller
                     [
                         'ip_address'=> $ip_address,
                         'device'    => request()->header('User-Agent'),
-                        'status'    => LOGIN_FAILED
+                        'status'    => User::LOGIN_FAILED
                     ]
                 );
                 return response()->json([
@@ -153,7 +153,7 @@ class AuthController extends Controller
                         'user_id'   => $user->id,
                         'ip_address'=> $ip_address,
                         'device'    => request()->header('User-Agent'),
-                        'status'    => LOGIN_FAILED_INACTIVE
+                        'status'    => User::LOGIN_FAILED_INACTIVE
                     ]
                 );
 
@@ -195,7 +195,7 @@ class AuthController extends Controller
                         'user_id'   => $user->id,
                         'ip_address'=> $ip_address,
                         'device'    => request()->header('User-Agent'),
-                        'status'    => LOGIN_SUCCESS
+                        'status'    => User::LOGIN_SUCCESS
                     ]
                 );
 
@@ -206,7 +206,7 @@ class AuthController extends Controller
                         'user_id'   => $user->id,
                         'ip_address'=> $ip_address,
                         'device'    => request()->header('User-Agent'),
-                        'status'    => LOGIN_FAILED
+                        'status'    => User::LOGIN_FAILED
                     ]
                 );
 

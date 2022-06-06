@@ -29,7 +29,7 @@
     <div style="margin-left: 20px;margin-right: 20px;">
         <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
             <h1 style="margin-top: 5px;margin-bottom: 0;font-style: normal;font-weight: normal;color: #3e4751;font-size: 14px;line-height: 31px;font-family: Ubuntu,sans-serif;text-align: center;">
-                Izora
+                Inventaris
             </h1>
         </div>
     </div>

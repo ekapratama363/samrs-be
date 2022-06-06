@@ -193,6 +193,11 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'transaction
     Route::put('/stock-opname-reject/{id}', 'StockOpnameController@reject');
     Route::put('/stock-opname-approve/{id}', 'StockOpnameController@approve');
     Route::put('/stock-opname-scan/{id}', 'StockOpnameController@scan');
+
+    /* Reservation */
+    Route::get('/reservation', 'ReservationController@index');
+    Route::get('/reservation-list', 'ReservationController@list');
+    Route::get('/reservation/{id}', 'ReservationController@show');
 });
 
 Route::get('/transaction/stock-detail/qrcode', 'Api\StockDetailController@qrcode');

@@ -14,6 +14,12 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable, LogsActivity, SoftDeletes;
 
+    const LOGIN_SUCCESS = 1;
+    const LOGIN_SUCCESS_PASSWORD_EXPIRED = 2;
+    const LOGIN_FAILED = -1;
+    const LOGIN_FAILED_SPAM_ATTEMPT = -2;
+    const LOGIN_FAILED_INACTIVE = -3;
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

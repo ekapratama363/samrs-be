@@ -25,14 +25,6 @@
             </h1>
         </div>
     </div>
-
-    {{--<div style="margin-left: 20px;margin-right: 20px;">
-        <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
-            <h1 style="margin-top: 5px;margin-bottom: 0;font-style: normal;font-weight: normal;color: #3e4751;font-size: 14px;line-height: 24px;font-family: Ubuntu,sans-serif;text-align: center;">
-                Izora
-            </h1>
-        </div>
-    </div>--}}
     
     <div style="margin-left: 20px;margin-right: 20px;text-align: center;">
         <div style="mso-line-height-rule: exactly;mso-text-raise: 4px;">
@@ -41,7 +33,7 @@
             </h2>
             <p style="margin-top: 5px;margin-bottom: 0; font-size: 12px;font-family: Ubuntu,sans-serif;">
                 <p style="margin: 0; font-size: 12px; font-family: Ubuntu,sans-serif;">
-                    You've joined to izora. Here are your account detail:
+                    You've joined to Inventaris. Here are your account detail:
                     <ul style="margin: 0; font-size: 12px; font-family: Ubuntu,sans-serif;">
                         Email : {{$user->email}}<br/>
                         Username : {{$user->username}}
