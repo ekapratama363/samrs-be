@@ -139,7 +139,7 @@ class StockDetailController extends Controller
 
         foreach($stock_detail['data'] as $k => $v) {
             try {
-                $v['id'] = HashId::encode($v['id']);
+                $v['id'] = base64_encode($v['id']);
                 $stock_detail['data'][$k] = $v;
             } catch(\Exception $ex) {
                 return response()->json([
@@ -162,7 +162,7 @@ class StockDetailController extends Controller
         $data = [];
         foreach (request()->input('id') as $key => $ids) {
             try {
-                $ids = HashId::decode($ids);
+                $ids = base64_decode($ids);
             } catch(\Exception $ex) {
                 return response()->json([
                     'message'   => 'Data invalid',

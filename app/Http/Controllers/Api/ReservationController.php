@@ -24,10 +24,9 @@ class ReservationController extends Controller
 
         $reservation = (new Reservation)->newQuery();
 
-        $reservation->with(['material', 'room', 'stock_details']);
-        $reservation->with(['material.uom']);
-        $reservation->with(['material.classification']);
-        $reservation->with(['room.plant']);
+        $reservation->with(['room_sender', 'room_receive', 'vendor']);
+
+        $reservation->has('details');
 
         // if have organization parameter
         $room_id = Auth::user()->roleOrgParam(['room']);
@@ -83,10 +82,9 @@ class ReservationController extends Controller
 
         $reservation = (new Reservation)->newQuery();
 
-        $reservation->with(['material', 'room', 'stock_details']);
-        $reservation->with(['material.uom']);
-        $reservation->with(['material.classification']);
-        $reservation->with(['room.plant']);
+        $reservation->with(['room_sender', 'room_receive', 'vendor']);
+
+        $reservation->has('details');
 
         // if have organization parameter
         $room_id = Auth::user()->roleOrgParam(['room']);
@@ -146,5 +144,50 @@ class ReservationController extends Controller
         }
 
         return $reservation;
+    }
+
+    public function store(Request $request)
+    {
+        Auth::user()->cekRoleModules(['reservation-create']);
+
+        $this->validate(request(), [
+            'code' => 'nullable',
+            'room_id' => 'required|exists:rooms,id',
+            'type' => 'required|between:0,3',
+            'note' => 'nullable',
+        ]);
+
+        if ($request->type == 1) {
+            $this->validate(request(), [
+                'vendor_id' => 'required|exists:vendors,id',
+            ]);
+        } else {
+            $this->validate(request(), [
+                'room_sender' => 'required|exists:rooms,id',
+            ]);
+        }
+
+        if ($request->room_id == $request->room_sender) {
+            return response()->json([
+                'message' => 'Data invalid',
+                'errors' => [
+                    'room_sender' => ['Room sender cannot be same as room recipient']
+                ]
+            ],422);
+        }
+
+        $save = Reservation::create([
+            'code'          => 'RES/' . date('ymd/His'),
+            'room_id'       => $request->room_id,
+            'plant_id'      => $request->plant_id,
+            'vendor_id'     => $request->type == 1 ? $request->vendor_id : null,
+            'room_sender'   => $request->type != 1 ? $request->room_sender : null,
+            'delivery_date' => $request->delivery_date,
+            'note'          => $request->note,
+            'type'          => $request->type,
+            'status'        => 0,
+        ]);
+        
+        return $save;
     }
 }

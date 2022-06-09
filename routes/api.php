@@ -198,6 +198,7 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'transaction
     Route::get('/reservation', 'ReservationController@index');
     Route::get('/reservation-list', 'ReservationController@list');
     Route::get('/reservation/{id}', 'ReservationController@show');
+    Route::post('/reservation', 'ReservationController@store');
 });
 
 Route::get('/transaction/stock-detail/qrcode', 'Api\StockDetailController@qrcode');
