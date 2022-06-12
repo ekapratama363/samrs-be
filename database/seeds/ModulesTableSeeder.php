@@ -234,6 +234,12 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Reservation - Approve']
         );
 
+        /** =========== PURCHASE ORDER ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'purchase-order-view'],
+            ['description' => 'Purchase Order - Display']
+        );
+
         /** =========== Unit of Measurement ====================== */
         Modules::updateOrCreate(
             ['object' => 'unit-of-measurement-view'],

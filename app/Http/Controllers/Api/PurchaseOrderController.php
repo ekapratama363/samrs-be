@@ -16,17 +16,21 @@ use App\Models\ReservationDetail;
 
 use App\Helpers\HashId;
 
-class ReservationController extends Controller
+class PurchaseOrderController extends Controller
 {
+
     public function index()
     {
         Auth::user()->cekRoleModules(['reservation-view']);
 
         $reservation = (new Reservation)->newQuery();
 
+        $reservation->where('status', 1); //approve
+
         $reservation->with(['room_sender', 'room_receiver', 'vendor']);
 
         $reservation->has('details');
+        $reservation->doesntHave('delivery_orders');
 
         // if have organization parameter
         $room_id = Auth::user()->roleOrgParam(['room']);
@@ -103,10 +107,13 @@ class ReservationController extends Controller
             'plant'
         ]);
 
+        $reservation->where('status', 1); //approve
+
         $reservation->with('room_sender.plant');
         $reservation->with('room_receiver.plant');
 
         $reservation->has('details');
+        $reservation->doesntHave('delivery_orders');
 
         // if have organization parameter
         $room_id = Auth::user()->roleOrgParam(['room']);
@@ -180,119 +187,5 @@ class ReservationController extends Controller
         }
 
         return $reservation;
-    }
-
-    public function show($id)
-    {
-        Auth::user()->cekRoleModules(['reservation-view']);
-
-        try {
-            $id = HashId::decode($id);
-        } catch(\Exception $ex) {
-            return response()->json([
-                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
-            ], 400);
-        }
-
-        $reservation = Reservation::with([
-            'room_sender', 
-            'room_receiver', 
-            'vendor',
-            'plant',
-            'room_sender.plant',
-            'room_receiver.plant',
-            'details',
-            'details.material',
-            'details.material.uom'
-        ])->find($id);
-
-        if (count($reservation->details) > 0) {
-            foreach($reservation->details as $index => $detail) {
-                $detail->material_code = $detail->material->material_code;
-                $detail->description = $detail->material->description;
-                $detail->uom = $detail->material->uom;
-            }
-        }
-
-        return $reservation;
-    }
-
-    public function store(Request $request)
-    {
-        Auth::user()->cekRoleModules(['reservation-create']);
-
-        $this->validate(request(), [
-            'code' => 'nullable',
-            'room_id' => 'required|exists:rooms,id',
-            'type' => 'required|between:0,3',
-            'note' => 'nullable',
-        ]);
-
-        if ($request->type == 1) {
-            $this->validate(request(), [
-                'vendor_id' => 'required|exists:vendors,id',
-            ]);
-        } else {
-            $this->validate(request(), [
-                'room_sender' => 'required|exists:rooms,id',
-            ]);
-        }
-
-        if ($request->room_id == $request->room_sender) {
-            return response()->json([
-                'message' => 'Data invalid',
-                'errors' => [
-                    'room_sender' => ['Room sender cannot be same as room recipient']
-                ]
-            ],422);
-        }
-
-        $save = Reservation::create([
-            'code'          => 'RES/' . date('ymd/His'),
-            'room_id'       => $request->room_id,
-            'plant_id'      => $request->plant_id,
-            'vendor_id'     => $request->type == 1 ? $request->vendor_id : null,
-            'room_sender'   => $request->type != 1 ? $request->room_sender : null,
-            'delivery_date' => $request->delivery_date,
-            'note'          => $request->note,
-            'type'          => $request->type,
-            'status'        => 0,  //waiting approve
-            'created_by'    => Auth::user()->id,
-            'updated_by'    => Auth::user()->id
-        ]);
-        
-        return $save;
-    }
-
-    public function storeDetail(Request $request)
-    {
-        Auth::user()->cekRoleModules(['reservation-create']);
-
-        $this->validate(request(), [
-            'materials'                  => 'required|array',
-            'materials.*.reservation_id' => 'required|exists:reservations,id',
-            'materials.*.id'             => 'required|exists:materials,id',
-            'materials.*.quantity'       => 'required|numeric|min:1',
-        ]);
-
-        DB::BeginTransaction();
-        try {
-            foreach($request->materials as $material) {
-                ReservationDetail::create([
-                    'reservation_id' => $material['reservation_id'],
-                    'material_id' => $material['id'],
-                    'quantity' => $material['quantity'],
-                    'created_by' => Auth::user()->id,
-                    'updated_by' => Auth::user()->id
-                ]);
-            }
-            DB::commit();
-            return $request->all();
-        } catch (\Throwable $th) {
-            DB::rollback();
-            return response()->json([
-                'message' => $th->getMessage(),
-            ], 400);
-        }
     }
 }

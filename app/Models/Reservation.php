@@ -18,6 +18,11 @@ class Reservation extends Model
         return $this->hasMany('App\Models\ReservationDetail', 'reservation_id');
     }
 
+    public function delivery_orders()
+    {
+        return $this->hasMany('App\Models\DeliveryOrder', 'reservation_id');
+    }
+
 	public function room_receiver()
     {
         return $this->hasOne('App\Models\Room', 'id', 'room_id');

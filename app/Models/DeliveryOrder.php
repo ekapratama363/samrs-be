@@ -5,16 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ReservationDetail extends Model
+class DeliveryOrder extends Model
 {
     use SoftDeletes;
 
     protected $guarded = [
         'id', 'created_at', 'updated_at', 'deleted_at'
     ];   
-
-	public function material()
-    {
-        return $this->hasOne('App\Models\Material', 'id', 'material_id');
-    }
 }
