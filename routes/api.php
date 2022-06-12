@@ -201,6 +201,8 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'transaction
     Route::post('/reservation', 'ReservationController@store');
     Route::post('/reservation-detail', 'ReservationController@storeDetail');
     Route::get('/reservation/{id}', 'ReservationController@show');
+    Route::put('/reservation-reject/{id}', 'ReservationController@reject');
+    Route::put('/reservation-approve/{id}', 'ReservationController@approve');
 
     /* PO */
     Route::get('/purchase-order', 'PurchaseOrderController@index');

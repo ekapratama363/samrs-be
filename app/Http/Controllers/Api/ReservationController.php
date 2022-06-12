@@ -200,7 +200,9 @@ class ReservationController extends Controller
             'vendor',
             'plant',
             'room_sender.plant',
+            'room_sender.responsible_person',
             'room_receiver.plant',
+            'room_receiver.responsible_person',
             'details',
             'details.material',
             'details.material.uom'
@@ -228,7 +230,7 @@ class ReservationController extends Controller
             'note' => 'nullable',
         ]);
 
-        if ($request->type == 1) {
+        if ($request->type == 0) {
             $this->validate(request(), [
                 'vendor_id' => 'required|exists:vendors,id',
             ]);
@@ -251,8 +253,8 @@ class ReservationController extends Controller
             'code'          => 'RES/' . date('ymd/His'),
             'room_id'       => $request->room_id,
             'plant_id'      => $request->plant_id,
-            'vendor_id'     => $request->type == 1 ? $request->vendor_id : null,
-            'room_sender'   => $request->type != 1 ? $request->room_sender : null,
+            'vendor_id'     => $request->type == 0 ? $request->vendor_id : null,
+            'room_sender'   => $request->type != 0 ? $request->room_sender : null,
             'delivery_date' => $request->delivery_date,
             'note'          => $request->note,
             'type'          => $request->type,
@@ -294,5 +296,64 @@ class ReservationController extends Controller
                 'message' => $th->getMessage(),
             ], 400);
         }
+    }
+
+    public function approve($id, Request $request)
+    {
+        Auth::user()->cekRoleModules(['reservation-approve']);
+
+        try {
+            $id = HashId::decode($id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $reservation = Reservation::find($id);
+
+        if ($reservation->status != 0) { //waiting approve
+            return response()->json([
+                'message'   => 'Data invalid',
+                'errors'    => [
+                    'status'  => ['Reservation status must waiting approve']
+                ]
+            ], 422);
+        }
+
+        $reservation->update(['status' => 1]);
+
+        return $reservation;
+    }
+
+    public function reject($id, Request $request)
+    {
+        Auth::user()->cekRoleModules(['reservation-reject']);
+
+        try {
+            $id = HashId::decode($id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $reservation = Reservation::find($id);
+
+        if ($reservation->status != 0) { //waiting approve
+            return response()->json([
+                'message'   => 'Data invalid',
+                'errors'    => [
+                    'status'  => ['Reservation status must waiting approve']
+                ]
+            ], 422);
+        }
+
+        $reservation->update([
+            'status' => 2, //reject
+            'remark' => $request->remark
+        ]);
+
+        return $reservation;
     }
 }

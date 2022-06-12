@@ -21,7 +21,7 @@ class PurchaseOrderController extends Controller
 
     public function index()
     {
-        Auth::user()->cekRoleModules(['reservation-view']);
+        Auth::user()->cekRoleModules(['purchase-order-view']);
 
         $reservation = (new Reservation)->newQuery();
 
@@ -96,7 +96,7 @@ class PurchaseOrderController extends Controller
 
     public function list()
     {
-        Auth::user()->cekRoleModules(['reservation-view']);
+        Auth::user()->cekRoleModules(['purchase-order-view']);
 
         $reservation = (new Reservation)->newQuery();
 
