@@ -13,6 +13,13 @@ class StockOpname extends Model
         'id', 'created_at', 'updated_at', 'deleted_at'
     ];  
 
+    protected $casts = [
+        'id' => 'integer',
+        'status' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];
+
 	public function room()
     {
         return $this->hasOne('App\Models\Room', 'id', 'room_id')->withTrashed();

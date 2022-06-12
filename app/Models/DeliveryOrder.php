@@ -12,4 +12,11 @@ class DeliveryOrder extends Model
     protected $guarded = [
         'id', 'created_at', 'updated_at', 'deleted_at'
     ];   
+
+    protected $casts = [
+        'id' => 'integer',
+        'status' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];
 }

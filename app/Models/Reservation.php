@@ -13,6 +13,13 @@ class Reservation extends Model
         'id', 'created_at', 'updated_at', 'deleted_at'
     ];   
 
+    protected $casts = [
+        'id' => 'integer',
+        'status' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];
+
     public function details()
     {
         return $this->hasMany('App\Models\ReservationDetail', 'reservation_id');
