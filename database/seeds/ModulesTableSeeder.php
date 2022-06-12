@@ -240,6 +240,12 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Purchase Order - Display']
         );
 
+        /** =========== DELIVERY ORDER ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'delivery-order-process'],
+            ['description' => 'delivery Order - Process']
+        );
+
         /** =========== Unit of Measurement ====================== */
         Modules::updateOrCreate(
             ['object' => 'unit-of-measurement-view'],
