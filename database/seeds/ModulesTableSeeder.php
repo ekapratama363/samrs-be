@@ -242,6 +242,11 @@ class ModulesTableSeeder extends Seeder
 
         /** =========== DELIVERY ORDER ====================== */
         Modules::updateOrCreate(
+            ['object' => 'delivery-order-view'],
+            ['description' => 'Delivery Order - Display']
+        );
+
+        Modules::updateOrCreate(
             ['object' => 'delivery-order-process'],
             ['description' => 'delivery Order - Process']
         );
