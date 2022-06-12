@@ -26,6 +26,13 @@ class Role extends Model
 		'name', 'created_by', 'updated_by', 'composite'
 	];
 
+    protected $casts = [
+        'id' => 'integer',
+        'composite' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];
+
     public function users()
 	{
 		return $this->belongsToMany('App\Models\User', 'role_users', 'role_id', 'user_id')

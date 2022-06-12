@@ -13,6 +13,14 @@ class ReservationDetail extends Model
         'id', 'created_at', 'updated_at', 'deleted_at'
     ];   
 
+    protected $casts = [
+        'id' => 'integer',
+        'reservation_id' => 'integer',
+        'material_id' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];
+
 	public function material()
     {
         return $this->hasOne('App\Models\Material', 'id', 'material_id');

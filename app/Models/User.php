@@ -72,6 +72,12 @@ class User extends Authenticatable implements JWTSubject
         'last_request_time'
     ];
 
+    protected $casts = [
+        'id' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];  
+
     /**
      * The attributes that should be hidden for arrays.
      *

@@ -13,6 +13,14 @@ class Room extends Model
         'id', 'created_at', 'updated_at', 'deleted_at'
     ];
 
+    protected $casts = [
+        'id' => 'integer',
+        'plant_id' => 'integer',
+        'responsible_person' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];
+
 	public function plant()
     {
         return $this->hasOne('App\Models\Plant', 'id', 'plant_id');

@@ -13,6 +13,14 @@ class Material extends Model
         'id', 'created_at', 'updated_at', 'deleted_at'
     ];   
 
+    protected $casts = [
+        'id' => 'integer',
+        'classification_id' => 'integer',
+        'unit_of_measurement_id' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];
+
 	public function classification()
     {
         return $this->hasOne('App\Models\Classification', 'id', 'classification_id');

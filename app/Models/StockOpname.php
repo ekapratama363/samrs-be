@@ -15,6 +15,7 @@ class StockOpname extends Model
 
     protected $casts = [
         'id' => 'integer',
+        'room_id' => 'integer',
         'status' => 'integer',
         'created_by' => 'integer',
         'updated_by' => 'integer'

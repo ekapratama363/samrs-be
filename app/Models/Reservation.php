@@ -15,6 +15,10 @@ class Reservation extends Model
 
     protected $casts = [
         'id' => 'integer',
+        'room_id' => 'integer',
+        'plant_id' => 'integer',
+        'vendor_id' => 'integer',
+        'room_sender' => 'integer',
         'type' => 'integer',
         'status' => 'integer',
         'created_by' => 'integer',

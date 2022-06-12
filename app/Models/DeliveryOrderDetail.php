@@ -15,6 +15,8 @@ class DeliveryOrderDetail extends Model
 
     protected $casts = [
         'id' => 'integer',
+        'delivery_order_id' => 'integer',
+        'reservation_detail_id' => 'integer',
         'status' => 'integer',
         'created_by' => 'integer',
         'updated_by' => 'integer'

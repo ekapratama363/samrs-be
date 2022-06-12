@@ -30,6 +30,13 @@ class UserDetail extends Model
         'address',
     ];
 
+    protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];  
+
     protected $appends = [
         'photo_url_full'
     ];

@@ -32,6 +32,12 @@ class Plant extends Model
         'updated_by',
 	];
 
+    protected $casts = [
+        'id' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];
+
 	public function createdBy()
     {
         return $this->hasOne('App\Models\User', 'id', 'created_by');

@@ -13,6 +13,13 @@ class StockOpnameSerial extends Model
         'id', 'created_at', 'updated_at', 'deleted_at'
     ];   
 
+    protected $casts = [
+        'id' => 'integer',
+        'stock_opname_detail_id' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];  
+
 	public function stock_opname_detail()
     {
         return $this->hasOne('App\Models\StockOpnameDetail', 'id', 'stock_opname_detail_id');

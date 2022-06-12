@@ -15,6 +15,14 @@ class RoleUser extends Model
         'role_id', 'user_id', 'created_by', 'updated_by'
     ];
 
+    protected $casts = [
+        'id' => 'integer',
+        'role_id' => 'integer',
+        'user_id' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];
+
     /**
      * Enable logging all changes in this model
      *

@@ -13,6 +13,17 @@ class Stock extends Model
         'id', 'created_at', 'updated_at', 'deleted_at'
     ];   
 
+    protected $casts = [
+        'id' => 'integer',
+        'material_id' => 'integer',
+        'room_id' => 'integer',
+        'stock' => 'integer',
+        'minimum_stock' => 'integer',
+        'quantity_in_transit' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];
+
 	public function material()
     {
         return $this->hasOne('App\Models\Material', 'id', 'material_id')->withTrashed();
