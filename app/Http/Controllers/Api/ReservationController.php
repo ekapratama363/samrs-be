@@ -24,7 +24,7 @@ class ReservationController extends Controller
 
         $reservation = (new Reservation)->newQuery();
 
-        $reservation->with(['room_sender', 'room_receive', 'vendor']);
+        $reservation->with(['room_sender', 'room_receiver', 'vendor']);
 
         $reservation->has('details');
 
@@ -44,9 +44,9 @@ class ReservationController extends Controller
             $reservation->whereIn('code', request()->input('code'));
         }
 
-        if (request()->has('plant_id')) {
-            $reservation->whereIn('plant_id', request()->input('plant_id'));
-        }
+        // if (request()->has('plant_id')) {
+        //     $reservation->whereIn('plant_id', request()->input('plant_id'));
+        // }
 
         if (request()->has('room_id')) {
             $reservation->whereIn('room_id', request()->input('room_id'));
@@ -54,6 +54,16 @@ class ReservationController extends Controller
 
         if (request()->has('vendor_id')) {
             $reservation->whereIn('vendor_id', request()->input('vendor_id'));
+        }
+
+        if (request()->has('status')) {
+            $reservation->whereIn('status', request()->input('status'));
+        }
+
+        if (request()->has('delivery_date')) {
+            $start = trim(request()->delivery_date[0], '"');
+            $end   = trim(request()->delivery_date[1], '"');
+            $reservation->whereBetween('delivery_date', [$start, $end]);
         }
 
         if (request()->has('q') && request()->input('q')) {
@@ -82,7 +92,15 @@ class ReservationController extends Controller
 
         $reservation = (new Reservation)->newQuery();
 
-        $reservation->with(['room_sender', 'room_receive', 'vendor']);
+        $reservation->with([
+            'room_sender', 
+            'room_receiver', 
+            'vendor',
+            'plant'
+        ]);
+
+        $reservation->with('room_sender.plant');
+        $reservation->with('room_receiver.plant');
 
         $reservation->has('details');
 
@@ -112,6 +130,16 @@ class ReservationController extends Controller
 
         if (request()->has('vendor_id')) {
             $reservation->whereIn('vendor_id', request()->input('vendor_id'));
+        }
+
+        if (request()->has('status')) {
+            $reservation->whereIn('status', request()->input('status'));
+        }
+
+        if (request()->has('delivery_date')) {
+            $start = trim(request()->delivery_date[0], '"');
+            $end   = trim(request()->delivery_date[1], '"');
+            $reservation->whereBetween('delivery_date', [$start, $end]);
         }
 
         if (request()->has('q') && request()->input('q')) {
@@ -142,6 +170,30 @@ class ReservationController extends Controller
                 ], 400);
             }
         }
+
+        return $reservation;
+    }
+
+    public function show($id)
+    {
+        Auth::user()->cekRoleModules(['reservation-view']);
+
+        try {
+            $id = HashId::decode($id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $reservation = Reservation::with([
+            'room_sender', 
+            'room_receiver', 
+            'vendor',
+            'plant',
+            'room_sender.plant',
+            'room_receiver.plant',
+        ])->find($id);
 
         return $reservation;
     }
@@ -185,9 +237,43 @@ class ReservationController extends Controller
             'delivery_date' => $request->delivery_date,
             'note'          => $request->note,
             'type'          => $request->type,
-            'status'        => 0,
+            'status'        => 0,  //waiting approve
+            'created_by'    => Auth::user()->id,
+            'updated_by'    => Auth::user()->id
         ]);
         
         return $save;
+    }
+
+    public function storeDetail(Request $request)
+    {
+        Auth::user()->cekRoleModules(['reservation-create']);
+
+        $this->validate(request(), [
+            'materials'                  => 'required|array',
+            'materials.*.reservation_id' => 'required|exists:reservations,id',
+            'materials.*.id'             => 'required|exists:materials,id',
+            'materials.*.quantity'       => 'required|numeric|min:1',
+        ]);
+
+        DB::BeginTransaction();
+        try {
+            foreach($request->materials as $material) {
+                ReservationDetail::create([
+                    'reservation_id' => $material['reservation_id'],
+                    'material_id' => $material['id'],
+                    'quantity' => $material['quantity'],
+                    'created_by' => Auth::user()->id,
+                    'updated_by' => Auth::user()->id
+                ]);
+            }
+            DB::commit();
+            return $request->all();
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
+        }
     }
 }

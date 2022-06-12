@@ -225,16 +225,6 @@ class ModulesTableSeeder extends Seeder
         );
 
         Modules::updateOrCreate(
-            ['object' => 'reservation-update'],
-            ['description' => 'Reservation - Edit']
-        );
-
-        Modules::updateOrCreate(
-            ['object' => 'reservation-delete'],
-            ['description' => 'Reservation - Delete']
-        );
-
-        Modules::updateOrCreate(
             ['object' => 'reservation-reject'],
             ['description' => 'Reservation - Reject']
         );
