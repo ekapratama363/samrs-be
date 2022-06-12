@@ -17,6 +17,8 @@ class ReservationDetail extends Model
         'id' => 'integer',
         'reservation_id' => 'integer',
         'material_id' => 'integer',
+        'quantity' => 'integer',
+        'delivery_quantity' => 'integer',
         'created_by' => 'integer',
         'updated_by' => 'integer'
     ];
