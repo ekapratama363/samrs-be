@@ -215,6 +215,13 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'transaction
     Route::get('/delivery-order-list', 'DeliveryOrderController@list');
     Route::post('/delivery-order-process/{reservation_id}', 'DeliveryOrderController@process');
     Route::get('/delivery-order/{id}', 'DeliveryOrderController@show');
+
+    /* GR */
+    Route::get('/good-receive', 'GoodReceiveController@index');
+    Route::get('/good-receive-list', 'GoodReceiveController@list');
+    Route::get('/good-receive/{id}', 'GoodReceiveController@show');
+    Route::put('/good-receive-reject/{id}', 'GoodReceiveController@reject');
+    Route::put('/good-receive-approve/{id}', 'GoodReceiveController@approve');
 });
 
 Route::get('/transaction/stock-detail/qrcode', 'Api\StockDetailController@qrcode');

@@ -251,6 +251,22 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Delivery Order - Display']
         );
 
+        /** =========== GOOD RECEIVE ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'good-receive-view'],
+            ['description' => 'Good Receive - Display']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'good-receive-reject'],
+            ['description' => 'Good Receive - Reject']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'good-receive-approve'],
+            ['description' => 'Good Receive - Approve']
+        );
+
         /** =========== Unit of Measurement ====================== */
         Modules::updateOrCreate(
             ['object' => 'unit-of-measurement-view'],

@@ -15,6 +15,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserTableSeeder::class);
         $this->call(ModulesTableSeeder::class);
         $this->call(SettingsTableSeeder::class);
-        $this->call(ChangeMyISAMtoInnoDBTableSeeder::class);
+        // $this->call(ChangeMyISAMtoInnoDBTableSeeder::class);
     }
 }
