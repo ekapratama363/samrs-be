@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDeliveryOrderDetailsTable extends Migration
+class CreateDeliveryOrderSerialsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,16 @@ class CreateDeliveryOrderDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('delivery_order_details', function (Blueprint $table) {
+        Schema::create('delivery_order_serials', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
-            $table->bigInteger('delivery_order_id')->unsigned()->nullable();
-            $table->bigInteger('reservation_detail_id')->unsigned()->nullable();
-            $table->tinyInteger('status')->default(0)->comment('1 = sudah dikirim, 0 = belum dikirim');
+            $table->bigInteger('delivery_order_detail_id')->unsigned()->nullable();
+            $table->string('serial_number')->nullable();
             $table->bigInteger('created_by')->unsigned()->nullable();
             $table->bigInteger('updated_by')->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('delivery_order_id')->references('id')->on('delivery_orders')->onDelete('set null');
-            $table->foreign('reservation_detail_id')->references('id')->on('reservation_details')->onDelete('set null');
+            $table->foreign('delivery_order_detail_id')->references('id')->on('delivery_order_details')->onDelete('set null');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
         });
@@ -38,6 +35,6 @@ class CreateDeliveryOrderDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('delivery_order_details');
+        Schema::dropIfExists('delivery_order_serials');
     }
 }

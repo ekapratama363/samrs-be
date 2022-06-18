@@ -168,7 +168,7 @@ class User extends Authenticatable implements JWTSubject
         $modules_id = ModulesRole::whereIn('role_id', $all_role)->pluck('modules_id');
         $modules = Modules::whereIn('id', $modules_id)->where('object', $object)->first();
         $object_name = Modules::where('object', $object)->first();
-        return $modules || abort( response()->json(['message' => 'Unauthenticated'], 401) );//abort(403, $object_name ? $object_name->description : '');
+        return $modules || abort( response()->json(['message' => 'Forbidden'], 403) );//abort(403, $object_name ? $object_name->description : '');
     }
 
     public function roleOrgParam($key)

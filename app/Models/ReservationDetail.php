@@ -27,4 +27,9 @@ class ReservationDetail extends Model
     {
         return $this->hasOne('App\Models\Material', 'id', 'material_id');
     }
+
+	public function do_detail()
+    {
+        return $this->belongsTo('App\Models\DeliveryOrderDetail', 'id', 'reservation_detail_id');
+    }
 }

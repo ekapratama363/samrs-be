@@ -20,4 +20,9 @@ class DeliveryOrder extends Model
         'created_by' => 'integer',
         'updated_by' => 'integer'
     ];
+
+	public function reservation()
+    {
+        return $this->hasOne('App\Models\Reservation', 'id', 'reservation_id');
+    }
 }

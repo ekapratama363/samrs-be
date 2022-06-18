@@ -461,14 +461,15 @@ class StockOpnameController extends Controller
             ], 400);
         }
 
-        $this->validate(request(), [
-            'code' => 'required|exists:stock_details,code',
-        ]);
-
         $response = [
             'status'  => false,
             'message' => 'Data Invalid'
         ];
+
+        if (!$request->code) {
+            $response['errors']['material'] = ['code material qrcode tidak valid'];
+            return response()->json($response, 400);
+        }
 
         $code = explode('/', $request->code);
 
@@ -483,8 +484,8 @@ class StockOpnameController extends Controller
             ->first();
 
         if (!$stock_opname_detail) {
-            $response['errors']['material'] = 'code material qrcode tidak valid';
-            return $response;
+            $response['errors']['material'] = ['code material qrcode tidak valid'];
+            return response()->json($response, 400);
         }
 
         DB::beginTransaction();

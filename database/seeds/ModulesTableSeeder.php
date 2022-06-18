@@ -167,20 +167,20 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Stock - Display']
         );
 
-        Modules::updateOrCreate(
-            ['object' => 'stock-create'],
-            ['description' => 'Stock - Create']
-        );
+        // Modules::updateOrCreate(
+        //     ['object' => 'stock-create'],
+        //     ['description' => 'Stock - Create']
+        // );
 
-        Modules::updateOrCreate(
-            ['object' => 'stock-update'],
-            ['description' => 'Stock - Edit']
-        );
+        // Modules::updateOrCreate(
+        //     ['object' => 'stock-update'],
+        //     ['description' => 'Stock - Edit']
+        // );
 
-        Modules::updateOrCreate(
-            ['object' => 'stock-delete'],
-            ['description' => 'Stock - Delete']
-        );
+        // Modules::updateOrCreate(
+        //     ['object' => 'stock-delete'],
+        //     ['description' => 'Stock - Delete']
+        // );
 
         /** =========== STOCK OPNAME ====================== */
         Modules::updateOrCreate(
@@ -240,15 +240,15 @@ class ModulesTableSeeder extends Seeder
             ['description' => 'Purchase Order - Display']
         );
 
+        Modules::updateOrCreate(
+            ['object' => 'purchase-order-process'],
+            ['description' => 'Purchase Order - Process']
+        );
+
         /** =========== DELIVERY ORDER ====================== */
         Modules::updateOrCreate(
             ['object' => 'delivery-order-view'],
             ['description' => 'Delivery Order - Display']
-        );
-
-        Modules::updateOrCreate(
-            ['object' => 'delivery-order-process'],
-            ['description' => 'delivery Order - Process']
         );
 
         /** =========== Unit of Measurement ====================== */
@@ -315,7 +315,7 @@ class ModulesTableSeeder extends Seeder
         );
         
         //Assign All Module To Admin Role
-        $role_admin = Role::where(DB::raw("LOWER(name)"), 'admin')->first();
+        $role_admin = Role::where(DB::raw("LOWER(name)"), 'Super_Admin')->first();
         $modules    = Modules::all()->pluck('id');
         $role_admin->modules()->sync($modules);
     }

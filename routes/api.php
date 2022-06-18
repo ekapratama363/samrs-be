@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -207,6 +208,13 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'transaction
     /* PO */
     Route::get('/purchase-order', 'PurchaseOrderController@index');
     Route::get('/purchase-order-list', 'PurchaseOrderController@list');
+    Route::get('/purchase-order/{reservation_id}', 'PurchaseOrderController@show');
+
+    /* DO */
+    Route::get('/delivery-order', 'DeliveryOrderController@index');
+    Route::get('/delivery-order-list', 'DeliveryOrderController@list');
+    Route::post('/delivery-order-process/{reservation_id}', 'DeliveryOrderController@process');
+    Route::get('/delivery-order/{id}', 'DeliveryOrderController@show');
 });
 
 Route::get('/transaction/stock-detail/qrcode', 'Api\StockDetailController@qrcode');

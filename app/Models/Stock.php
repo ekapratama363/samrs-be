@@ -20,6 +20,7 @@ class Stock extends Model
         'stock' => 'integer',
         'minimum_stock' => 'integer',
         'quantity_in_transit' => 'integer',
+        'quantity_sent' => 'integer',
         'created_by' => 'integer',
         'updated_by' => 'integer'
     ];

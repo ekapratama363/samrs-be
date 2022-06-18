@@ -347,7 +347,7 @@ class ClassificationController extends Controller
                 // numeric
                 $this->validate(request(), [
                     'length' => 'required|numeric',
-                    'decimal' => 'required|numeric'
+                    // 'decimal' => 'required|numeric'
                 ]);
             } else if (request()->input('type') == 5) {
                 // list

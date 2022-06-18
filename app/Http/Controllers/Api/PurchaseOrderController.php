@@ -44,6 +44,12 @@ class PurchaseOrderController extends Controller
             $reservation->whereIn('plant_id', $plant_id);
         }
 
+        // if have organization parameter
+        $vendor_id = Auth::user()->roleOrgParam(['vendor']);
+        if (count($vendor_id) > 0) {
+            $reservation->whereIn('vendor_id', $vendor_id);
+        }
+
         if (request()->has('code')) {
             $reservation->whereIn('code', request()->input('code'));
         }
@@ -127,6 +133,12 @@ class PurchaseOrderController extends Controller
             $reservation->whereIn('plant_id', $plant_id);
         }
 
+        // if have organization parameter
+        $vendor_id = Auth::user()->roleOrgParam(['vendor']);
+        if (count($vendor_id) > 0) {
+            $reservation->whereIn('vendor_id', $vendor_id);
+        }
+
         if (request()->has('code')) {
             $reservation->whereIn('code', request()->input('code'));
         }
@@ -183,6 +195,43 @@ class PurchaseOrderController extends Controller
                 return response()->json([
                     'message' => 'ERROR : Cannot hash ID. '.$ex->getMessage(),
                 ], 400);
+            }
+        }
+
+        return $reservation;
+    }
+
+    public function show($reservation_id)
+    {
+        Auth::user()->cekRoleModules(['purchase-order-view']);
+
+        try {
+            $id = HashId::decode($reservation_id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $reservation = Reservation::with([
+            'room_sender', 
+            'room_receiver', 
+            'vendor',
+            'plant',
+            'room_sender.plant',
+            'room_sender.responsible_person',
+            'room_receiver.plant',
+            'room_receiver.responsible_person',
+            'details',
+            'details.material',
+            'details.material.uom'
+        ])->find($id);
+
+        if (count($reservation->details) > 0) {
+            foreach($reservation->details as $index => $detail) {
+                $detail->material_code = $detail->material->material_code;
+                $detail->description = $detail->material->description;
+                $detail->uom = $detail->material->uom;
             }
         }
 

@@ -40,6 +40,12 @@ class ReservationController extends Controller
             $reservation->whereIn('plant_id', $plant_id);
         }
 
+        // if have organization parameter
+        $vendor_id = Auth::user()->roleOrgParam(['vendor']);
+        if (count($vendor_id) > 0) {
+            $reservation->whereIn('vendor_id', $vendor_id);
+        }
+
         if (request()->has('code')) {
             $reservation->whereIn('code', request()->input('code'));
         }
@@ -118,6 +124,12 @@ class ReservationController extends Controller
         $plant_id = Auth::user()->roleOrgParam(['plant']);
         if (count($plant_id) > 0) {
             $reservation->whereIn('plant_id', $plant_id);
+        }
+
+        // if have organization parameter
+        $vendor_id = Auth::user()->roleOrgParam(['vendor']);
+        if (count($vendor_id) > 0) {
+            $reservation->whereIn('vendor_id', $vendor_id);
         }
 
         if (request()->has('code')) {
