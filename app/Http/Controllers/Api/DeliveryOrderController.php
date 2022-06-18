@@ -64,6 +64,10 @@ class DeliveryOrderController extends Controller
             });
         }
 
+        if (request()->has('code_do')) {
+            $delivery_order->whereIn('code', request()->input('code_do'));
+        }
+
         if (request()->has('code')) {
             $code = request()->input('code');
             $delivery_order->whereHas('reservation', function($query) use($code) {
@@ -153,6 +157,10 @@ class DeliveryOrderController extends Controller
             $delivery_order->whereHas('reservation', function($query) use($plant_id) {
                 $query->whereIn('plant_id', $room_id);
             });
+        }
+
+        if (request()->has('code_do')) {
+            $delivery_order->whereIn('code', request()->input('code_do'));
         }
 
         if (request()->has('code')) {
