@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => 'user', 'namespace' => 'Api'], function () {
+Route::group(['middleware' => 'cors', 'prefix' => 'user', 'namespace' => 'Api'], function () {
     Route::post('/login', 'AuthController@authenticate');
     Route::post('/confirm-email/{id}', 'AuthController@confirmEmail');
     Route::post('/forgot-password', 'AuthController@forgotPassword');
