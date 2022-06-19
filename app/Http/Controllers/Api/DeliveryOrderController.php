@@ -379,6 +379,7 @@ class DeliveryOrderController extends Controller
                             StockDetail::create([
                                 'code'          => 'MT/' . $material['material_id'] . '/' . $serial,
                                 'stock_id'      => $receive_stock->id,
+                                'delivery_order_detail_id' => $do_detail->id,
                                 'serial_number' => $serial,
                                 'status'        => 2, //in transit
                                 'created_by'    => Auth::user()->id,
@@ -396,8 +397,9 @@ class DeliveryOrderController extends Controller
                         for($i = 0; $i < $material['delivery_quantity']; $i++) {
                             StockDetail::create([ //jika material tidak punya serial, makan buat stock detail tanpa serial
                                 'code' => 'MT/' . $material['material_id'],
-                                'serial_number' => null,
                                 'stock_id' => $receive_stock->id,
+                                'delivery_order_detail_id' => $do_detail->id,
+                                'serial_number' => null,
                                 'status'   => 2, //in transit
                                 'created_by' => Auth::user()->id,
                                 'updated_by' => Auth::user()->id

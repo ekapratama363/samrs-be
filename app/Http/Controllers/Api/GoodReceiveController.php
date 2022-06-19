@@ -266,4 +266,169 @@ class GoodReceiveController extends Controller
 
         return $do;
     }
+
+    public function approve($id, Request $request)
+    {
+        Auth::user()->cekRoleModules(['good-receive-approve']);
+
+        try {
+            $id = HashId::decode($id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $gr = DeliveryOrder::with('reservation.details')->find($id);
+
+        if (!$gr) {
+            return response()->json([
+                'message'   => 'Data invalid',
+                'errors'    => [
+                    'status'  => ['GR not found']
+                ]
+            ], 404);
+        }
+
+        if ($gr->status != 0) { //waiting approve
+            return response()->json([
+                'message'   => 'Data invalid',
+                'errors'    => [
+                    'status'  => ['GR status must waiting approve']
+                ]
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+
+            foreach($gr->details as $detail) {
+                if ($detail->status == 0) { //delivery
+                    $gr_details_id[] = $detail->id;
+                }
+            } 
+
+            $gr->update(['status' => 1]); //received
+    
+            foreach($gr->reservation->details as $detail) {
+                $stock = Stock::where('material_id', $detail->material_id)
+                    ->where('room_id', $gr->reservation->room_id)
+                    ->first();
+
+                $stock->update([
+                    'stock' => $stock->stock + $detail->delivery_quantity,
+                    'quantity_in_transit' => $stock->quantity_in_transit - $detail->delivery_quantity,
+                ]);
+
+                $stock_details = StockDetail::where('stock_id', $stock->id)
+                    ->where('status', 2) //in transit
+                    ->whereIn('delivery_order_detail_id', $gr_details_id)
+                    ->get();
+
+                foreach($stock_details as $stock_detail) {
+                    $material_id = explode('/', $stock_detail->code)[1];
+                    if ($detail->material_id == $material_id) {
+                        $stock_details_id[] = $stock_detail->id;
+                    }
+                }
+            }
+
+            StockDetail::whereIn('id', $stock_details_id)
+                ->update([
+                    'status' => 1,// delivered
+                ]);
+
+            DB::commit();
+
+            return $gr;
+        } catch (\Throwable $th) {
+            DB::rollback();
+
+            return response()->json([
+                'message'   => $th->getMessage(),
+            ], 422);
+        }
+    }
+
+    public function reject($id, Request $request)
+    {
+        Auth::user()->cekRoleModules(['good-receive-reject']);
+
+        try {
+            $id = HashId::decode($id);
+        } catch(\Exception $ex) {
+            return response()->json([
+                'message' => 'ID is not valid. ERROR:'.$ex->getMessage(),
+            ], 400);
+        }
+
+        $gr = DeliveryOrder::find($id);
+
+        if (!$gr) {
+            return response()->json([
+                'message'   => 'Data invalid',
+                'errors'    => [
+                    'status'  => ['GR not found']
+                ]
+            ], 404);
+        }
+
+        if ($gr->status != 0) { //waiting approve
+            return response()->json([
+                'message'   => 'Data invalid',
+                'errors'    => [
+                    'status'  => ['GR status must waiting approve']
+                ]
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+
+            foreach($gr->details as $detail) {
+                if ($detail->status == 0) { //delivery
+                    $gr_details_id[] = $detail->id;
+                }
+            } 
+
+            $gr->update([
+                'status' => 2,
+                'note' => $request->remark
+            ]); //rejected
+    
+            foreach($gr->reservation->details as $detail) {
+                $stock = Stock::where('material_id', $detail->material_id)
+                    ->where('room_id', $gr->reservation->room_id)
+                    ->first();
+
+                $stock->update([
+                    'quantity_in_transit' => $stock->quantity_in_transit - $detail->delivery_quantity,
+                ]);
+
+                $stock_details = StockDetail::where('stock_id', $stock->id)
+                    ->where('status', 2) //in transit
+                    ->whereIn('delivery_order_detail_id', $gr_details_id)
+                    ->get();
+
+                foreach($stock_details as $stock_detail) {
+                    $material_id = explode('/', $stock_detail->code)[1];
+                    if ($detail->material_id == $material_id) {
+                        $stock_details_id[] = $stock_detail->id;
+                    }
+                }
+            }
+
+            StockDetail::whereIn('id', $stock_details_id)->delete();
+
+            DB::commit();
+
+            return $gr;
+        } catch (\Throwable $th) {
+            DB::rollback();
+
+            return response()->json([
+                'message'   => $th->getMessage(),
+            ], 422);
+        }
+    }
 }

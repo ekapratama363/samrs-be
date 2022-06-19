@@ -43,4 +43,9 @@ class DeliveryOrder extends Model
     {
         return $this->hasOne('App\Models\Reservation', 'id', 'reservation_id');
     }
+
+	public function details()
+    {
+        return $this->hasMany('App\Models\DeliveryOrderDetail', 'delivery_order_id');
+    }
 }
