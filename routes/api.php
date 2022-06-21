@@ -224,6 +224,7 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'transaction
     Route::put('/good-receive-approve/{id}', 'GoodReceiveController@approve');
 });
 
+Route::get('/transaction/reservation-pdf/{code}', 'Api\ReservationController@pdf');
 Route::get('/transaction/stock-detail/qrcode', 'Api\StockDetailController@qrcode');
 
 // Authenticated User API (Dashboard)

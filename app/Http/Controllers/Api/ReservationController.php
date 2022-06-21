@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Auth;
 use DB;
 use Storage;
+use PDF;
 
 use App\Models\Reservation;
 use App\Models\ReservationDetail;
@@ -367,5 +368,15 @@ class ReservationController extends Controller
         ]);
 
         return $reservation;
+    }
+
+    public function pdf($code)
+    {
+        $reservation = Reservation::where('code', $code)->first();
+
+        $data = [];
+        $pdf = PDF::chunkLoadView("<html-separator/>", "report.pdf.reservation", $data);
+        $pdf->getMpdf()->setFooter("Page {PAGENO} of {nb}");
+        return $pdf->stream("reservation_$code.pdf");
     }
 }

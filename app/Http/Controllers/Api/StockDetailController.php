@@ -199,7 +199,8 @@ class StockDetailController extends Controller
 
         $size = request()->input('size');
         $pdf = PDF::loadView("report.pdf.qrcode_$size" , $data);
-        return $pdf->stream('document.pdf');
+        // $pdf->getMpdf()->setFooter('Page {PAGENO} of {nb}');
+        return $pdf->stream('qrcode.pdf');
     }
 
     public function getStockDetailSerialNumberByStockId($stock_id)

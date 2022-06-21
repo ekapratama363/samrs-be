@@ -269,7 +269,7 @@ class DeliveryOrderController extends Controller
     
     public function process($reservation_id, Request $request)
     {
-        Auth::user()->cekRoleModules(['delivery-order-process']);
+        Auth::user()->cekRoleModules(['purchase-order-process']);
 
         $response = [
             'message' => 'Data invalid',
