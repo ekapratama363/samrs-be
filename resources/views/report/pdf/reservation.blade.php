@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Reservation</title>
 
     <style>
         tr.border_bottom td {
@@ -42,7 +42,7 @@
                     </td>
                     <td width="10">:</td>
                     <td>
-                        RS/0902334/039543
+                        {{ $reservation->code }}
                     </td>
                 </tr>
                 <tr>
@@ -51,7 +51,7 @@
                     </td>
                     <td width="10">:</td>
                     <td>
-                        Plant 1
+                        {{ $reservation->plant ? $reservation->plant->name : '-' }}
                     </td>
                 </tr>
                 <tr>
@@ -60,7 +60,7 @@
                     </td>
                     <td width="10">:</td>
                     <td>
-                        Room 1
+                        {{ $reservation->room_receiver ? $reservation->room_receiver->name : '-' }}
                     </td>
                 </tr>
                 <tr>
@@ -69,7 +69,7 @@
                     </td>
                     <td width="10">:</td>
                     <td>
-                        dadang
+                        {{ $reservation->createdBy ? $reservation->createdBy->fullname : '-' }}
                     </td>
                 </tr>
                 <tr>
@@ -78,7 +78,7 @@
                     </td>
                     <td width="10">:</td>
                     <td>
-                        2020-01-01 10:01:01
+                        {{ $reservation->created_at }}
                     </td>
                 </tr>
                 <tr>
@@ -86,7 +86,9 @@
                         <strong>Update By</strong>
                     </td>
                     <td width="10">:</td>
-                    <td>Eka</td>
+                    <td>
+                        {{ $reservation->updatedBy ? $reservation->updatedBy->fullname : '-' }}
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -94,7 +96,7 @@
                     </td>
                     <td width="10">:</td>
                     <td>
-                        2020-01-01 10:01:01
+                        {{ $reservation->updated_at }}
                     </td>
                 </tr>
             </table>
@@ -103,7 +105,7 @@
             <div style="text-align: right">
                 <img src="{{asset('images/rsch.png')}}" style="width:100px; height:110px"></img>
                 <p>Printed by: Eka Pratama </p>
-                <p>{{date("d M Y h:i:s")}}</p>
+                <p>{{ date("d M Y h:i:s") }}</p>
             </div>
         </div>
     </div>
@@ -120,13 +122,21 @@
             </tr>
         </thead>
         <tbody>
+            @foreach($reservation->details as $detail)
             <tr>
-                <td>1</td>
-                <td>MT 001</td>
-                <td>3</td>
-                <td>Unit</td>
-                <td>Vendor 1</td>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $detail->material->material_code }} - {{ $detail->material->description }}</td>
+                <td>{{ $detail->quantity }}</td>
+                <td>{{ $detail->material->uom ? $detail->material->uom->name : '-' }}</td>
+                @if ($reservation->vendor) 
+                    <td>{{ $reservation->vendor->name }}</td>
+                @elseif ($reservation->room_sender)
+                    <td>{{ $reservation->room_sender->name }}</td>
+                @else
+                    <td></td>
+                @endif
             </tr>
+            @endforeach
         </tbody>
     </table>
     <html-separator/>

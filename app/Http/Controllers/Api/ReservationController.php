@@ -263,7 +263,7 @@ class ReservationController extends Controller
         }
 
         $save = Reservation::create([
-            'code'          => 'RES/' . date('ymd/His'),
+            'code'          => 'RES-' . date('ymd-His'),
             'room_id'       => $request->room_id,
             'plant_id'      => $request->plant_id,
             'vendor_id'     => $request->type == 0 ? $request->vendor_id : null,
@@ -372,10 +372,13 @@ class ReservationController extends Controller
 
     public function pdf($code)
     {
-        $reservation = Reservation::where('code', $code)->first();
+        $reservation = Reservation::with([
+            'room_receiver', 'plant', 'room_sender', 'details.material.uom', 'vendor',
+            'createdBy', 'updatedBy'
+        ])->where('code', $code)->first();
 
-        $data = [];
-        $pdf = PDF::chunkLoadView("<html-separator/>", "report.pdf.reservation", $data);
+        $data['reservation'] = $reservation;
+        $pdf = PDF::chunkLoadView("<html-separator/>", "report.pdf.reservation", $data, [], ['orientation' => 'L']);
         $pdf->getMpdf()->setFooter("Page {PAGENO} of {nb}");
         return $pdf->stream("reservation_$code.pdf");
     }

@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Auth;
 use DB;
 use Storage;
+use PDF;
 
 use App\Models\DeliveryOrder;
 use App\Models\DeliveryOrderDetail;
@@ -328,7 +329,7 @@ class DeliveryOrderController extends Controller
         try {
 
             $do = DeliveryOrder::create([
-                'code'           => 'DO/' . date('ymd/His'),
+                'code'           => 'DO-' . date('ymd-His'),
                 'reservation_id' => $reservation->id,
                 'note'           => $request->note,
                 'status'         => 0, //waiting received
@@ -613,6 +614,39 @@ class DeliveryOrderController extends Controller
             'status' => true,
             'message' => null,
         ];
+    }
+
+    public function pdf($code)
+    {
+        $do = DeliveryOrder::with([
+            'reservation.room_sender', 
+            'reservation.room_receiver', 
+            'reservation.vendor',
+            'reservation.plant',
+            'reservation.room_sender.plant',
+            'reservation.room_sender.responsible_person',
+            'reservation.room_receiver.plant',
+            'reservation.room_receiver.responsible_person',
+            'reservation.details',
+            'reservation.details.do_detail.serial_numbers',
+            'reservation.details.material',
+            'reservation.details.material.uom'
+        ])
+        ->where('code', $code)
+        ->first();
+
+        if (count($do->reservation->details) > 0) {
+            foreach($do->reservation->details as $index => $detail) {
+                $detail->material_code = $detail->material->material_code;
+                $detail->description = $detail->material->description;
+                $detail->uom = $detail->material->uom;
+            }
+        }
+
+        $data['do'] = $do;
+        $pdf = PDF::chunkLoadView("<html-separator/>", "report.pdf.delivery_order", $data, [], ['orientation' => 'L']);
+        $pdf->getMpdf()->setFooter("Page {PAGENO} of {nb}");
+        return $pdf->stream("delivery_order_$code.pdf");
     }
 
     private function uniqueSerials($serials) 
