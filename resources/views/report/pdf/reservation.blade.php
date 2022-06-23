@@ -104,8 +104,8 @@
         <div class="column">
             <div style="text-align: right">
                 <img src="{{asset('images/rsch.png')}}" style="width:100px; height:110px"></img>
-                <p>Printed by: Eka Pratama </p>
-                <p>{{ date("d M Y h:i:s") }}</p>
+                <!-- <p>Printed by: Eka Pratama </p> -->
+                <p>Printed at: {{ date("d M Y h:i:s") }}</p>
             </div>
         </div>
     </div>
@@ -125,7 +125,7 @@
             @foreach($reservation->details as $detail)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $detail->material->material_code }} - {{ $detail->material->description }}</td>
+                <td style="text-align: left">{{ $detail->material->material_code }} - {{ $detail->material->description }}</td>
                 <td>{{ $detail->quantity }}</td>
                 <td>{{ $detail->material->uom ? $detail->material->uom->name : '-' }}</td>
                 @if ($reservation->vendor) 

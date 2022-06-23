@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delivery Order</title>
+    <title>Good Receives</title>
 
     <style>
         tr.border_bottom td {
@@ -33,7 +33,7 @@
 <body>
     <div class="container">
         <div class="column">
-            <p><b style="font-size: large;">Delivery Order (Surat Jalan)</b></p>
+            <p><b style="font-size: large;">Good Receives (Berita Acara Serah Terima)</b></p>
         </div>
         <div class="column">
             <div style="text-align: right">
@@ -67,11 +67,29 @@
                 </tr>
                 <tr>
                     <td>
+                        <strong>Request Date</strong>
+                    </td>
+                    <td width="10">:</td>
+                    <td>
+                        {{ $do->reservation->updated_at }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <strong>Delivery Date</strong>
                     </td>
                     <td width="10">:</td>
                     <td>
                         {{ $do->created_at }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Duration</strong>
+                    </td>
+                    <td width="10">:</td>
+                    <td>
+                        {{ $do->duration }}
                     </td>
                 </tr>
                 <tr>
@@ -90,15 +108,6 @@
                     <td width="10">:</td>
                     <td>
                         {{ $do->reservation->updatedBy ? $do->reservation->updatedBy->fullname : '-'  }}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <strong>Duration</strong>
-                    </td>
-                    <td width="10">:</td>
-                    <td>
-                        {{ $do->duration }}
                     </td>
                 </tr>
             </table>
@@ -134,11 +143,11 @@
                 </tr>
                 <tr>
                     <td>
-                        <strong>Note</strong>
+                        <strong>Goods Receive Date</strong>
                     </td>
                     <td width="10">:</td>
                     <td>
-                        {{ $do->note ? $do->note : '-' }}
+                        {{ $do->updated_at }}
                     </td>
                 </tr>
             </table>

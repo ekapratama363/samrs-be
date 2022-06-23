@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Auth;
 use DB;
 use Storage;
+use PDF;
 
 use App\Models\DeliveryOrder;
 use App\Models\DeliveryOrderDetail;
@@ -335,7 +336,8 @@ class GoodReceiveController extends Controller
 
             StockDetail::whereIn('id', $stock_details_id)
                 ->update([
-                    'status' => 1,// delivered
+                    'status' => 1,// delivered,
+                    'updated_by' => Auth::user()->id
                 ]);
 
             DB::commit();
@@ -393,7 +395,8 @@ class GoodReceiveController extends Controller
 
             $gr->update([
                 'status' => 2,
-                'note' => $request->remark
+                'note' => $request->remark,
+                'updated_by' => Auth::user()->id
             ]); //rejected
     
             foreach($gr->reservation->details as $detail) {
@@ -430,5 +433,42 @@ class GoodReceiveController extends Controller
                 'message'   => $th->getMessage(),
             ], 422);
         }
+    }
+
+    public function pdf($code)
+    {
+        $do = DeliveryOrder::with([
+            'reservation.room_sender', 
+            'reservation.room_receiver', 
+            'reservation.vendor',
+            'reservation.plant',
+            'reservation.room_sender.plant',
+            'reservation.room_sender.responsible',
+            'reservation.room_receiver.plant',
+            'reservation.room_receiver.responsible',
+            'reservation.details',
+            'reservation.details.do_detail.serial_numbers',
+            'reservation.details.material',
+            'reservation.details.material.uom',
+            'reservation.createdBy',
+            'reservation.updatedBy',
+            'details'
+        ])
+        ->where('code', $code)
+        ->where('status', 1) //delivered
+        ->first();
+
+        if (count($do->reservation->details) > 0) {
+            foreach($do->reservation->details as $index => $detail) {
+                $detail->material_code = $detail->material->material_code;
+                $detail->description = $detail->material->description;
+                $detail->uom = $detail->material->uom;
+            }
+        }
+
+        $data['do'] = $do;
+        $pdf = PDF::chunkLoadView("<html-separator/>", "report.pdf.good_receives", $data, [], ['orientation' => 'L']);
+        $pdf->getMpdf()->setFooter("Page {PAGENO} of {nb}");
+        return $pdf->stream("good_receives_$code.pdf");
     }
 }

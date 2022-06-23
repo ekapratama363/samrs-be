@@ -31,6 +31,11 @@ class Room extends Model
         return $this->hasOne('App\Models\User', 'id', 'responsible_person');
     }
 
+	public function responsible()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'responsible_person');
+    }
+
 	public function createdBy()
     {
         return $this->hasOne('App\Models\User', 'id', 'created_by');

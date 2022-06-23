@@ -445,7 +445,7 @@ class DeliveryOrderController extends Controller
         if ($receive_stock) {
             $receive_stock->update([
                 'quantity_in_transit' => $receive_stock->quantity_in_transit + $material['delivery_quantity'],
-                'updated_bys'    => Auth::user()->id
+                'updated_by'    => Auth::user()->id
             ]); 
         } else {
             $receive_stock = Stock::create([
@@ -453,7 +453,7 @@ class DeliveryOrderController extends Controller
                 'room_id' => $reservation->room_id,
                 'quantity_in_transit' => $material['delivery_quantity'],
                 'created_by'    => Auth::user()->id,
-                'updated_bys'    => Auth::user()->id
+                'updated_by'    => Auth::user()->id
             ]);
         }
 
@@ -624,13 +624,16 @@ class DeliveryOrderController extends Controller
             'reservation.vendor',
             'reservation.plant',
             'reservation.room_sender.plant',
-            'reservation.room_sender.responsible_person',
+            'reservation.room_sender.responsible',
             'reservation.room_receiver.plant',
-            'reservation.room_receiver.responsible_person',
+            'reservation.room_receiver.responsible',
             'reservation.details',
             'reservation.details.do_detail.serial_numbers',
             'reservation.details.material',
-            'reservation.details.material.uom'
+            'reservation.details.material.uom',
+            'reservation.createdBy',
+            'reservation.updatedBy',
+            'details'
         ])
         ->where('code', $code)
         ->first();

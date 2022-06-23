@@ -226,6 +226,7 @@ Route::group(['middleware' => ['auth:api', 'activity'], 'prefix' => 'transaction
 
 Route::get('/transaction/reservation-pdf/{code}', 'Api\ReservationController@pdf');
 Route::get('/transaction/delivery-order-pdf/{code}', 'Api\DeliveryOrderController@pdf');
+Route::get('/transaction/good-receives-pdf/{code}', 'Api\GoodReceiveController@pdf');
 Route::get('/transaction/stock-detail/qrcode', 'Api\StockDetailController@qrcode');
 
 // Authenticated User API (Dashboard)

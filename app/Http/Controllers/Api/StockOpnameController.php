@@ -154,7 +154,6 @@ class StockOpnameController extends Controller
                     'remark' => null,
                     'created_by' => Auth::user()->id,
                     'updated_by' => Auth::user()->id
-
                 ]);
             }
 

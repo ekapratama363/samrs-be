@@ -334,7 +334,10 @@ class ReservationController extends Controller
             ], 422);
         }
 
-        $reservation->update(['status' => 1]);
+        $reservation->update([
+            'status' => 1,
+            'updated_by' => Auth::user()->id
+        ]);
 
         return $reservation;
     }
@@ -364,7 +367,8 @@ class ReservationController extends Controller
 
         $reservation->update([
             'status' => 2, //reject
-            'remark' => $request->remark
+            'remark' => $request->remark,
+            'updated_by' => Auth::user()->id
         ]);
 
         return $reservation;
