@@ -9,12 +9,14 @@
 
     <style>
         tr.border_bottom td {
-            border-bottom: 1px solid black;
+            border: 0.1px solid;
         }
 
         .table-center {
             text-align: center;
             vertical-align: middle;
+            border: 0.1px solid;
+            border-collapse: collapse;
         }
 
         .container:after {
@@ -94,7 +96,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <strong>Request by</strong>
+                        <strong>Request Reservation by</strong>
                     </td>
                     <td width="10">:</td>
                     <td>
@@ -103,11 +105,11 @@
                 </tr>
                 <tr>
                     <td>
-                        <strong>Approved by</strong>
+                        <strong>Approved GR by</strong>
                     </td>
                     <td width="10">:</td>
                     <td>
-                        {{ $do->reservation->updatedBy ? $do->reservation->updatedBy->fullname : '-'  }}
+                        {{ $do->approved ? $do->approved->fullname : '-'  }}
                     </td>
                 </tr>
             </table>
@@ -168,12 +170,36 @@
         </thead>
         <tbody>
             @foreach($do->reservation->details as $detail)
-            <tr>
+            <tr class="border_bottom">
                 <td>{{ $loop->iteration }}</td>
                 <td style="text-align: left">{{ $detail->material->material_code }} - {{ $detail->material->description }}</td>
-                <td>{{ $detail->quantity }}</td>
-                <td>{{ $detail->delivery_quantity }}</td>
+                
+                <td>
+                    {{ $detail->quantity }} 
+
+                    @if ($detail->material->quantity_uom > 1)
+
+                    {{ $detail->material->uom ? $detail->material->uom->name : '-' }}
+                    isi
+                    ({{ $detail->quantity * $detail->material->quantity_uom }})
+
+                    @endif
+                </td>
+                
+                <td>
+                    {{ $detail->delivery_quantity }} 
+
+                    @if ($detail->material->quantity_uom > 1)
+
+                    {{ $detail->material->uom ? $detail->material->uom->name : '-' }}
+                    isi
+                    ({{ $detail->delivery_quantity * $detail->material->quantity_uom }})
+
+                    @endif
+                </td>
+                
                 <td>{{ $detail->material->uom ? $detail->material->uom->name : '-' }}</td>
+
                 @if ($do->reservation->vendor) 
                     <td>{{ $do->reservation->vendor->name }}</td>
                 @elseif ($do->reservation->room_sender)
@@ -184,7 +210,7 @@
             </tr>
                 @if (count($detail->do_detail->serial_numbers) > 0)
                     <tr style="margin-bottom: 0px; padding-bottom: 0px">
-                        <td colspan="9" align="justify" style="margin-bottom: 0px; padding-bottom: 0px; border:none">
+                        <td colspan="6" align="justify" style="margin-bottom: 0px; padding-bottom: 0px; border:none">
                             <strong>Serial Numbers: </strong>
                             <span style="margin-top:5px; margin-bottom: 0px; padding-bottom: 0px; text-align: justify;">
                                 @foreach($detail->do_detail->serial_numbers as $serial)

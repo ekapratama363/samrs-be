@@ -9,12 +9,14 @@
 
     <style>
         tr.border_bottom td {
-            border-bottom: 1px solid black;
+            border: 0.1px solid;
         }
 
         .table-center {
             text-align: center;
             vertical-align: middle;
+            border: 0.1px solid;
+            border-collapse: collapse;
         }
 
         .container:after {
@@ -123,10 +125,20 @@
         </thead>
         <tbody>
             @foreach($reservation->details as $detail)
-            <tr>
+            <tr class="border_bottom">
                 <td>{{ $loop->iteration }}</td>
                 <td style="text-align: left">{{ $detail->material->material_code }} - {{ $detail->material->description }}</td>
-                <td>{{ $detail->quantity }}</td>
+                <td>
+                    {{ $detail->quantity }} 
+
+                    @if ($detail->material->quantity_uom > 1)
+
+                    {{ $detail->material->uom ? $detail->material->uom->name : '-' }}
+                    isi
+                    ({{ $detail->quantity * $detail->material->quantity_uom }})
+
+                    @endif
+                </td>
                 <td>{{ $detail->material->uom ? $detail->material->uom->name : '-' }}</td>
                 @if ($reservation->vendor) 
                     <td>{{ $reservation->vendor->name }}</td>

@@ -336,7 +336,8 @@ class ReservationController extends Controller
 
         $reservation->update([
             'status' => 1,
-            'updated_by' => Auth::user()->id
+            'approved_or_rejected_by' => Auth::user()->id,
+            'approved_or_rejected_at' => Carbon::now(),
         ]);
 
         return $reservation;
@@ -368,7 +369,8 @@ class ReservationController extends Controller
         $reservation->update([
             'status' => 2, //reject
             'remark' => $request->remark,
-            'updated_by' => Auth::user()->id
+            'approved_or_rejected_by' => Auth::user()->id,
+            'approved_or_rejected_at' => Carbon::now(),
         ]);
 
         return $reservation;
@@ -378,8 +380,8 @@ class ReservationController extends Controller
     {
         $reservation = Reservation::with([
             'room_receiver', 'plant', 'room_sender', 'details.material.uom', 'vendor',
-            'createdBy', 'updatedBy'
-        ])->where('code', $code)->first();
+            'createdBy', 'updatedBy', 'approved', 'rejected'
+        ])->where('code', $code)->firstOrFail();
 
         $data['reservation'] = $reservation;
         $pdf = PDF::chunkLoadView("<html-separator/>", "report.pdf.reservation", $data, [], ['orientation' => 'L']);

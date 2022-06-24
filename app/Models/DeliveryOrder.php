@@ -48,4 +48,14 @@ class DeliveryOrder extends Model
     {
         return $this->hasMany('App\Models\DeliveryOrderDetail', 'delivery_order_id');
     }
+
+	public function approved()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'approved_or_rejected_by')->where('status', 1); //approved
+    }
+
+	public function rejected()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'approved_or_rejected_by')->where('status', 2); //rejected
+    }
 }

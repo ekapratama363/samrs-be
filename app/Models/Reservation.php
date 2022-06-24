@@ -55,6 +55,16 @@ class Reservation extends Model
         return $this->hasOne('App\Models\Vendor', 'id', 'vendor_id');
     }
 
+	public function approved()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'approved_or_rejected_by')->where('status', 1); //approved
+    }
+
+	public function rejected()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'approved_or_rejected_by')->where('status', 2); //rejected
+    }
+
 	public function createdBy()
     {
         return $this->hasOne('App\Models\User', 'id', 'created_by');

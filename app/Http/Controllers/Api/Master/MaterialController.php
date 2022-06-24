@@ -95,7 +95,8 @@ class MaterialController extends Controller
             'material_code' => 'required|max:30',
             'description' => 'required',
             'classification_id' => 'required|exists:classifications,id',
-            'unit_of_measurement_id' => 'nullable|exists:unit_of_measurements,id',
+            'unit_of_measurement_id' => 'required|exists:unit_of_measurements,id',
+            'quantity_uom' => 'required|min:1',
             'serial_number' => 'nullable|between:0,1',
         ]);
 
@@ -111,6 +112,7 @@ class MaterialController extends Controller
                         'description' => $request->description,
                         'classification_id' => $request->classification_id,
                         'unit_of_measurement_id' => $request->unit_of_measurement_id,
+                        'quantity_uom' => $request->quantity_uom,
                         'serial_number' => $request->serial_number ? $request->serial_number : 0,
                         'updated_by'    => Auth::user()->id
                     ]);
@@ -129,6 +131,7 @@ class MaterialController extends Controller
                     'description' => $request->description,
                     'classification_id' => $request->classification_id,
                     'unit_of_measurement_id' => $request->unit_of_measurement_id,
+                    'quantity_uom' => $request->quantity_uom,
                     'serial_number' => $request->serial_number ? $request->serial_number : 0,
                     'created_by' => Auth::user()->id,
                     'updated_by' => Auth::user()->id
@@ -201,7 +204,8 @@ class MaterialController extends Controller
             'material_code' => 'required|max:30|unique:materials,material_code,'. $id .'',
             'description' => 'required',
             'classification_id' => 'required|exists:classifications,id',
-            'unit_of_measurement_id' => 'nullable|exists:unit_of_measurements,id',
+            'unit_of_measurement_id' => 'required|exists:unit_of_measurements,id',
+            'quantity_uom' => 'required|min:1',
             'serial_number' => 'nullable|between:0,1',
         ]);
 
@@ -213,6 +217,7 @@ class MaterialController extends Controller
                 'description' => $request->description,
                 'classification_id' => $request->classification_id,
                 'unit_of_measurement_id' => $request->unit_of_measurement_id,
+                'quantity_uom' => $request->quantity_uom,
                 'serial_number' => $request->serial_number ? $request->serial_number : 0,
                 'updated_by'    => Auth::user()->id
             ]);

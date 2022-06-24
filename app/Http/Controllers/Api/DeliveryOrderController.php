@@ -636,7 +636,7 @@ class DeliveryOrderController extends Controller
             'details'
         ])
         ->where('code', $code)
-        ->first();
+        ->firstOrFail();
 
         if (count($do->reservation->details) > 0) {
             foreach($do->reservation->details as $index => $detail) {

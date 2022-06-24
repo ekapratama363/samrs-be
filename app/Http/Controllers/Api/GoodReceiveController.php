@@ -309,7 +309,11 @@ class GoodReceiveController extends Controller
                 }
             } 
 
-            $gr->update(['status' => 1]); //received
+            $gr->update([
+                'status' => 1,  //received
+                'approved_or_rejected_by' => Auth::user()->id,
+                'approved_or_rejected_at' => Carbon::now(),
+            ]);
     
             foreach($gr->reservation->details as $detail) {
                 $stock = Stock::where('material_id', $detail->material_id)
@@ -396,8 +400,9 @@ class GoodReceiveController extends Controller
             $gr->update([
                 'status' => 2,
                 'note' => $request->remark,
-                'updated_by' => Auth::user()->id
-            ]); //rejected
+                'approved_or_rejected_by' => Auth::user()->id,
+                'approved_or_rejected_at' => Carbon::now(),
+            ]);
     
             foreach($gr->reservation->details as $detail) {
                 $stock = Stock::where('material_id', $detail->material_id)
@@ -452,11 +457,13 @@ class GoodReceiveController extends Controller
             'reservation.details.material.uom',
             'reservation.createdBy',
             'reservation.updatedBy',
-            'details'
+            'details',
+            'approved',
+            'rejected'
         ])
         ->where('code', $code)
         ->where('status', 1) //delivered
-        ->first();
+        ->firstOrFail();
 
         if (count($do->reservation->details) > 0) {
             foreach($do->reservation->details as $index => $detail) {

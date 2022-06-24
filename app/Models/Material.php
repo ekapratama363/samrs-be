@@ -17,6 +17,7 @@ class Material extends Model
         'id' => 'integer',
         'classification_id' => 'integer',
         'unit_of_measurement_id' => 'integer',
+        'quantity_uom' => 'integer',
         'created_by' => 'integer',
         'updated_by' => 'integer'
     ];
