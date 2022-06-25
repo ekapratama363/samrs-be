@@ -323,6 +323,11 @@ class ReservationController extends Controller
             ], 400);
         }
 
+        $this->validate(request(), [
+            'quantity' => 'required|array',
+            'price'    => 'required|array',
+        ]);
+        
         $reservation = Reservation::find($id);
 
         if ($reservation->status != 0) { //waiting approve
@@ -334,13 +339,39 @@ class ReservationController extends Controller
             ], 422);
         }
 
-        $reservation->update([
-            'status' => 1,
-            'approved_or_rejected_by' => Auth::user()->id,
-            'approved_or_rejected_at' => Carbon::now(),
-        ]);
+        DB::beginTransaction();
+        try {
+            $total = [];
+            foreach($request->quantity as $index => $quantity) {
+                if ($quantity && isset($request->price[$index])) {
+                    $qty      = (int) $quantity;
+                    $price    = (int) $request->price[$index];
+                    $subtotal = $qty * $price;
+                    $total[]  = (int) $subtotal;
 
-        return $reservation;
+                    ReservationDetail::where('id', $index)
+                        ->update([
+                            'price'    => $price,
+                            'subtotal' => $subtotal,
+                        ]);
+                }
+            }
+            $reservation->update([
+                'status' => 1,
+                'total_price' => array_sum($total),
+                'approved_or_rejected_by' => Auth::user()->id,
+                'approved_or_rejected_at' => Carbon::now(),
+            ]);
+
+            DB::commit();
+
+            return $reservation;
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
+        }
     }
 
     public function reject($id, Request $request)

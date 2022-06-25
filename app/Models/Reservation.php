@@ -21,6 +21,7 @@ class Reservation extends Model
         'room_sender' => 'integer',
         'type' => 'integer',
         'status' => 'integer',
+        'total_price' => 'integer',
         'created_by' => 'integer',
         'updated_by' => 'integer'
     ];
