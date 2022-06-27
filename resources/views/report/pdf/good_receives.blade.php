@@ -164,6 +164,8 @@
                 <td>Material</td>
                 <td>Request Quantity</td>
                 <td>Delivery Quantity</td>
+                <td>Price</td>
+                <td>Subtotal</td>
                 <td>UoM</td>
                 <td>Supply Form</td>
             </tr>
@@ -172,7 +174,7 @@
             @foreach($do->reservation->details as $detail)
             <tr class="border_bottom">
                 <td>{{ $loop->iteration }}</td>
-                <td style="text-align: left">{{ $detail->material->material_code }} - {{ $detail->material->description }}</td>
+                <td style="text-align: left">{{ $detail->material->material_code }}</td>
                 
                 <td>
                     {{ $detail->quantity }} 
@@ -191,11 +193,17 @@
 
                     @if ($detail->material->quantity_uom > 1)
 
-                    {{ $detail->material->uom ? $detail->material->uom->name : '-' }}
-                    isi
                     ({{ $detail->delivery_quantity * $detail->material->quantity_uom }})
 
                     @endif
+                </td>
+
+                <td style="text-align: right">
+                    {{ number_format($detail->price) }} 
+                </td>
+
+                <td style="text-align: right">
+                    {{ number_format($detail->subtotal) }} 
                 </td>
                 
                 <td>{{ $detail->material->uom ? $detail->material->uom->name : '-' }}</td>
@@ -221,6 +229,11 @@
                     </tr>
                 @endif
             @endforeach
+            <tr class="border_bottom">
+                <td colspan="8" style="text-align: right">
+                    Total Price: <b>Rp. {{ number_format($do->reservation->total_price) }}</b>
+                </td>
+            </tr>
         </tbody>
     </table>
 </body>
