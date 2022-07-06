@@ -38,7 +38,9 @@ class DeliveryOrderController extends Controller
             'reservation.room_receiver', 
             'reservation.room_receiver.plant',
             'reservation.vendor',
-            'reservation.plant'
+            'reservation.plant',
+            'approved',
+            'rejected'
         ]);
 
         // if have organization parameter
@@ -141,7 +143,9 @@ class DeliveryOrderController extends Controller
             'reservation.room_receiver', 
             'reservation.room_receiver.plant',
             'reservation.vendor',
-            'reservation.plant'
+            'reservation.plant',
+            'approved',
+            'rejected'
         ]);
 
         // if have organization parameter
@@ -219,6 +223,12 @@ class DeliveryOrderController extends Controller
         foreach($delivery_order['data'] as $k => $v) {
             try {
                 $v['id'] = HashId::encode($v['id']);
+                $v['pdf_po'] = url('/api/transaction/reservation-pdf/' . $v['reservation']['code']);
+                
+                if ($v['status'] == 1) { //received
+                    $v['pdf_gr'] = url('/api/transaction/good-receives-pdf/' . $v['code']);
+                }
+
                 $delivery_order['data'][$k] = $v;
             } catch(\Exception $ex) {
                 return response()->json([

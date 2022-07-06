@@ -14,6 +14,82 @@ class ModulesTableSeeder extends Seeder
      */
     public function run()
     {
+        /** =========== MENU ====================== */
+        Modules::updateOrCreate(
+            ['object' => 'room-menu'],
+            ['description' => 'Room - Menu']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'plant-menu'],
+            ['description' => 'Plant - Menu']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'vendor-menu'],
+            ['description' => 'Vendor - Menu']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'unit-of-measurement-menu'],
+            ['description' => 'Unit of Measurment - Menu']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'classification-menu'],
+            ['description' => 'Classification - Menu']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'material-menu'],
+            ['description' => 'Material - Menu']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'material-sourcing-menu'],
+            ['description' => 'Material Sourcing - Menu']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'stock-menu'],
+            ['description' => 'Stock - Menu']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'reservation-menu'],
+            ['description' => 'Reservation - Menu']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'purchase-order-menu'],
+            ['description' => 'Purchase Order - Menu']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'delivery-order-menu'],
+            ['description' => 'Delivery Order - Menu']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'good-receives-menu'],
+            ['description' => 'Good Receives - Menu']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'stock-opname-menu'],
+            ['description' => 'Stock Opname - Menu']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'user-menu'],
+            ['description' => 'User - Menu']
+        );
+
+        Modules::updateOrCreate(
+            ['object' => 'role-menu'],
+            ['description' => 'Role - Menu']
+        );
+
         /** =========== USER ====================== */
         Modules::updateOrCreate(
             ['object' => 'user-view'],

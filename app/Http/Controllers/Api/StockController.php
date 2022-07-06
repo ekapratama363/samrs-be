@@ -90,7 +90,7 @@ class StockController extends Controller
 
         $stock = (new Stock)->newQuery();
 
-        $stock->with(['material', 'room']);
+        $stock->with(['material', 'room', 'stock_details']);
         $stock->with(['material.uom']);
         $stock->with(['material.classification']);
         $stock->with(['room.plant']);
@@ -124,6 +124,18 @@ class StockController extends Controller
         if (request()->input('ready_stock') === 'true') {
             $stock->where('stock', '>', 0);
         }
+        
+        if (isset(request()->created_at[0]) && isset(request()->created_at[1])) {
+            $created_at = request()->created_at;
+            
+            $stock->with(['stock_details' => function($q) use($created_at) {
+                $start = trim($created_at[0], '"');
+                $end   = trim($created_at[1], '"');
+
+                $q->whereDate('created_at','>=',$start)
+                    ->whereDate('created_at','<=',$end);
+            }]);
+        }
 
         if (request()->has('q')) {
             $q = strtolower(request()->input('q'));
@@ -142,8 +154,31 @@ class StockController extends Controller
         }
 
         $stock = $stock->paginate(request()->has('per_page') ? request()->per_page : appsetting('PAGINATION_DEFAULT'))
-            ->appends(request()->except('page'))
-            ->toArray();
+            ->appends(request()->except('page'));
+
+        $stock->transform(function($item) {
+            
+            unset($item->stock);
+            unset($item->quantity_in_transit);
+
+            if(count($item->stock_details) > 0) {
+                foreach($item->stock_details as $stock_detail) {
+                    if (in_array($stock_detail->status, [1, 3])) {
+                        $ready_stock[] = 1;
+                    }
+                    if (in_array($stock_detail->status, [2])) {
+                        $in_transit[] = 1;
+                    }
+                }
+            }
+            
+            $item->stock = isset($ready_stock) ? array_sum($ready_stock) : 0;
+            $item->quantity_in_transit = isset($in_transit) ? array_sum($in_transit) : 0;
+
+            return $item;
+        });
+
+        $stock = $stock->toArray();
 
         foreach($stock['data'] as $k => $v) {
             try {
@@ -219,9 +254,70 @@ class StockController extends Controller
         $stocks->with(['room.plant']);
         $stocks->with(['stock_details']);
 
+        // if have organization parameter
+        $room_id = Auth::user()->roleOrgParam(['room']);
+        if (count($room_id) > 0) {
+            $stocks->whereIn('room_id', $room_id);
+        }
+
+        // if have organization parameter
+        $plant_id = Auth::user()->roleOrgParam(['plant']);
+        if (count($plant_id) > 0) {
+            $stocks->whereIn('plant_id', $plant_id);
+        }
+
+        if (request()->has('plant_id')) {
+            $stocks->whereHas('room', function($q) {
+                $q->whereIn('plant_id', request()->input('plant_id'));
+            });
+        }
+
+        if (request()->has('room_id')) {
+            $stocks->whereIn('room_id', request()->input('room_id'));
+        }
+
+        if (request()->has('material_id')) {
+            $stocks->whereIn('material_id', request()->input('material_id'));
+        }
+
+        if (request()->input('ready_stock') === 'true') {
+            $stocks->where('stock', '>', 0);
+        }
+        
+        if (isset(request()->created_at[0]) && isset(request()->created_at[1])) {
+            $created_at = request()->created_at;
+            
+            $stocks->with(['stock_details' => function($q) use($created_at) {
+                $start = trim($created_at[0], '"');
+                $end   = trim($created_at[1], '"');
+
+                $q->whereDate('created_at','>=',$start)
+                    ->whereDate('created_at','<=',$end);
+            }]);
+        }
+
         $stocks->whereIn('id', request()->input('id'));
         
-        $stocks = $stocks->get();
+        $stocks = $stocks->get()->transform(function($item) {
+            unset($item->stock);
+            unset($item->quantity_in_transit);
+
+            if(count($item->stock_details) > 0) {
+                foreach($item->stock_details as $stock_detail) {
+                    if (in_array($stock_detail->status, [1, 3])) {
+                        $ready_stock[] = 1;
+                    }
+                    if (in_array($stock_detail->status, [2])) {
+                        $in_transit[] = 1;
+                    }
+                }
+            }
+            
+            $item->stock = isset($ready_stock) ? array_sum($ready_stock) : 0;
+            $item->quantity_in_transit = isset($in_transit) ? array_sum($in_transit) : 0;
+
+            return $item;
+        });
 
         $contents = Excel::raw(new StocksExport('report.excel.stock', $stocks), \Maatwebsite\Excel\Excel::XLSX);
         

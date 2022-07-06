@@ -35,7 +35,15 @@
 <body>
     <div class="container">
         <div class="column">
-            <p><b style="font-size: large;">Reservation</b></p>
+            <p>
+                <b style="font-size: large;">
+                @if ($reservation->approved) 
+                    Purchase Order
+                @else 
+                    Reservation
+                @endif
+                </b>
+            </p>
 
             <table>
                 <tr>
@@ -85,20 +93,33 @@
                 </tr>
                 <tr>
                     <td>
-                        <strong>Update By</strong>
+                        <strong>Approved By</strong>
                     </td>
                     <td width="10">:</td>
                     <td>
-                        {{ $reservation->updatedBy ? $reservation->updatedBy->fullname : '-' }}
+                        {{ $reservation->approved ? $reservation->approved->fullname : '-' }}
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <strong>Update Date</strong>
+                        <strong>Approved Date</strong>
                     </td>
                     <td width="10">:</td>
                     <td>
-                        {{ $reservation->updated_at }}
+                        {{ $reservation->approved ? $reservation->approved_or_rejected_at : '-' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Sender</strong>
+                    </td>
+                    <td width="10">:</td>
+                    <td>
+                        @if ($reservation->vendor) 
+                            {{ $reservation->vendor->name }}
+                        @elseif ($reservation->room_sender)
+                            {{ $reservation->room_sender->name }}
+                        @endif
                     </td>
                 </tr>
             </table>
@@ -107,7 +128,7 @@
             <div style="text-align: right">
                 <img src="{{asset('images/rsch.png')}}" style="width:100px; height:110px"></img>
                 <!-- <p>Printed by: Eka Pratama </p> -->
-                <p>Printed at: {{ date("d M Y h:i:s") }}</p>
+                <p>Printed at: {{ date("d M Y H:i:s") }}</p>
             </div>
         </div>
     </div>
@@ -118,11 +139,10 @@
             <tr class="border_bottom">
                 <td style="widtd: 30px">No</td>
                 <td>Material</td>
-                <td>Price (Rp)</td>
+                @if ($reservation->approved) <td>Price (Rp)</td> @endif
                 <td>Quantity</td>
-                <td>Subtotal (Rp)</td>
+                @if ($reservation->approved) <td>Subtotal (Rp)</td> @endif
                 <td>UoM</td>
-                <td>Supply Form</td>
             </tr>
         </thead>
         <tbody>
@@ -130,9 +150,13 @@
             <tr class="border_bottom">
                 <td>{{ $loop->iteration }}</td>
                 <td style="text-align: left">{{ $detail->material->material_code }}</td>
+                
+                @if ($reservation->approved) 
                 <td style="text-align: right">
                     {{ number_format($detail->price) }} 
-                </td>
+                </td> 
+                @endif
+
                 <td>
                     {{ $detail->quantity }}
 
@@ -140,21 +164,18 @@
                         ({{ $detail->quantity * $detail->material->quantity_uom }})
                     @endif
                 </td>
+
+                @if ($reservation->approved) 
                 <td style="text-align: right">
                     {{ number_format($detail->subtotal) }} 
                 </td>
-                <td>{{ $detail->material->uom ? $detail->material->uom->name : '-' }}</td>
-                @if ($reservation->vendor) 
-                    <td>{{ $reservation->vendor->name }}</td>
-                @elseif ($reservation->room_sender)
-                    <td>{{ $reservation->room_sender->name }}</td>
-                @else
-                    <td></td>
                 @endif
+
+                <td>{{ $detail->material->uom ? $detail->material->uom->name : '-' }}</td>
             </tr>
             @endforeach
             <tr class="border_bottom">
-                <td colspan="7" style="text-align: right">
+                <td colspan="{{ $reservation->approved ? 6 : 4 }}" style="text-align: right">
                     Total Price: <b>Rp. {{ number_format($reservation->total_price) }}</b>
                 </td>
             </tr>

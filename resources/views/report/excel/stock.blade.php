@@ -18,8 +18,8 @@
             <th>Ready Stock</th>
             <th>Quantity in Transit</th>
             <th>Minimum Stock</th>
-            <th>Require Serial Number?</th>
-            <th>Serial Numbers</th>
+            <!-- <th>Require Serial Number?</th>
+            <th>Serial Numbers</th> -->
         </tr>
         @foreach($stocks as $stock)
         <tr>
@@ -32,23 +32,25 @@
             <td>{{ $stock->stock }}</td>
             <td>{{ $stock->quantity_in_transit }}</td>
             <td>{{ $stock->minimum_stock }}</td>
-            <td>
-                {{ 
+            <!-- <td>
+                {{-- 
                     $stock->material 
                     ? 
                     $stock->material->serial_number ? 'Yes' : 'No' 
                     : '' 
-                }}
+                --}}
             </td>
             <td>
+                {{--
                 @if (count($stock->stock_details) > 0) 
                     @foreach($stock->stock_details as $history)
                         @if ($history->status == 1 || $history->status == 3)
                             <p>{{$history->serial_number}}</p>,
                         @endif
                     @endforeach
-                @endif 
-            </td>
+                @endif
+                --}} 
+            </td> -->
         </tr>
         @endforeach
     </table>

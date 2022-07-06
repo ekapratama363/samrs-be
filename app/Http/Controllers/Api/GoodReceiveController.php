@@ -38,7 +38,9 @@ class GoodReceiveController extends Controller
             'reservation.room_receiver', 
             'reservation.room_receiver.plant',
             'reservation.vendor',
-            'reservation.plant'
+            'reservation.plant',
+            'approved',
+            'rejected'
         ]);
 
         // if have organization parameter
@@ -141,7 +143,9 @@ class GoodReceiveController extends Controller
             'reservation.room_receiver', 
             'reservation.room_receiver.plant',
             'reservation.vendor',
-            'reservation.plant'
+            'reservation.plant',
+            'approved',
+            'rejected'
         ]);
 
         // if have organization parameter

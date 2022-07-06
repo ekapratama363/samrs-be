@@ -92,7 +92,7 @@ class MaterialController extends Controller
         Auth::user()->cekRoleModules(['material-create']);
 
         $this->validate(request(), [
-            'material_code' => 'required|max:30',
+            'material_code' => 'required|max:190',
             'description' => 'required',
             'classification_id' => 'required|exists:classifications,id',
             'unit_of_measurement_id' => 'required|exists:unit_of_measurements,id',
@@ -201,7 +201,7 @@ class MaterialController extends Controller
         $material = Material::with('material_parameters')->findOrFail($id);
 
         $this->validate(request(), [
-            'material_code' => 'required|max:30|unique:materials,material_code,'. $id .'',
+            'material_code' => 'required|max:190|unique:materials,material_code,'. $id .'',
             'description' => 'required',
             'classification_id' => 'required|exists:classifications,id',
             'unit_of_measurement_id' => 'required|exists:unit_of_measurements,id',

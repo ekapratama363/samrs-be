@@ -136,6 +136,19 @@
                 </tr>
                 <tr>
                     <td>
+                        <strong>Sender</strong>
+                    </td>
+                    <td width="10">:</td>
+                    <td>
+                        @if ($do->reservation->vendor) 
+                            {{ $do->reservation->vendor->name }}
+                        @elseif ($do->reservation->room_sender)
+                            {{ $do->reservation->room_sender->name }}
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <strong>Note</strong>
                     </td>
                     <td width="10">:</td>
@@ -153,12 +166,11 @@
             <tr class="border_bottom">
                 <td style="widtd: 30px">No</td>
                 <td>Material</td>
-                <td>Request Quantity</td>
-                <td>Delivery Quantity</td>
-                <td>Price</td>
-                <td>Subtotal</td>
+                <td>Req Quantity</td>
+                <td>Deliv. Quantity</td>
+                <td>Price (Rp)</td>
+                <td>Subtotal (Rp)</td>
                 <td>UoM</td>
-                <td>Supply Form</td>
             </tr>
         </thead>
         <tbody>
@@ -180,8 +192,6 @@
 
                     @if ($detail->material->quantity_uom > 1)
 
-                    {{ $detail->material->uom ? $detail->material->uom->name : '-' }}
-                    isi
                     ({{ $detail->delivery_quantity * $detail->material->quantity_uom }})
 
                     @endif
@@ -196,13 +206,6 @@
                 </td>
 
                 <td>{{ $detail->material->uom ? $detail->material->uom->name : '-' }}</td>
-                @if ($do->reservation->vendor) 
-                    <td>{{ $do->reservation->vendor->name }}</td>
-                @elseif ($do->reservation->room_sender)
-                    <td>{{ $do->reservation->room_sender->name }}</td>
-                @else
-                    <td></td>
-                @endif
             </tr>
                 @if (count($detail->do_detail->serial_numbers) > 0)
                     <tr style="margin-bottom: 0px; padding-bottom: 0px">
@@ -218,7 +221,7 @@
                 @endif
             @endforeach
             <tr class="border_bottom">
-                <td colspan="8" style="text-align: right">
+                <td colspan="7" style="text-align: right">
                     Total Price: <b>Rp. {{ number_format($do->reservation->total_price) }}</b>
                 </td>
             </tr>

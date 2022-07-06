@@ -28,12 +28,12 @@ class DeliveryOrder extends Model
 
     public function getDurationAttribute()
     {
-        if (!empty($this->created_at) && !empty($this->reservation->updated_at)) {
-            $start  = new Carbon($this->reservation->updated_at);
-            $end    = new Carbon($this->created_at);
+        if (!empty($this->updated_at)) {
+            $start  = new Carbon($this->updated_at);
+            $end    = new Carbon($this->approved_or_rejected_at ? $this->approved_or_rejected_at : date('d-m-y H:i:s'));
 
             $diff = $start->diff($end);
-            $message = "$diff->d days {$diff->h} hours {$diff->m} minutes {$diff->s} seconds";
+            $message = "$diff->d days {$diff->h} hours {$diff->i} minutes";
 
             return $message;
         }
@@ -43,6 +43,11 @@ class DeliveryOrder extends Model
     {
         return $this->hasOne('App\Models\Reservation', 'id', 'reservation_id');
     }
+
+	// public function good_receive()
+    // {
+    //     return $this->belongsTo('App\Models\DeliveryOrder', 'id')->where('status', 1); //received
+    // }
 
 	public function details()
     {
