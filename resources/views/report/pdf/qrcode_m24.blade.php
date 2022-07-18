@@ -44,11 +44,11 @@
                                 {{$stock_detail->stock->material ? $stock_detail->stock->material->classification->name : ''}}
                             <td>
                         </tr>
-                        <tr>
+                        {--<tr>
                             <td style="width:100%;padding-right: 5px">
                                 SN : {{$stock_detail->serial_number ? $stock_detail->serial_number : '-'}}
                             <td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <td>
                                 {{$stock_detail->stock->room ? $stock_detail->stock->room->name : ''}}

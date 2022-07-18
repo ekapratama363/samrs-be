@@ -111,7 +111,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <strong>Sender</strong>
+                        <strong>Vendor</strong>
                     </td>
                     <td width="10">:</td>
                     <td>

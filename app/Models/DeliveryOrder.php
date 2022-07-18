@@ -28,9 +28,9 @@ class DeliveryOrder extends Model
 
     public function getDurationAttribute()
     {
-        if (!empty($this->updated_at)) {
-            $start  = new Carbon($this->updated_at);
-            $end    = new Carbon($this->approved_or_rejected_at ? $this->approved_or_rejected_at : date('d-m-y H:i:s'));
+        if (!empty($this->created_at)) {
+            $start  = new Carbon($this->created_at);
+            $end    = $this->approved_or_rejected_at ? new Carbon($this->approved_or_rejected_at) : Carbon::now();
 
             $diff = $start->diff($end);
             $message = "$diff->d days {$diff->h} hours {$diff->i} minutes";

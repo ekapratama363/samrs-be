@@ -322,7 +322,7 @@ class UserController extends Controller
                     'username'          => $request->username,
                     'email'             => $request->email,
                     'mobile'            => $request->mobile,
-                    'password'          => $request->password ? Hash::make($request->password, ['rounds' => 10]) : Hash::make(str_random(((int)appsetting('PASS_LENGTH_MIN'))), ['rounds' => 10]),
+                    'password'          => $request->password ? Hash::make($request->password, ['rounds' => 10]) : Hash::make('p@sswordS3m3ntar@', ['rounds' => 10]),
                     'api_token'         => str_random(100),
                     'status'            => 0, //pending email
                     'confirmation_code' => $code,
