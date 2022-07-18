@@ -161,17 +161,15 @@ class StockController extends Controller
             unset($item->stock);
             unset($item->quantity_in_transit);
 
-            if(count($item->stock_details) > 0) {
-                foreach($item->stock_details as $stock_detail) {
-                    if (in_array($stock_detail->status, [1, 3])) {
-                        $ready_stock[] = 1;
-                    }
-                    if (in_array($stock_detail->status, [2])) {
-                        $in_transit[] = 1;
-                    }
+            foreach($item->stock_details as $stock_detail) {
+                if (in_array($stock_detail->status, [1, 3])) {
+                    $ready_stock[] = 1;
+                }
+                if (in_array($stock_detail->status, [2])) {
+                    $in_transit[] = 1;
                 }
             }
-            
+                        
             $item->stock = isset($ready_stock) ? array_sum($ready_stock) : 0;
             $item->quantity_in_transit = isset($in_transit) ? array_sum($in_transit) : 0;
 
