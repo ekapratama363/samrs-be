@@ -164,6 +164,14 @@ class GoodReceiveController extends Controller
             });
         }
 
+        // if have organization parameter
+        $vendor_id = Auth::user()->roleOrgParam(['vendor']);
+        if (count($vendor_id) > 0) {
+            $gr->whereHas('reservation', function($query) use($vendor_id) {
+                $query->whereIn('vendor_id', $vendor_id);
+            });
+        }
+
         if (request()->has('code_do')) {
             $gr->whereIn('code', request()->input('code_do'));
         }
